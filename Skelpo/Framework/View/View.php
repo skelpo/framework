@@ -4,6 +4,7 @@ namespace Skelpo\Framework\View;
 
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Skelpo\Framework\Events\ControllerEvent;
 use Skelpo\Framework\Framework;
@@ -181,7 +182,7 @@ class View extends \Smarty
 		return $jsurl;
 	}
 	
-	public function onKernelResponse(FilterResponseEvent $event)
+	public function onViewResponse(GetResponseForControllerResultEvent $event)
 	{
 		if (in_array($this->module, array("api", "widgets")))
 		{

@@ -131,16 +131,16 @@ class Loader implements LoaderInterface
 				}
 				$ctlStr = $controllerNS.'Controller::'.$functionName."Action";
 				
-				if ($module=="frontend") $module = "";
-				else $module = $module . "/";
+				if ($module=="frontend") $module = "/";
+				else $module = "/".$module . "/";
 				
 				if ($functionName=="index")
 				{
-					$s .= '$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\'/'.$module.strtolower($controller).'\',array(\'_controller\' => \''.$ctlStr.'\')));';
-					$s .= '$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\'/{_locale}/'.$module.strtolower($controller).'\',array(\'_controller\' => \''.$ctlStr.'\'),array(\'_locale\'=>\''.$this->locale.'\'),array(\'_locale\'=>\''.implode(",",$this->supportedLocales).'\')));';
+					$s .= '$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\''.$module.strtolower($controller).'\',array(\'_controller\' => \''.$ctlStr.'\')));';
+					$s .= '$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\'/{_locale}'.$module.strtolower($controller).'\',array(\'_controller\' => \''.$ctlStr.'\'),array(\'_locale\'=>\''.$this->locale.'\'),array(\'_locale\'=>\''.implode(",",$this->supportedLocales).'\')));';
 				}
-				$s .= '$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\'/'.$module.strtolower($controller).'/'.$functionName.'\',array(\'_controller\' => \''.$ctlStr.'\')));';
-				$s .= '$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\'/{_locale}/'.$module.strtolower($controller).'/'.$functionName.'\',array(\'_controller\' => \''.$ctlStr.'\'),array(\'_locale\'=>\''.$this->locale.'\'),array(\'_locale\'=>\''.implode(",",$this->supportedLocales).'\')));';
+				$s .= '$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\''.$module.strtolower($controller).'/'.$functionName.'\',array(\'_controller\' => \''.$ctlStr.'\')));';
+				$s .= '$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\'/{_locale}'.$module.strtolower($controller).'/'.$functionName.'\',array(\'_controller\' => \''.$ctlStr.'\'),array(\'_locale\'=>\''.$this->locale.'\'),array(\'_locale\'=>\''.implode(",",$this->supportedLocales).'\')));';
 			
 				
 			}
