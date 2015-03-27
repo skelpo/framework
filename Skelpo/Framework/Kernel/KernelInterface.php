@@ -1,6 +1,6 @@
 <?php
 
-use Skelpo\Framework\Kernel;
+namespace Skelpo\Framework\Kernel;
 
 interface KernelInterface
 {
