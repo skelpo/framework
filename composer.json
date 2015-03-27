@@ -30,8 +30,8 @@
         "sensio/generator-bundle": "~2.3"
     },
     "config": {
-        "bin-dir": “vendor/bin",
+        "bin-dir": "vendor/bin",
         "vendor-dir": "vendor"
-    },
+    }
     
 }
