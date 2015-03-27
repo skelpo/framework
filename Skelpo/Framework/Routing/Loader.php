@@ -53,7 +53,7 @@ class Loader implements LoaderInterface
 
 	private function buildRoutes($routes)
 	{
-		$rootPath = __DIR__."/../../../../";
+		$rootPath = $this->kernel->getRootDir();
 		$routesFile = $rootPath."cache/routes.php";
 		
 		if (file_exists($routesFile))
