@@ -65,9 +65,9 @@ class Loader implements LoaderInterface
 			// build all the routes
 			$routesString = "";
 			$controllerDirs = array();
-			$controllerDirs[] = "engine/App/Controllers/Frontend/";
-			$controllerDirs[] = "engine/App/Controllers/Backend/";
-			$controllerDirs[] = "engine/App/Controllers/Api/";
+			$controllerDirs[] = "App/Controllers/Frontend/";
+			$controllerDirs[] = "App/Controllers/Backend/";
+			$controllerDirs[] = "App/Controllers/Api/";
 			// TODO: Add plugins.
 			$lookFor = "Controller.php";
 			foreach ($controllerDirs as $dir)
