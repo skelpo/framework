@@ -45,8 +45,12 @@ class Loader implements LoaderInterface
 
         $this->loaded = true;
 		
-		//$routes->add("backend", new Route('/backend',array('_controller' => 'Framework:Main:rebuildRoutes')));
-		
+		$routes->add("frontend/", new Symfony\Component\Routing\Route('/',array('_controller' => 'App\Controllers\Frontend\IndexController::indexAction')));
+		$routes->add("backend/", new Symfony\Component\Routing\Route('/backend',array('_controller' => 'App\Controllers\Backend\IndexController::indexAction')));
+		$routes->add("api/", new Symfony\Component\Routing\Route('/api',array('_controller' => 'App\Controllers\Api\IndexController::indexAction')));
+		$routes->add("frontend/", new Symfony\Component\Routing\Route('/{_locale',array('_controller' => 'App\Controllers\Frontend\IndexController::indexAction'),array('_locale'=>$this->locale),array('_locale'=>implode(",",$this->supportedLocales))));
+		$routes->add("backend/", new Symfony\Component\Routing\Route('/{_locale/backend',array('_controller' => 'App\Controllers\Backend\IndexController::indexAction')));
+			
 
         return $routes;
     }
