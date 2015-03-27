@@ -15,6 +15,12 @@ class Loader implements LoaderInterface
     private $loaded = false;
 	private $locale;
 	private $supportedLocales;
+	private $kernel;
+	
+	public function __construct($k)
+	{
+		$this->kernel = $k;
+	}
 
     public function load($resource, $type = null)
     {
@@ -24,7 +30,7 @@ class Loader implements LoaderInterface
 		$routes = new RouteCollection();
 		
 		$container = new ContainerBuilder();
-		$loader = new YamlFileLoader($container, new FileLocator(__DIR__."/../../../../config/"));
+		$loader = new YamlFileLoader($container, new FileLocator($this->kernel->getConfigDir()));
 		$loader->load('parameters.yml');
 		//die("asfasdf2");
 		$this->locale = $container->getParameter('locale');
