@@ -1,4 +1,16 @@
 <?php
+
+/**
+ * This file is part of the skelpo framework.
+ * 
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ * 
+ * @version 1.0.0-alpha
+ * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
+ * @copyright 2015 Skelpo Inc. www.skelpo.com
+ */
+
 namespace Skelpo\Framework\Routing;
 
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -10,6 +22,10 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
+/**
+ * This class creates routes for all controllers with all actions. Makes it significantly easier
+ * to build further pages and actions.
+ */
 class Loader implements LoaderInterface
 {
     private $loaded = false;
@@ -17,11 +33,16 @@ class Loader implements LoaderInterface
 	private $supportedLocales;
 	private $kernel;
 	
+	/**
+	 * Construct the clas.
+	 */
 	public function __construct($k)
 	{
 		$this->kernel = $k;
 	}
-
+	/**
+	 * Load configuration and start building the routes.
+	 */
     public function load($resource, $type = null)
     {
         if (true === $this->loaded) {
@@ -32,7 +53,7 @@ class Loader implements LoaderInterface
 		$container = new ContainerBuilder();
 		$loader = new YamlFileLoader($container, new FileLocator($this->kernel->getConfigDir()));
 		$loader->load('parameters.yml');
-		//die("asfasdf2");
+		
 		$this->locale = $container->getParameter('locale');
 		$this->supportedLocales = explode(",", $container->getParameter('supportedLocales'));
 		
@@ -45,16 +66,13 @@ class Loader implements LoaderInterface
 
         $this->loaded = true;
 		
-		$routes->add("frontend", new \Symfony\Component\Routing\Route('/',array('_controller' => 'App\Controllers\Frontend\IndexController::indexAction')));
-		$routes->add("backend", new \Symfony\Component\Routing\Route('/backend',array('_controller' => 'App\Controllers\Backend\IndexController::indexAction')));
-		$routes->add("api", new \Symfony\Component\Routing\Route('/api',array('_controller' => 'App\Controllers\Api\IndexController::indexAction')));
-		$routes->add("frontendlocale", new \Symfony\Component\Routing\Route('/{_locale',array('_controller' => 'App\Controllers\Frontend\IndexController::indexAction'),array('_locale'=>$this->locale),array('_locale'=>implode(",",$this->supportedLocales))));
-		$routes->add("backendlocale", new \Symfony\Component\Routing\Route('/{_locale/backend',array('_controller' => 'App\Controllers\Backend\IndexController::indexAction')));
-			
-
         return $routes;
     }
-
+	/**
+	 * Build the routes for all controllers.
+	 * 
+	 * @return The routes as a RouteCollection.
+	 */
 	private function buildRoutes($routes)
 	{
 		$rootPath = $this->kernel->getRootDir();
@@ -97,12 +115,13 @@ class Loader implements LoaderInterface
 			$a = fopen($routesFile,"a");
 			fwrite($a,"<?php ".$routesString." ?>");
 			fclose($a);
-			//die("done");
 			include($routesFile);
 		}
 		return $routes;
 	}
-
+	/**
+	 * Internal function to build the routes for a specific class.
+	 */
 	private function buildRoutesForClass($path,$file, $module)
 	{
 		$s = "";
@@ -125,41 +144,76 @@ class Loader implements LoaderInterface
 			{
 				$functionName = str_replace("Action","",$function->getName());
 				$parameters = $function->getParameters();
-				if ($function->getNumberOfParameters()>0)
-				{
-					//die("C:".print_r($parameters,true));
-				}
+				
 				$ctlStr = $controllerNS.'Controller::'.$functionName."Action";
+				$moduleStr = $module;
 				
-				if ($module=="frontend") $module = "/";
-				else $module = "/".$module . "/";
-				
-				if ($functionName=="index")
-				{
-					$s .= '$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\''.$module.strtolower($controller).'\',array(\'_controller\' => \''.$ctlStr.'\')));';
-					$s .= '$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\'/{_locale}'.$module.strtolower($controller).'\',array(\'_controller\' => \''.$ctlStr.'\'),array(\'_locale\'=>\''.$this->locale.'\'),array(\'_locale\'=>\''.implode(",",$this->supportedLocales).'\')));';
-				}
-				$s .= '$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\''.$module.strtolower($controller).'/'.$functionName.'\',array(\'_controller\' => \''.$ctlStr.'\')));';
-				$s .= '$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\'/{_locale}'.$module.strtolower($controller).'/'.$functionName.'\',array(\'_controller\' => \''.$ctlStr.'\'),array(\'_locale\'=>\''.$this->locale.'\'),array(\'_locale\'=>\''.implode(",",$this->supportedLocales).'\')));';
-			
+				$s .= $this->getRouteString($moduleStr, strtolower($controller), $functionName, array(), $ctlStr);
 				
 			}
 		}
 		return $s;
 		
 	}
-	
+	/**
+	 * Internal class to build the route for a specific action. It build all sub-routes as well as the
+	 * language.
+	 */
+	private function getRouteString($module, $controller, $function, $parameter, $ctlStr, $stop = false)
+	{
+		if ($module == "frontend") $module = "";
+		else {
+			if (!stristr($module,"/")) 
+			{
+				$module = "/".$module;
+			}
+		}
+		
+		$s = "";
+		
+		if ($controller=="index")
+		{
+			$s .= $this->getRouteString($module, "", $function, $parameter, $ctlStr);
+		}
+		 
+		if ($function == "index")
+		{
+			$s .= $this->getRouteString($module, $controller, "", $parameter, $ctlStr, true);
+		}
+		
+		if ($stop) return $s;
+		
+		if ($function != "") $function = "/".$function;
+		if ($controller != "") $controller = "/".$controller;
+		$valid = false;
+		
+		if ($controller != "" && $function != "") $valid = true;
+		if ($controller == "" && $function == "") $valid = true;
+		
+		if ($valid) {	
+			$s .= "\n".'$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\''.$module.$controller.$function.'\',array(\'_controller\' => \''.$ctlStr.'\')));';
+			$s .= "\n".'$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\'/{_locale}'.$module.$controller.$function.'\',array(\'_controller\' => \''.$ctlStr.'\'),array(\'_locale\'=>\''.$this->locale.'\'),array(\'_locale\'=>\''.implode(",",$this->supportedLocales).'\')));';
+		}
+		return $s;
+	}
+	/**
+	 * Tells symfony what type this load is.
+	 */
     public function supports($resource, $type = null)
     {
         return 'extra' === $type;
     }
-
+	/**
+	 * Has to be supported for the interface.
+	 */
     public function getResolver()
     {
         // needed, but can be blank, unless you want to load other resources
         // and if you do, using the Loader base class is easier (see below)
     }
-
+	/**
+	 * Not necessary.
+	 */
     public function setResolver(LoaderResolverInterface $resolver)
     {
         // same as above
