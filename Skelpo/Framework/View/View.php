@@ -55,6 +55,9 @@ class View extends \Smarty
 	 */
 	private $minifyCss;
 	
+	private $eventName1;
+	private $eventName2;
+	
 	/**
 	 * Creates a new view.
 	 */
@@ -125,17 +128,19 @@ class View extends \Smarty
 		$actionName = substr($params[1],0,-6);
 		$controllerName = substr($params[0],0,-10);
 		
-		// build the event name
-		$eventName = str_replace("\\","_",$controllerName)."_".ucwords($actionName)."_PreDispatch";
+		// build the events name
+		$this->eventName1 = str_replace("\\","_",$controllerName)."_".ucwords($actionName)."_PreDispatch";
+		$this->eventName2 = str_replace("\\","_",$controllerName)."_PreDispatch";
 		
 		// get the event dispatcher
 		$dispatcher = $this->framework->getEventDispatcher();
 		
 		// create an event
-		$cevent = new ControllerEvent($controller);
+		$cevent = new ControllerEvent($controller, $request);
 		
-		// dispatch the event
-		$dispatcher->dispatch($eventName, $cevent);
+		// dispatch the events
+		$dispatcher->dispatch($this->eventName1, $cevent);
+		$dispatcher->dispatch($this->eventName2, $cevent);
 		
 		// the module we are using right now
 		$module = substr($controllerName,strpos($controllerName,"Controllers")+12);
@@ -293,6 +298,16 @@ class View extends \Smarty
 	 */
 	public function onViewResponse(GetResponseForControllerResultEvent $event)
 	{
+		// get the event dispatcher
+		$dispatcher = $this->framework->getEventDispatcher();
+		
+		// create an event
+		$cevent = new ControllerEvent(null, $event->getRequest(), $event->getResponse());
+		
+		// dispatch the events
+		$dispatcher->dispatch($this->eventName1, $cevent);
+		$dispatcher->dispatch($this->eventName2, $cevent);
+		
 		if (in_array($this->module, array("api", "widgets"))) return;
 		
 		// get the compressed urls

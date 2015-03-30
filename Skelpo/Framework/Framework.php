@@ -130,4 +130,5 @@ class Framework extends Bundle
 	{
 		return $this->eventDispatcher;
 	}
+	
 }

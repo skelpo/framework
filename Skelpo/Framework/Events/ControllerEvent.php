@@ -16,6 +16,8 @@ namespace Skelpo\Framework\Events;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Skelpo\Framework\View;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Controller event class. Carries the controller to the listener.
@@ -25,14 +27,38 @@ class ControllerEvent extends Event
 	/**
 	 * The controller we are carrying.
 	 */
-    private $controller;
+    protected $controller;
+	/**
+	 * The request.
+	 */
+	protected $request;
+	/** 
+	 * The response.
+	 */
+	protected $response;
 	/**
 	 * Creates a new event with controller $c.
 	 */
-    public function __construct(Controller $c)
+    public function __construct(Controller $c = null, Request $q = null, Response $r = null)
     {
         $this->controller = $c;
+		$this->request = $q;
+		$this->response = $r;
     }
+	/**
+	 * Returns the request object.
+	 */
+	public function getRequest()
+	{
+		return $this->request;
+	}
+	/**
+	 * Returns the response object.
+	 */
+	public function getResponse()
+	{
+		return $this->response;
+	}
 	/**
 	 * Returns the controller.
 	 */

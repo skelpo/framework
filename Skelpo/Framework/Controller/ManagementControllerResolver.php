@@ -1,24 +1,35 @@
 <?php
-
-
-namespace Symfony\Component\HttpKernel\Controller;
+/**
+ * This file is part of the skelpo framework.
+ * 
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ * 
+ * @version 1.0.0-alpha
+ * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
+ * @copyright 2015 Skelpo Inc. www.skelpo.com
+ */
+ 
+namespace Skelpo\Framework\Controller;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 
-
-class ManagementControllerResolver implements Symfony\Component\HttpKernel\Controller\ControllerResolverInterface
+class ManagementControllerResolver implements ControllerResolverInterface
 {
-    private $logger;
+    protected $container;
+	protected $controllers;
 
     /**
      * Constructor.
      *
      * @param LoggerInterface $logger A LoggerInterface instance
      */
-    public function __construct(LoggerInterface $logger = null)
+    public function __construct($container = null)
     {
-        $this->logger = $logger;
+        $this->container = $container;
+		$this->controllers = array();
     }
 
     /**
@@ -31,7 +42,7 @@ class ManagementControllerResolver implements Symfony\Component\HttpKernel\Contr
      */
     public function getController(Request $request)
     {
-    	die("hier we go!");
+    	//die("hier we go!".print_r($request,true));
         if (!$controller = $request->attributes->get('_controller')) {
             if (null !== $this->logger) {
                 $this->logger->warning('Unable to look for the controller as the "_controller" parameter is missing');
@@ -148,6 +159,16 @@ class ManagementControllerResolver implements Symfony\Component\HttpKernel\Contr
      */
     protected function instantiateController($class)
     {
-        return new $class();
+    	$k = md5($class);
+		if (array_key_exists($k, $this->controllers))
+		{
+			return $this->controllers[$k];
+		}
+		else {
+			$o = new $class();
+			$this->controllers[$k] = $o;
+			return $o;
+		}
+       
     }
 }

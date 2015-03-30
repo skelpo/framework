@@ -21,20 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 abstract class MainController extends Controller
 {
-	/**
-	 * Event that is called before every action.
-	 */
-	public function onPreDispatch()
-	{
-		// empty
-	}
-	/**
-	 * Event that is called after every action.
-	 */
-	public function onPostDispatch()
-	{
-		// empty
-	}
+	
     /**
 	 * Empty index action to create the routes and show templates.
 	 */
