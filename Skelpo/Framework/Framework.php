@@ -116,39 +116,6 @@ class Framework extends Bundle
 		// default
 		$this->module = "frontend";
 	}
-	
-	public function registerEvents(Request $request)
-	{
-		// our string
-		$s = $request->attributes->get('_controller');
-		
-		// only if it is to skelpo controllers
-		if (!stristr($s,"::")) return;
-		
-		// get the different parts
-		$params = explode('::',$s);
-		$actionName = substr($params[1],0,-6);
-		$controllerName = substr($params[0],0,-10);
-		// build the event name
-		$eventName = str_replace("\\","_",$controllerName)."_".ucwords($actionName)."_PreDispatch";
-		
-		
-		die("A:".$eventName);
-	}
-	
-	/**
-     * {@inheritdoc}
-     *
-     * @api
-     */
-    public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
-    {
-    	$this->registerEvents($request);
-		
-    	return parent::handle($request, $type, $catch);
-        
-    }
-	
 	/**
 	 * Returns information.
 	 */
