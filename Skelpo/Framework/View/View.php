@@ -126,7 +126,7 @@ class View extends \Smarty
 		$controllerName = substr($params[0],0,-10);
 		
 		// build the event name
-		$eventName = str_replace("\\","_",$controllerName)."_".ucwords($actionName)."_PostDispatch";
+		$eventName = str_replace("\\","_",$controllerName)."_".ucwords($actionName)."_PreDispatch";
 		
 		// get the event dispatcher
 		$dispatcher = $this->framework->getEventDispatcher();
