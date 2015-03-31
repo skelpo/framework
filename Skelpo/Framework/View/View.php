@@ -168,6 +168,8 @@ class View extends \Smarty
 			}
 		}
 		
+		$orf = $dir.$templateName;
+		
 		// if we haven't found the template let's look for the default template
 		if ($this->templateFile=="")
 		{
@@ -183,7 +185,7 @@ class View extends \Smarty
 		// if still no template there is a problem
 		if ($this->templateFile=="")
 		{
-			throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException("Template does not exist: ".$templateName);
+			throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException("Template does not exist: ".$orf);
 		}
     }
 	/**
