@@ -183,7 +183,7 @@ class View extends \Smarty
 		// if still no template there is a problem
 		if ($this->templateFile=="")
 		{
-			throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException("Template does not exist.");
+			throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException("Template does not exist: ".$templateName);
 		}
     }
 	/**
