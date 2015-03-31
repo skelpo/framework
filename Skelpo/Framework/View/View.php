@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the skelpo framework.
  * 
@@ -69,7 +68,7 @@ class View extends \Smarty
 		$this->templateFile = "";
 		$this->filesystem = new Filesystem();
 		$this->minifyJs = true;
-		$this->minifyCss = true;
+		$this->minifyCss = false;
 		
 		$this->setupSmarty();
 	}
