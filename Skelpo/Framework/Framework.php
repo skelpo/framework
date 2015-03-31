@@ -27,11 +27,6 @@ class Framework extends Bundle
 	private $eventDispatcher;
 	
 	/**
-	 * The root URL.
-	 */
-	private $rootUrl;
-	
-	/**
 	 * The environment we are using (dev/prod/test).
 	 */
 	private $environment;
@@ -56,11 +51,11 @@ class Framework extends Bundle
 	}
 	
 	/**
-	 * Returns the root url.
+	 * Pass-through: Returns the root url.
 	 */
 	public function getRootUrl()
 	{
-		return $this->rootUrl;
+		return $this->kernel->getRootUrl();
 	}
 	
 	/**
@@ -114,13 +109,10 @@ class Framework extends Bundle
 	/**
 	 * Creates a new instance with the kernel as an argument.
 	 */
-	public function __construct($kernel, $rootUrl)
+	public function __construct($kernel)
 	{
 		$this->kernel = $kernel;
 		$this->eventDispatcher = new EventDispatcher();
-		
-		$this->rootUrl = $rootUrl;
-		
 		// default
 		$this->module = "frontend";
 	}

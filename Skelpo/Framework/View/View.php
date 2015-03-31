@@ -57,10 +57,12 @@ class View extends \Smarty
 	private $eventName1;
 	private $eventName2;
 	
+	private $rootUrl;
+	
 	/**
 	 * Creates a new view.
 	 */
-	public function __construct(Framework $f)
+	public function __construct(Framework $f, $rootUrl)
 	{
 		parent::__construct();
 			
@@ -69,6 +71,7 @@ class View extends \Smarty
 		$this->filesystem = new Filesystem();
 		$this->minifyJs = true;
 		$this->minifyCss = false;
+		$this->rootUrl = $rootUrl;
 		
 		$this->setupSmarty();
 	}
@@ -193,7 +196,7 @@ class View extends \Smarty
 	private function getLessUrl()
 	{
 		$cssfile = $this->framework->getRootDir()."static/css/all.css";
-		$cssurl = $this->framework->getRootUrl()."static/css/all.css";
+		$cssurl = $this->rootUrl."static/css/all.css";
 		
 		// in case we have it in cache just return the url
 		if ($this->filesystem->exists($cssfile) && !$this->isCacheDue()) 
@@ -253,7 +256,7 @@ class View extends \Smarty
 	private function getJSUrl()
 	{
 		$jsfile = $this->framework->getRootDir()."static/js/all.js";
-		$jsurl = $this->framework->getRootUrl()."static/js/all.js";
+		$jsurl = $this->rootUrl."static/js/all.js";
 		
 		// check if we have it in cache
 		if ($this->filesystem->exists($jsfile) && !$this->isCacheDue()) 
