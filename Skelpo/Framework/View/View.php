@@ -334,10 +334,10 @@ class View extends \Smarty
 	{
 		$baseFolder = $this->framework->getRootDir()."static/".$this->module."/";
 		
-		if (!$this->filesystem->exists($p))
+		if (!$this->filesystem->exists($baseFolder))
 		{
-			$this->filesystem->remove($p);
-			$this->filesystem->mkdir($p);
+			$this->filesystem->remove($baseFolder);
+			$this->filesystem->mkdir($baseFolder);
 		}
 		
 		////$fs->symlink('/path/to/source', '/path/to/destination', true);
