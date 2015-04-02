@@ -59,6 +59,7 @@ class View extends \Smarty
 	
 	private $rootUrl;
 	
+	
 	/**
 	 * Creates a new view.
 	 */
@@ -87,6 +88,21 @@ class View extends \Smarty
 		$this->error_reporting = 0;
 		$this->caching = \Smarty::CACHING_LIFETIME_CURRENT;
 	}
+	/**
+	 * Change the template file.
+	 */
+	public function setTemplateFile($t)
+	{
+		$this->templateFile = $t;
+	}
+	/**
+	 * Returns the template file.
+	 */
+	public function getTemplateFile()
+	{
+		return $this->templateFile;
+	}
+	
 	/**
 	 * This function will add template dirs. This is necessary for plugins.
 	 */
@@ -195,8 +211,15 @@ class View extends \Smarty
 	 */
 	private function getLessUrl()
 	{
-		$cssfile = $this->framework->getRootDir()."static/css/all.css";
-		$cssurl = $this->rootUrl."static/css/all.css";
+		$p = $this->framework->getRootDir()."static/".$this->module."/css/";
+		
+		if (!$this->filesystem->exists($p))
+		{
+			$this->filesystem->mkdir($p);
+		}
+		
+		$cssfile = $p."all.css";
+		$cssurl = $this->rootUrl."static/".$this->module."/css/all.css";
 		
 		// in case we have it in cache just return the url
 		if ($this->filesystem->exists($cssfile) && !$this->isCacheDue()) 
@@ -255,8 +278,15 @@ class View extends \Smarty
 	 */
 	private function getJSUrl()
 	{
-		$jsfile = $this->framework->getRootDir()."static/js/all.js";
-		$jsurl = $this->rootUrl."static/js/all.js";
+		$p = $this->framework->getRootDir()."static/".$this->module."/css/";
+		
+		if (!$this->filesystem->exists($p))
+		{
+			$this->filesystem->mkdir($p);
+		}
+		
+		$jsfile = $p."all.js";
+		$jsurl = $this->rootUrl."static/".$this->module."/js/all.js";
 		
 		// check if we have it in cache
 		if ($this->filesystem->exists($jsfile) && !$this->isCacheDue()) 
@@ -266,6 +296,7 @@ class View extends \Smarty
 		
 		// get all our JS files 
 		$files = $this->framework->getTheme()->getJSFiles();
+		$files = $files[$this->module];
 		
 		// and all dirs
 		$dirs = $this->framework->getTemplateDirs();
@@ -297,6 +328,41 @@ class View extends \Smarty
 		return $jsurl;
 	}
 	/**
+	 * Copies all items from the theme folder that should be moved.
+	 */
+	private function copyStaticContent()
+	{
+		$baseFolder = $this->framework->getRootDir()."static/".$this->module."/";
+		
+		if (!$this->filesystem->exists($p))
+		{
+			$this->filesystem->remove($p);
+			$this->filesystem->mkdir($p);
+		}
+		
+		////$fs->symlink('/path/to/source', '/path/to/destination', true);
+			
+		$files = $this->framework->getTheme()->getAllStaticFiles();
+		$files = $files[$this->module];
+		
+		// and all dirs
+		$dirs = $this->framework->getTemplateDirs();
+		$dir_ = $dirs[0];
+		
+		
+		// get all the files
+		foreach ($files as $file_)
+		{
+			$file = $dir_ . $this->module."/_public/".$file_;
+			$target = $baseFolder.$file_;
+			if ($this->filesystem->exists($file))
+			{
+				$this->filesystem->symlink($file, $target,true);
+			}
+		}
+		
+	}
+	/**
 	 * This event is being triggered after the controllers we called and before the response is checked.
 	 * Because our html controllers don't return anything we build the response here.
 	 */
@@ -321,6 +387,12 @@ class View extends \Smarty
 		// assign them to the template
 		$this->assign("cssUrl", $cssUrl);
 		$this->assign("jsUrl", $jsUrl);
+		
+		// copy static elements
+		if ($this->isCacheDue())
+		{
+			$this->copyStaticContent();
+		}
 		
 		// get our template
 		$content = $this->fetch($this->templateFile);

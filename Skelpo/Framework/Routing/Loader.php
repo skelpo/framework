@@ -148,7 +148,7 @@ class Loader implements LoaderInterface
 				$ctlStr = $controllerNS.'Controller::'.$functionName."Action";
 				$moduleStr = $module;
 				
-				$s .= $this->getRouteString($moduleStr, strtolower($controller), $functionName, array(), $ctlStr);
+				$s .= $this->getRouteString($moduleStr, strtolower($controller), $functionName, array(), $ctlStr, false, $parameters);
 				
 			}
 		}
@@ -159,7 +159,7 @@ class Loader implements LoaderInterface
 	 * Internal class to build the route for a specific action. It build all sub-routes as well as the
 	 * language.
 	 */
-	private function getRouteString($module, $controller, $function, $parameter, $ctlStr, $stop = false)
+	private function getRouteString($module, $controller, $function, $parameter, $ctlStr, $stop = false, $parameters = array())
 	{
 		if ($module == "frontend") $module = "";
 		else {
@@ -193,6 +193,15 @@ class Loader implements LoaderInterface
 		if ($valid) {	
 			$s .= "\n".'$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\''.$module.$controller.$function.'\',array(\'_controller\' => \''.$ctlStr.'\')));';
 			$s .= "\n".'$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\'/{_locale}'.$module.$controller.$function.'\',array(\'_controller\' => \''.$ctlStr.'\'),array(\'_locale\'=>\''.$this->locale.'\'),array(\'_locale\'=>\''.implode(",",$this->supportedLocales).'\')));';
+			$para = "";
+			foreach ($parameters as $p)
+			{
+				$para .= "/{".$p->name."}";
+				$s .= "\n".'$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\''.$module.$controller.$function.$para.'\',array(\'_controller\' => \''.$ctlStr.'\')));';
+				$s .= "\n".'$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\'/{_locale}'.$module.$controller.$function.$para.'\',array(\'_controller\' => \''.$ctlStr.'\'),array(\'_locale\'=>\''.$this->locale.'\'),array(\'_locale\'=>\''.implode(",",$this->supportedLocales).'\')));';
+		
+				
+			}
 		}
 		return $s;
 	}

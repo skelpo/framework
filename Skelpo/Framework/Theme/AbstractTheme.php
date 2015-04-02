@@ -55,6 +55,11 @@ abstract class AbstractTheme
 	public abstract function getJSFiles();
 	
 	/**
+	 * Returns all static files that are necessary.
+	 */
+	public abstract function getAllStaticFiles();
+	
+	/**
 	 * Returns the name.
 	 */
 	public abstract function getName();

@@ -21,7 +21,13 @@ use Symfony\Component\HttpFoundation\Response;
  */
 abstract class MainController extends Controller
 {
-	
+	/**
+	 * Returns our smarty view.
+	 */
+	protected function getView()
+	{
+		return $this->get('view');
+	}
     /**
 	 * Empty index action to create the routes and show templates.
 	 */
