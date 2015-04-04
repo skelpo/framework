@@ -16,10 +16,11 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Skelpo\Framework\Events\ControllerEvent;
-use Skelpo\Framework\Framework;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Filesystem\Filesystem;
+use Skelpo\Framework\Events\ControllerEvent;
+use Skelpo\Framework\Framework;
+use Skelpo\Framework\Language\Language;
 
 /**
  * View service class. This class takes twig out of symfony and replaces all responses from controllers
@@ -383,6 +384,8 @@ class View extends \Smarty
 		
 		if (in_array($this->module, array("api", "widgets"))) return;
 		
+		
+		
 		// get the compressed urls
 		$cssUrl = $this->getLessUrl();
 		$jsUrl = $this->getJSUrl();
@@ -400,11 +403,20 @@ class View extends \Smarty
 		// get our template
 		$content = $this->fetch($this->templateFile);
 		
+		// parse language elements
+		$content = $this->parseLanguage($content);
+		
 		// our response
 		$newResponse = new Response();
 		$newResponse->setContent($content);
 		$newResponse->setStatusCode(200);
 	    $event->setResponse($newResponse);
+	}
+
+	protected function parseLanguage($content)
+	{
+		$ret = preg_replace("/##(.+?)##/e","\$this->language->getString('\\1')",$content);
+		return $ret;
 	}
 
 }

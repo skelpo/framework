@@ -107,22 +107,24 @@ class Loader implements LoaderInterface
 					{
 						if (substr($file,$l-14)==$lookFor)
 						{
-							$routesString .= $this->buildRoutesForClass($path,$file, $module);
+							//$routesString .= $this->buildRoutesForClass($path,$file, $module);
+							$this->buildRoutesForClass($path,$file, $module, $routes);
 						}
 					}
 				}
 			}
-			$a = fopen($routesFile,"a");
+			/*$a = fopen($routesFile,"a");
 			fwrite($a,"<?php ".$routesString." ?>");
 			fclose($a);
-			include($routesFile);
+			include($routesFile);*/
+			
 		}
 		return $routes;
 	}
 	/**
 	 * Internal function to build the routes for a specific class.
 	 */
-	private function buildRoutesForClass($path,$file, $module)
+	private function buildRoutesForClass($path,$file, $module, $routes)
 	{
 		$s = "";
 		$class = str_replace(".php", "", $file);
@@ -148,7 +150,7 @@ class Loader implements LoaderInterface
 				$ctlStr = $controllerNS.'Controller::'.$functionName."Action";
 				$moduleStr = $module;
 				
-				$s .= $this->getRouteString($moduleStr, strtolower($controller), $functionName, array(), $ctlStr, false, $parameters);
+				$s .= $this->getRouteString($moduleStr, strtolower($controller), $functionName, array(), $ctlStr, false, $parameters, $routes);
 				
 			}
 		}
@@ -159,7 +161,7 @@ class Loader implements LoaderInterface
 	 * Internal class to build the route for a specific action. It build all sub-routes as well as the
 	 * language.
 	 */
-	private function getRouteString($module, $controller, $function, $parameter, $ctlStr, $stop = false, $parameters = array())
+	private function getRouteString($module, $controller, $function, $parameter, $ctlStr, $stop, $parameters, $routes)
 	{
 		if ($module == "frontend") $module = "";
 		else {
@@ -173,12 +175,12 @@ class Loader implements LoaderInterface
 		
 		if ($controller=="index")
 		{
-			$s .= $this->getRouteString($module, "", $function, $parameter, $ctlStr);
+			$s .= $this->getRouteString($module, "", $function, $parameter, $ctlStr, false, array(), $routes);
 		}
 		 
 		if ($function == "index")
 		{
-			$s .= $this->getRouteString($module, $controller, "", $parameter, $ctlStr, true);
+			$s .= $this->getRouteString($module, $controller, "", $parameter, $ctlStr, true, array(), $routes);
 		}
 		
 		if ($stop) return $s;
@@ -191,19 +193,21 @@ class Loader implements LoaderInterface
 		if ($controller == "" && $function == "") $valid = true;
 		
 		if ($valid) {	
-			$s .= "\n".'$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\''.$module.$controller.$function.'\',array(\'_controller\' => \''.$ctlStr.'\')));';
-			$s .= "\n".'$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\'/{_locale}'.$module.$controller.$function.'\',array(\'_controller\' => \''.$ctlStr.'\'),array(\'_locale\'=>\''.$this->locale.'\'),array(\'_locale\'=>\''.implode(",",$this->supportedLocales).'\')));';
+			//$s .= "\n".'$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\''.$module.$controller.$function.'\',array(\'_controller\' => \''.$ctlStr.'\')));';
+			//$s .= "\n".'$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\'/{_locale}'.$module.$controller.$function.'\',array(\'_controller\' => \''.$ctlStr.'\'),array(\'_locale\'=>\''.$this->locale.'\'),array(\'_locale\'=>\''.implode(",",$this->supportedLocales).'\')));';
+			$routes->add("route_".md5(microtime()), new \Symfony\Component\Routing\Route(''.$module.$controller.$function.'',array('_controller' => $ctlStr)));
+			$routes->add("route_".md5(microtime()), new \Symfony\Component\Routing\Route('/{_locale}'.$module.$controller.$function.'',array('_controller' => $ctlStr),array('_locale'=> $this->locale),array('_locale'=> implode(",",$this->supportedLocales))));
 			$para = "";
 			foreach ($parameters as $p)
 			{
 				$para .= "/{".$p->name."}";
-				$s .= "\n".'$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\''.$module.$controller.$function.$para.'\',array(\'_controller\' => \''.$ctlStr.'\')));';
-				$s .= "\n".'$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\'/{_locale}'.$module.$controller.$function.$para.'\',array(\'_controller\' => \''.$ctlStr.'\'),array(\'_locale\'=>\''.$this->locale.'\'),array(\'_locale\'=>\''.implode(",",$this->supportedLocales).'\')));';
-		
+				//$s .= "\n".'$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\''.$module.$controller.$function.$para.'\',array(\'_controller\' => \''.$ctlStr.'\')));';
+				//$s .= "\n".'$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\'/{_locale}'.$module.$controller.$function.$para.'\',array(\'_controller\' => \''.$ctlStr.'\'),array(\'_locale\'=>\''.$this->locale.'\'),array(\'_locale\'=>\''.implode(",",$this->supportedLocales).'\')));';
+				$routes->add("route_".md5(microtime()), new \Symfony\Component\Routing\Route(''.$module.$controller.$function.$para.'',array('_controller' => $ctlStr)));
+				$routes->add("route_".md5(microtime()), new \Symfony\Component\Routing\Route('/{_locale}'.$module.$controller.$function.$para.'',array('_controller' => $ctlStr),array('_locale'=>$this->locale),array('_locale'=> implode(",",$this->supportedLocales))));
 				
 			}
 		}
-		return $s;
 	}
 	/**
 	 * Tells symfony what type this load is.

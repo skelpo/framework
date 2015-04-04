@@ -24,7 +24,7 @@ use Skelpo\Framework\View\View;
  * ##user.message.body,"this is the text from a varible for the title","and this is the body text"##
  * In the language files:
  * $lang['index.title'] = "my title";
- * $lang['user.message.body'] = "my other message about {1} and contains: {2}.";
+ * $lang['user.message.body'] = "my other message about $1 and contains: $2.";
  * 
  * For plurals it works like this:
  * In outputs:
@@ -32,10 +32,10 @@ use Skelpo\Framework\View\View;
  * ##user.count:1## => "One user"
  * ##user.count:3## => "More, 3 Users";
  * In the language files:
- * $lang['user.count'] = "{0} Users";
+ * $lang['user.count'] = "$0 Users";
  * $lang['user.count:1'] = "One user";
- * $lang['user.count:+1'] = "More, {0} User";
- * $lang['user.count:-10'] = "Less than {0} User";
+ * $lang['user.count:+1'] = "More, $0 User";
+ * $lang['user.count:-10'] = "Less than $0 User";
  * $lagn['user.count:+4']
  * 
  */
@@ -54,11 +54,31 @@ class Language
 		$this->writeMissingFile = false;
 		$this->missingFile = "App/Locale/missing.".$name.".php";
 		$this->name = $name;
+		$this->messages = array();
+		
+		$this->addMessage("von.der.sprachdatei", "ich bin geil und adsist ein test, $0, $1, $2, $3 ich bin ein $4");
+	}
+	
+	public function loadLanguageFile($path)
+	{
+		$lang = array();
+		include($path);
+		$this->addMessages($lang);
+	}
+	
+	public function addMessages($data)
+	{
+		$this->messages = array_merge($this->messages,$data);
+	}
+	
+	public function addMessage($key, $value)
+	{
+		$this->messages[$key] = $value;
 	}
 	
 	public function getString($term)
 	{
-		$ret = preg_replace("/##(.+?)##/e","\$this->getString('\\1')",$ret);
+		$ret = preg_replace("/##(.+?)##/e","\$this->getString('\\1')",$term);
         if (substr($term,-2)!="##" && substr($term,0,2)!="##")
 		{
 			$k = $term;
@@ -70,17 +90,37 @@ class Language
 			}
 			$paras = array();
 			$paras[] = $count;
-			//if (stristr($k,","))
-			//preg_match_all('/(?:[^\']|\\\\.)+|(?:[^"]|\\\\.)+/', $term, $matches);
 			
-			
+			if (stristr($k,","))
+			{
+				$p2 = strpos($k,",");
+				$mm = stripslashes(substr($k,$p2+1));
+				$matches = "\$strings = array(".$mm.");";
+				eval($matches);
+				$k = substr($k,0,$p2);
+				$paras = array_merge($paras, $strings);
+				
+			}
 			if (!array_key_exists($k, $this->messages))
 			{
+				$paras = array();
+				$paras[0] = $k;
 				$k = "not.found";
+				if ($this->writeMissingFile)
+				{
+					$this->addToMissingFile($k, $paras);
+				}
 			}
-			$m = $this->messages[$k];
-			if ($m=="") {
-				return "error: ".$term;
+			if (array_key_exists($k, $this->messages))
+			{
+				$m = $this->messages[$k];
+			}
+			else {
+				$m = $k;
+			}
+			foreach ($paras as $a=>$p)
+			{
+				$m = str_replace('$'.$a,$p,$m);
 			}
 			return $m;
 		}
