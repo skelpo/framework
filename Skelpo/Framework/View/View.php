@@ -59,6 +59,8 @@ class View extends \Smarty
 	
 	private $rootUrl;
 	
+	protected $language;
+	
 	
 	/**
 	 * Creates a new view.
@@ -73,6 +75,7 @@ class View extends \Smarty
 		$this->minifyJs = true;
 		$this->minifyCss = false;
 		$this->rootUrl = $rootUrl;
+		$this->language = new Language($this, "de");
 		
 		$this->setupSmarty();
 	}
@@ -278,7 +281,7 @@ class View extends \Smarty
 	 */
 	private function getJSUrl()
 	{
-		$p = $this->framework->getRootDir()."static/".$this->module."/css/";
+		$p = $this->framework->getRootDir()."static/".$this->module."/js/";
 		
 		if (!$this->filesystem->exists($p))
 		{
