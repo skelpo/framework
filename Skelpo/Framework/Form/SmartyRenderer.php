@@ -17,7 +17,7 @@ class SmartyRenderer extends FormRenderer implements SmartyRendererInterface
 		return $this->engine->renderForm($view, $blockName, $content, $params);
 	}
 	
-	public function renderInput(\Symfony\Component\Form\Form $view, $blockName, $params)
+	public function renderInput(\Symfony\Component\Form\FormInterface $view, $blockName, $params)
 	{
 		return $this->engine->renderInput($view, $blockName, $params);
 	}

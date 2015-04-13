@@ -35,25 +35,31 @@ class SmartyRendererEngine extends AbstractRendererEngine implements SmartyRende
 		}
 		if ($typeName == "submit")
 		{
-			return '<input type="submit" value="{$value}" />';
+			return '<input class="{$class}" type="submit" value="{$value}" />';
 		}
 		
 	}
 	/**
 	 * 
 	 */
-	public function renderInput(\Symfony\Component\Form\Form $view, $blockName, $params)
+	public function renderInput(\Symfony\Component\Form\FormInterface $view, $blockName, $params)
 	{
 		$pp = explode("_", strtolower($blockName));
-		$type = $view->getConfig()->getType();
+		$cfg = $view->getConfig();
+		$type = $cfg->getType();
 		$templateName = $pp[1]."/".$pp[0]."/".$pp[2]."/".$pp[3]."/".$type->getName().".tpl";
 		$templateName2 = $pp[1]."/".$pp[0]."/".$pp[2]."/".$pp[3]."/".$type->getName()."-".$view->getName().".tpl";
 		$template = new Template($this->framework);
 		if ($template->templateExists($templateName)) $template->setTemplateFile($templateName);
 		else if ($template->templateExists($templateName2)) $template->setTemplateFile($templateName2);
+		if ($view->getName()=="submit")
+		{
+			//return print_r($cfg->getOptions(),true);
+			$template->assign("value", $cfg->getOption('label'));
 		
-		$template->assign("action", $view->vars['action']);
+		}
 		$template->assign("id", $params['id']);
+		$template->assign("placeholder", $cfg->getOption('label')); //$view->vars['label']);
 		$template->assign("class", $params['class']." ".$view->getName());
 		$template->assign("name", $view->getName());
 		if ($template->exists())
