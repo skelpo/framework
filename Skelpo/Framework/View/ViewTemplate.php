@@ -15,6 +15,7 @@ namespace Skelpo\Framework\View;
 use Skelpo\Framework\View\FormView;
 use Skelpo\Framework\Form\SmartyRenderer;
 use Skelpo\Framework\Form\SmartyRendererEngine;
+use Skelpo\Framework\Routing\Loader;
 
 class ViewTemplate extends \Smarty_Internal_Template
 {
@@ -28,6 +29,9 @@ class ViewTemplate extends \Smarty_Internal_Template
 		//$this->formview = new FormView($this->smarty->getFramework());
 		$this->smartyrendererengine = new SmartyRendererEngine();
 		$this->smartyrendererengine->setFramework($smarty->getFramework());
+		if (method_exists($smarty, "getRouter"))
+			$this->smartyrendererengine->setRouter($smarty->getRouter());
+		
 		$this->smartyrenderer = new SmartyRenderer($this->smartyrendererengine);
 		$this->smartyrenderer->setFramework($smarty->getFramework());
 	}

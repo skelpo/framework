@@ -59,21 +59,27 @@ class View extends Template
 	private $rootUrl;
 	
 	protected $language;
-	
+	protected $router;
 	
 	/**
 	 * Creates a new view.
 	 */
-	public function __construct(Framework $f, $rootUrl)
+	public function __construct(Framework $f, $rootUrl, $router)
 	{
 		$this->template_class = "\Skelpo\Framework\View\ViewTemplate";
 		parent::__construct($f, "");
 		$this->minifyJs = true;
 		$this->minifyCss = false;
 		$this->rootUrl = $rootUrl;
+		$this->router = $router;
 		$this->language = new Language($this, "de");
 		
 		$this->setupSmarty();
+	}
+	
+	public function getRouter()
+	{
+		return $this->router;
 	}
 	
 	/**

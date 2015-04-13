@@ -14,7 +14,9 @@ class SmartyRendererEngine extends AbstractRendererEngine implements SmartyRende
     /**
      * @var Framework instance
      */
-    private $framework;
+    protected $framework;
+	
+	protected $router;
 
     /**
      * {@inheritdoc}
@@ -23,6 +25,14 @@ class SmartyRendererEngine extends AbstractRendererEngine implements SmartyRende
     {
         $this->framework = $s;
     }
+	public function setRouter( $router)
+	{
+		$this->router = $router;
+	}
+	public function getRouter()
+	{
+		return $this->router;
+	}
 	protected function getTemplate($typeName)
 	{
 		if ($typeName == "text")
@@ -87,6 +97,11 @@ class SmartyRendererEngine extends AbstractRendererEngine implements SmartyRende
 		{
 			$contentTemplate = new Template($this->framework, null);
 			$template->assign("content", $content);
+			
+			$action = $view->vars['action'];
+			
+			$action = $this->router->generate($action);
+			
 			$template->assign("action", $view->vars['action']);
 			$template->assign("id", $params['id']);
 			$template->assign("class", $params['class']);

@@ -85,6 +85,7 @@ class Framework extends Bundle
 	{
 		return $this->kernel->getThemeDir();
 	}
+	
 	/**
 	 * Returns all dirs that could contain templates.
 	 */
