@@ -41,13 +41,29 @@ use Skelpo\Framework\View\View;
  */
 class Language
 {
+	/**
+	 * The name of the language (de, de_DE, en_EN,...)
+	 */
 	protected $name;
+	/**
+	 * All messages that are translations of keys.
+	 */
 	protected $messages;
+	/**
+	 * Reference to the view object.
+	 */
 	protected $view;
-	
+	/**
+	 * Are we writing a file with all missing messages?
+	 */
 	protected $writeMissingFile;
+	/**
+	 * File in which we write all missing messages.
+	 */
 	protected $missingFile;
-	
+	/**
+	 * Creates a new language, initialed with a name and the view.
+	 */
 	public function __construct(View $v, $name)
 	{
 		$this->view = $v;
@@ -56,26 +72,51 @@ class Language
 		$this->name = $name;
 		$this->messages = array();
 		
-		$this->addMessage("von.der.sprachdatei", "ich bin geil und adsist ein test, $0, $1, $2, $3 ich bin ein $4");
 	}
-	
+	/**
+	 * Loads one individual language file.
+	 */
 	public function loadLanguageFile($path)
 	{
 		$lang = array();
 		include($path);
 		$this->addMessages($lang);
 	}
-	
+	/**
+	 * Loads all files from the given paths. Only the files matching the name of this language file will be loaded.
+	 */
+	public function loadLanguageFiles($paths)
+	{
+		foreach ($paths as $p)
+		{
+			$files = scandir($p);
+			foreach ($files as $file)
+			{
+				if ($file==$this->name.".php")
+				{
+					$this->loadLanguageFile($p.$file);
+				}
+			}
+		}
+		
+	}
+	/**
+	 * Adds a whole array of key to the existing messages. Keys will be overwritten.
+	 */
 	public function addMessages($data)
 	{
 		$this->messages = array_merge($this->messages,$data);
 	}
-	
+	/**
+	 * Adds an individual message to the array.
+	 */
 	public function addMessage($key, $value)
 	{
 		$this->messages[$key] = $value;
 	}
-	
+	/**
+	 * Translates a string.
+	 */
 	public function getString($term)
 	{
 		$ret = preg_replace("/##(.+?)##/e","\$this->getString('\\1')",$term);

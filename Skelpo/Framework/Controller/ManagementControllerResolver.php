@@ -15,6 +15,8 @@ namespace Skelpo\Framework\Controller;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 class ManagementControllerResolver implements ControllerResolverInterface
 {
@@ -165,9 +167,12 @@ class ManagementControllerResolver implements ControllerResolverInterface
 			return $this->controllers[$k];
 		}
 		else {
-			$o = new $class();
-			$this->controllers[$k] = $o;
-			return $o;
+			$controller = new $class();
+			if ($controller instanceof ContainerAwareInterface) {
+	            $controller->setContainer($this->container);
+	        }
+			$this->controllers[$k] = $controller;
+			return $controller;
 		}
        
     }

@@ -113,11 +113,6 @@ class Loader implements LoaderInterface
 					}
 				}
 			}
-			/*$a = fopen($routesFile,"a");
-			fwrite($a,"<?php ".$routesString." ?>");
-			fclose($a);
-			include($routesFile);*/
-			
 		}
 		return $routes;
 	}
@@ -193,18 +188,14 @@ class Loader implements LoaderInterface
 		if ($controller == "" && $function == "") $valid = true;
 		
 		if ($valid) {	
-			//$s .= "\n".'$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\''.$module.$controller.$function.'\',array(\'_controller\' => \''.$ctlStr.'\')));';
-			//$s .= "\n".'$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\'/{_locale}'.$module.$controller.$function.'\',array(\'_controller\' => \''.$ctlStr.'\'),array(\'_locale\'=>\''.$this->locale.'\'),array(\'_locale\'=>\''.implode(",",$this->supportedLocales).'\')));';
-			$routes->add("route_".md5(microtime()), new \Symfony\Component\Routing\Route(''.$module.$controller.$function.'',array('_controller' => $ctlStr)));
-			$routes->add("route_".md5(microtime()), new \Symfony\Component\Routing\Route('/{_locale}'.$module.$controller.$function.'',array('_controller' => $ctlStr),array('_locale'=> $this->locale),array('_locale'=> implode(",",$this->supportedLocales))));
+			$routes->add($module.$controller.$function, new \Symfony\Component\Routing\Route($module.$controller.$function,array('_controller' => $ctlStr)));
+			$routes->add('/{_locale}'.$module.$controller.$function, new \Symfony\Component\Routing\Route('/{_locale}'.$module.$controller.$function.'',array('_controller' => $ctlStr),array('_locale'=> $this->locale),array('_locale'=> implode(",",$this->supportedLocales))));
 			$para = "";
 			foreach ($parameters as $p)
 			{
 				$para .= "/{".$p->name."}";
-				//$s .= "\n".'$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\''.$module.$controller.$function.$para.'\',array(\'_controller\' => \''.$ctlStr.'\')));';
-				//$s .= "\n".'$routes->add("route_'.md5(microtime()).'", new Symfony\Component\Routing\Route(\'/{_locale}'.$module.$controller.$function.$para.'\',array(\'_controller\' => \''.$ctlStr.'\'),array(\'_locale\'=>\''.$this->locale.'\'),array(\'_locale\'=>\''.implode(",",$this->supportedLocales).'\')));';
-				$routes->add("route_".md5(microtime()), new \Symfony\Component\Routing\Route(''.$module.$controller.$function.$para.'',array('_controller' => $ctlStr)));
-				$routes->add("route_".md5(microtime()), new \Symfony\Component\Routing\Route('/{_locale}'.$module.$controller.$function.$para.'',array('_controller' => $ctlStr),array('_locale'=>$this->locale),array('_locale'=> implode(",",$this->supportedLocales))));
+				$routes->add($module.$controller.$function.$para, new \Symfony\Component\Routing\Route($module.$controller.$function.$para,array('_controller' => $ctlStr)));
+				$routes->add('/{_locale}'.$module.$controller.$function.$para, new \Symfony\Component\Routing\Route('/{_locale}'.$module.$controller.$function.$para,array('_controller' => $ctlStr),array('_locale'=>$this->locale),array('_locale'=> implode(",",$this->supportedLocales))));
 				
 			}
 		}

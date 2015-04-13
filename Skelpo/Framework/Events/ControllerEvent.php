@@ -66,5 +66,12 @@ class ControllerEvent extends Event
 	{
 		return $this->controller;
 	}
+	/**
+	 * 
+	 */
+	public function setResponse(Response $q)
+	{
+		$this->response = $q;
+	}
 
 }

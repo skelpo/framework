@@ -15,12 +15,14 @@ namespace Skelpo\Framework\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Parent class for all controllers.
  */
 abstract class MainController extends Controller
 {
+	
 	/**
 	 * Returns our smarty view.
 	 */
@@ -33,5 +35,11 @@ abstract class MainController extends Controller
 	 */
     public function indexAction()
     {
+    }
+	
+	protected function redirectToRoute($route, array $parameters = array(), $status = 302)
+    {
+    	if (substr($route,0,1)!="/") $route = "/".$route;
+        return $this->redirect($this->generateUrl($route, $parameters), $status);
     }
 }

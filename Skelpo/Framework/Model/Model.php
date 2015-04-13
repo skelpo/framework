@@ -20,6 +20,7 @@ namespace Skelpo\Framework\Model;
  */
 abstract class Model 
 {
+	
 	/**
 	 * Sets variable $name to $value.
 	 */
@@ -34,25 +35,41 @@ abstract class Model
 	{
 		return $this->$name;
 	}
+	
+	public function __set($name, $value) 
+    {
+        $this->$name = $value;
+    }
+
+    public function __get($name) 
+    {
+    	return $this->$name;
+    }
+	
 	/**
 	 * Manipulates all requests for a generic function "getWHATEVER" and passes on the parameters
 	 * so that we get and set all varialbes.
 	 */
-	public function __call($method, $arguments) {
+	public function __call($method, $arguments_) {
 		if (strlen($method)>3)
 		{
-			$v = substr($method,3);
-			if ($v=="set" || $v=="get")
+			$vO = substr($method,0,3);
+			if ($vO=="set" || $vO=="get")
 			{
+				$v = substr($method,3);
 				$v1 = strtolower(substr($v,0,1)).substr($v,1);
-				$v2 = $arguments[0];
 				$arguments = array();
 				$arguments[] = $v1;
-				$arguments[] = $v2;
-				$method = $v."Var";
+				if (isset($arguments_[0]))
+				{
+					$arguments[] = $arguments_[0];
+				
+				}
+				$method = $vO."Var";
+				
 			}
 			
 		}
-		return call_user_func_array($this->{$method}, $arguments);
+		return call_user_func_array(array($this,$method), $arguments);
 	}
 }

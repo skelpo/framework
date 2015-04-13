@@ -18,9 +18,13 @@ use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Form\Form;
 use Skelpo\Framework\Events\ControllerEvent;
 use Skelpo\Framework\Framework;
 use Skelpo\Framework\Language\Language;
+use Skelpo\Framework\View\Template;
+//use Skelpo\Framework\Forms\Form;
+
 
 /**
  * View service class. This class takes twig out of symfony and replaces all responses from controllers
@@ -28,24 +32,12 @@ use Skelpo\Framework\Language\Language;
  * 
  * Exception are controllers in the API module.
  */
-class View extends \Smarty
+class View extends Template
 {
-	/**
-	 * The framework instance.
-	 */
-	private $framework;
-	/**
-	 * The current template file. (not the theme)
-	 */
-	private $templateFile;
 	/**
 	 * The current module (api/backend/frontend/widgets)
 	 */
 	private $module;
-	/**
-	 * The current filesystem.
-	 */
-	private $filesystem;
 	/**
 	 * Are we minifying javascript?
 	 */
@@ -54,6 +46,12 @@ class View extends \Smarty
 	 * Are we minifying css?
 	 */
 	private $minifyCss;
+	/**
+	 * Our forms.
+	 */
+	protected $forms;
+	
+	protected $templates;
 	
 	private $eventName1;
 	private $eventName2;
@@ -68,11 +66,8 @@ class View extends \Smarty
 	 */
 	public function __construct(Framework $f, $rootUrl)
 	{
-		parent::__construct();
-			
-		$this->framework = $f;
-		$this->templateFile = "";
-		$this->filesystem = new Filesystem();
+		$this->template_class = "\Skelpo\Framework\View\ViewTemplate";
+		parent::__construct($f, "");
 		$this->minifyJs = true;
 		$this->minifyCss = false;
 		$this->rootUrl = $rootUrl;
@@ -80,32 +75,22 @@ class View extends \Smarty
 		
 		$this->setupSmarty();
 	}
+	
 	/**
-	 * Internal class to setup smarty with a bunch of config parameters.
+	 * Adds a form to this page.
 	 */
-	private function setupSmarty()
+	public function addForm(Form $f)
 	{
-		$p = $this->framework->getCacheDir()."smarty/";
-		$this->setCacheDir($p);
-		$this->setCompileDir($p."compile/");
-		$this->setTemplateDir($this->framework->getTemplateDirs());
-		$this->error_reporting = 0;
-		$this->caching = \Smarty::CACHING_LIFETIME_CURRENT;
+		$this->forms[$f->getName()] = $f;
 	}
 	/**
-	 * Change the template file.
+	 * Returns a form.
 	 */
-	public function setTemplateFile($t)
+	public function getForm($name)
 	{
-		$this->templateFile = $t;
+		return $this->forms[$name];
 	}
-	/**
-	 * Returns the template file.
-	 */
-	public function getTemplateFile()
-	{
-		return $this->templateFile;
-	}
+	
 	
 	/**
 	 * This function will add template dirs. This is necessary for plugins.
@@ -163,6 +148,14 @@ class View extends \Smarty
 		// dispatch the events
 		$dispatcher->dispatch($this->eventName1, $cevent);
 		$dispatcher->dispatch($this->eventName2, $cevent);
+		
+		$response = $cevent->getResponse();
+		if ($response instanceof Response)
+		{
+			die("AF: ".print_r($response,true));
+			die("A:".print_r($cevent,true));
+		}
+		
 		
 		// the module we are using right now
 		$module = substr($controllerName,strpos($controllerName,"Controllers")+12);
@@ -384,7 +377,15 @@ class View extends \Smarty
 		
 		if (in_array($this->module, array("api", "widgets"))) return;
 		
-		
+		// load language
+		$lpaths = array();
+		$lpaths[] = "App/Locale/";
+		$tpaths = $this->framework->getTemplateDirs();
+		foreach ($tpaths as $p)
+		{
+			$lpaths[] = $p."Locale/";
+		}
+		$this->language->loadLanguageFiles($lpaths);
 		
 		// get the compressed urls
 		$cssUrl = $this->getLessUrl();

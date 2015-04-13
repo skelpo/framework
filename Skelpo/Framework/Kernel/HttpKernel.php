@@ -105,15 +105,13 @@ class HttpKernel extends \Symfony\Component\HttpKernel\DependencyInjection\Conta
 			$eventName1 = str_replace("\\","_",$controllerName)."_PreDispatch";
 			$eventName2 = str_replace("\\","_",$controllerName)."_".ucwords($actionName)."_PreDispatch";
 			$d = $this->container->get('framework')->getEventDispatcher();
-			//$ce = new \Skelpo\Framework\Events\ControllerEvent($controller[0], $request);
 			
 			if (method_exists($controller[0], 'onPreDispatch')) $d->addListener($eventName1, array($controller[0], 'onPreDispatch'));
 			if (method_exists($controller[0], 'on'.ucwords($actionName).'PreDispatch')) $d->addListener($eventName2, array($controller[0], 'on'.ucwords($actionName).'PreDispatch'));
 			if (method_exists($controller[0], 'onPostDispatch')) $d->addListener($eventName1, array($controller[0], 'onPostDispatch'));
 			if (method_exists($controller[0], 'on'.ucwords($actionName).'PostDispatch')) $d->addListener($eventName2, array($controller[0], 'on'.ucwords($actionName).'PostDispatch'));
 			
-			//$d->dispatch($eventName, $ce);
-			//die("a:".print_r($ce,true));
+			
 		}
 		
 		
@@ -121,10 +119,11 @@ class HttpKernel extends \Symfony\Component\HttpKernel\DependencyInjection\Conta
         $event = new FilterControllerEvent($this, $controller, $request, $type);
         $this->dispatcher->dispatch(KernelEvents::CONTROLLER, $event);
         $controller = $event->getController();
+        
 		
         // controller arguments
         $arguments = $this->resolver->getArguments($request, $controller);
-
+		
         // call controller
         $response = call_user_func_array($controller, $arguments);
 

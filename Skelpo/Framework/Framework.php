@@ -49,7 +49,13 @@ class Framework extends Bundle
 	{
 		return $this->kernel->getRootDir();
 	}
-	
+	/**
+	 * Returns the module.
+	 */
+	public function getModule()
+	{
+		return $this->module;
+	}
 	/**
 	 * Pass-through: Returns the root url.
 	 */
