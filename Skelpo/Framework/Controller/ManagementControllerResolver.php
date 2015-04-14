@@ -100,7 +100,9 @@ class ManagementControllerResolver implements ControllerResolverInterface
 
         return $this->doGetArguments($request, $controller, $r->getParameters());
     }
-
+	/**
+	 * Checks for all the get arguments.
+	 */
     protected function doGetArguments(Request $request, $controller, array $parameters)
     {
         $attributes = $request->attributes->all();

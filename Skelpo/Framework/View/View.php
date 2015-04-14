@@ -80,20 +80,27 @@ class View extends Template
 		
 		$this->setupSmarty();
 	}
-	
+	/**
+	 * Sets the default language to $t.
+	 */
 	protected function setDefaultLanguage($t)
 	{
 		$this->defaultLanguage = $t;
 	}
+	/**
+	 * Returns the default language.
+	 */
 	public function getDefaultLanguage()
 	{
 		return $this->defaultLanguage;
 	}
+	/**
+	 * Sets the language.
+	 */
 	protected function setLanguage($locale)
 	{
 		$this->language = new Language($this, $locale);
 	}
-	
 	/**
 	 * Sets the request.
 	 */
@@ -102,12 +109,13 @@ class View extends Template
 		$this->request = $requestStack->getCurrentRequest();
 		$this->setLanguage($this->request->attributes->get('_locale'));
 	}
-	
+	/**
+	 * Returns the router (needed for smarty plugins).
+	 */
 	public function getRouter()
 	{
 		return $this->router;
 	}
-	
 	/**
 	 * Adds a form to this page.
 	 */
@@ -121,9 +129,7 @@ class View extends Template
 	public function getForm($name)
 	{
 		return $this->forms[$name];
-	}
-	
-	
+	}	
 	/**
 	 * This function will add template dirs. This is necessary for plugins.
 	 */
@@ -445,7 +451,9 @@ class View extends Template
 		$newResponse->setStatusCode(200);
 	    $event->setResponse($newResponse);
 	}
-
+	/**
+	 * Parses our content for language elements.
+	 */
 	protected function parseLanguage($content)
 	{
 		$ret = preg_replace("/##(.+?)##/e","\$this->language->getString('\\1')",$content);

@@ -1,4 +1,16 @@
 <?php
+
+/**
+ * This file is part of the skelpo framework.
+ * 
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ * 
+ * @version 1.0.0-alpha
+ * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
+ * @copyright 2015 Skelpo Inc. www.skelpo.com
+ */
+ 
 /*
  * Smarty plugin
  * -------------------------------------------------------------
@@ -16,13 +28,5 @@ function smarty_function_url($params, Smarty_Internal_Template $template)
 	$p = array();
 	$p['_locale'] = $locale;
 	return $router->generate($action, $p, $router::ABSOLUTE_PATH, $template->smarty->getDefaultLanguage());
-	return get_class($router);
-	$form = $template->smarty->getForm("Form_".$template->getTemplateVars("currentForm"));
-	$element = $form->get($name);
-	$view = $form->createView();
-	$renderer = $template->getFormRenderer();
-	$c = $renderer->renderInput($element, $element->getName(), $params);
-	return $c;
-	
 }
 ?>

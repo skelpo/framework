@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * This file is part of the skelpo framework.
+ * 
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ * 
+ * @version 1.0.0-alpha
+ * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
+ * @copyright 2015 Skelpo Inc. www.skelpo.com
+ */
+ 
 namespace Skelpo\Framework\Kernel;
 
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
@@ -21,6 +32,9 @@ use Symfony\Component\HttpKernel\TerminableInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Skelpo\Framework\Events\ControllerEvent;
 
+/**
+ * HttpKernel Class that is very similar to the standard symfony kernel, we just deal with controllers a little different.
+ */
 class HttpKernel extends \Symfony\Component\HttpKernel\DependencyInjection\ContainerAwareHttpKernel implements HttpKernelInterface, TerminableInterface
 {
 	/**

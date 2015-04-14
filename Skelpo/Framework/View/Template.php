@@ -26,7 +26,7 @@ use Skelpo\Framework\Language\Language;
 
 
 /**
- * 
+ * A simple template build on top of smarty.
  */
 class Template extends \Smarty
 {
@@ -38,7 +38,9 @@ class Template extends \Smarty
 	 * The current template file. (not the theme)
 	 */
 	protected $templateFile;
-	
+	/**
+	 * The file system.
+	 */
 	protected $filesystem;
 	
 	/**
@@ -55,9 +57,6 @@ class Template extends \Smarty
 		
 		$this->setupSmarty();
 	}
-	
-	
-	
 	/**
 	 * Returns the framework.
 	 */
@@ -65,13 +64,17 @@ class Template extends \Smarty
 	{
 		return $this->framework;
 	}
-	
+	/**
+	 * Returns the content of our specific file.
+	 */
 	public function getContent()
 	{
 		$content = $this->fetch($this->templateFile);
 		return $content;
 	}
-	
+	/**
+	 * Does this template exist?
+	 */
 	public function exists()
 	{
 		if ($this->templateFile=="") return false;
@@ -79,8 +82,6 @@ class Template extends \Smarty
 			return $this->templateExists($this->templateFile);
 		}
 	}
-	
-	
 	/**
 	 * Internal class to setup smarty with a bunch of config parameters.
 	 */
@@ -109,6 +110,4 @@ class Template extends \Smarty
 	{
 		return $this->templateFile;
 	}
-	
-	
 }

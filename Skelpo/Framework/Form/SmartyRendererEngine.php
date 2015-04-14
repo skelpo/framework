@@ -1,56 +1,75 @@
 <?php
 
+/**
+ * This file is part of the skelpo framework.
+ * 
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ * 
+ * @version 1.0.0-alpha
+ * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
+ * @copyright 2015 Skelpo Inc. www.skelpo.com
+ */
+ 
 namespace Skelpo\Framework\Form;
 
 use Symfony\Component\Form\AbstractRendererEngine;
 use Symfony\Component\Form\FormView;
 use Skelpo\Framework\View\Template;
 use Skelpo\Framework\Framework;
-
+/**
+ * The engine that renders the form elements.
+ */
 class SmartyRendererEngine extends AbstractRendererEngine implements SmartyRendererEngineInterface
 {
-    
-
-    /**
-     * @var Framework instance
-     */
     protected $framework;
-	
 	protected $router;
 
     /**
-     * {@inheritdoc}
+     * Sets the framework.
      */
     public function setFramework(Framework $s)
     {
         $this->framework = $s;
     }
+	/**
+	 * Sets the router.
+	 */
 	public function setRouter( $router)
 	{
 		$this->router = $router;
 	}
+	/**
+	 * Returns the router.
+	 */
 	public function getRouter()
 	{
 		return $this->router;
 	}
-	protected function getTemplate($typeName)
+	/**
+	 * Returns a template for a type of input within a form.
+	 */
+	protected function getTemplate($typeName, $formName)
 	{
 		if ($typeName == "text")
 		{
-			return '<input type="text" name="{$name}" value="{$value}" placeholder="{$placeholder}" id="{$id}" class="{$class}" />';
+			return '<input type="text" name="'.$formName.'[{$name}]" value="{$value}" placeholder="{$placeholder}" id="{$id}" class="{$class}" />';
 		}
-		if ($typeName == "password")
+		else if ($typeName == "password")
 		{
-			return '<input type="password" name="{$name}" value="{$value}" placeholder="{$placeholder}" id="{$id}" class="{$class}" />';
+			return '<input type="password" name="'.$formName.'[{$name}]" value="{$value}" placeholder="{$placeholder}" id="{$id}" class="{$class}" />';
 		}
-		if ($typeName == "submit")
+		else if ($typeName == "submit")
 		{
-			return '<input class="{$class}" type="submit" value="{$value}" />';
+			return '<input name="'.$formName.'[{$name}]" class="{$class}" type="submit" value="{$value}" />';
+		}
+		else {
+			return 'missng type:'.$typeName;
 		}
 		
 	}
 	/**
-	 * 
+	 * Renders an input.
 	 */
 	public function renderInput(\Symfony\Component\Form\FormInterface $view, $blockName, $params)
 	{
@@ -64,7 +83,6 @@ class SmartyRendererEngine extends AbstractRendererEngine implements SmartyRende
 		else if ($template->templateExists($templateName2)) $template->setTemplateFile($templateName2);
 		if ($view->getName()=="submit")
 		{
-			//return print_r($cfg->getOptions(),true);
 			$template->assign("value", $cfg->getOption('label'));
 		
 		}
@@ -79,22 +97,26 @@ class SmartyRendererEngine extends AbstractRendererEngine implements SmartyRende
 			
 		}
 		else {
-			$c = $template->fetch("string:".$this->getTemplate($type->getName()));
+			$c = $template->fetch("string:".$this->getTemplate($type->getName(), $blockName));
 		}
 		return $c;
-		return "no";
 	}
 	/**
-	 * 
+	 * Renders a form.
 	 */
 	public function renderForm(FormView $view, $blockName, $content, $params, $requestLocale, $defaultLocale)
 	{
 		$pp = explode("_", strtolower($blockName));
 		$templateName = $pp[1]."/".$pp[0]."/".$pp[2]."/".$pp[3].".tpl";
+		$element1 = array_keys($view->children['_token']->vars); 
+		$element = $view->children['_token']->vars; 
+		//die("A2:".print_r($element1,true)."<br />".$element);
 		$template = new Template($this->framework, $templateName);
 		if ($template->exists())
 		{
 			$contentTemplate = new Template($this->framework, null);
+			
+			$content = '<input type="hidden" name="Form_'.$params['name'].'['.$element['name'].']" value="'.$element['value'].'" />'.$content;
 			$template->assign("content", $content);
 			
 			$action = $view->vars['action'];
@@ -106,7 +128,7 @@ class SmartyRendererEngine extends AbstractRendererEngine implements SmartyRende
 			$template->assign("action", $action);
 			$template->assign("id", $params['id']);
 			$template->assign("class", $params['class']);
-			$template->assign("name", $params['name']);
+			$template->assign("name", "Form_".$params['name']);
 			if ($params['method']=="") $params['method'] = "post";
 			$template->assign("method", $params['method']);
 			
@@ -120,7 +142,6 @@ class SmartyRendererEngine extends AbstractRendererEngine implements SmartyRende
      */
     public function renderBlock(FormView $view, $resource, $blockName, array $variables = array())
     {
-    	//return get_class($this->resources[$cacheKey][$blockName]);
     	$pp = explode("_", $blockName);
 		return print_r($pp,true);
     	$templateName = "";
@@ -129,8 +150,6 @@ class SmartyRendererEngine extends AbstractRendererEngine implements SmartyRende
 		{
 			$ret .= print_r(($b->vars['value']),true)."<br />";
 			
-			//$ret .= "(".count($b->vars['value']).")";
-			//if (isset($b->vars['value'])) $ret .= (" F:".($b->vars[0]->getName()));
 		}
 		return $ret;
     	$cacheKey = $view->vars[self::CACHE_KEY_VAR];

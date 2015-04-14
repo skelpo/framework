@@ -14,7 +14,9 @@
 namespace Skelpo\Framework\Kernel;
 
 use Symfony\Component\HttpFoundation\Request;
-
+/**
+ * Kernel class.
+ */
 abstract class Kernel extends \Symfony\Component\HttpKernel\Kernel
 {
 	/**
