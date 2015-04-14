@@ -12,9 +12,9 @@ class SmartyRenderer extends FormRenderer implements SmartyRendererInterface
      */
     private $engine;
 	
-	public function renderForm(\Symfony\Component\Form\FormView $view, $blockName, $content, $params)
+	public function renderForm(\Symfony\Component\Form\FormView $view, $blockName, $content, $params, $requestLocale, $defaultLocale)
 	{
-		return $this->engine->renderForm($view, $blockName, $content, $params);
+		return $this->engine->renderForm($view, $blockName, $content, $params, $requestLocale, $defaultLocale);
 	}
 	
 	public function renderInput(\Symfony\Component\Form\FormInterface $view, $blockName, $params)

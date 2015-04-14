@@ -87,10 +87,9 @@ class SmartyRendererEngine extends AbstractRendererEngine implements SmartyRende
 	/**
 	 * 
 	 */
-	public function renderForm(FormView $view, $blockName, $content, $params)
+	public function renderForm(FormView $view, $blockName, $content, $params, $requestLocale, $defaultLocale)
 	{
-		//return get_class($this->resources[$cacheKey][$blockName]);
-    	$pp = explode("_", strtolower($blockName));
+		$pp = explode("_", strtolower($blockName));
 		$templateName = $pp[1]."/".$pp[0]."/".$pp[2]."/".$pp[3].".tpl";
 		$template = new Template($this->framework, $templateName);
 		if ($template->exists())
@@ -99,10 +98,12 @@ class SmartyRendererEngine extends AbstractRendererEngine implements SmartyRende
 			$template->assign("content", $content);
 			
 			$action = $view->vars['action'];
+			$p = array();
+			$p['_locale'] = $requestLocale;
+			$router = $this->router;
+			$action = $router->generate($action, $p, $router::ABSOLUTE_PATH, $defaultLocale );
 			
-			$action = $this->router->generate($action);
-			
-			$template->assign("action", $view->vars['action']);
+			$template->assign("action", $action);
 			$template->assign("id", $params['id']);
 			$template->assign("class", $params['class']);
 			$template->assign("name", $params['name']);

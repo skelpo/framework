@@ -189,13 +189,13 @@ class Loader implements LoaderInterface
 		
 		if ($valid) {	
 			$routes->add($module.$controller.$function, new \Symfony\Component\Routing\Route($module.$controller.$function,array('_controller' => $ctlStr)));
-			$routes->add('/{_locale}'.$module.$controller.$function, new \Symfony\Component\Routing\Route('/{_locale}'.$module.$controller.$function.'',array('_controller' => $ctlStr),array('_locale'=> $this->locale),array('_locale'=> implode(",",$this->supportedLocales))));
+			$routes->add('/{_locale}'.$module.$controller.$function, new \Symfony\Component\Routing\Route('/{_locale}'.$module.$controller.$function.'',array('_controller' => $ctlStr, '_locale'=> $this->locale),array('_locale'=> implode("|",$this->supportedLocales))));
 			$para = "";
 			foreach ($parameters as $p)
 			{
 				$para .= "/{".$p->name."}";
 				$routes->add($module.$controller.$function.$para, new \Symfony\Component\Routing\Route($module.$controller.$function.$para,array('_controller' => $ctlStr)));
-				$routes->add('/{_locale}'.$module.$controller.$function.$para, new \Symfony\Component\Routing\Route('/{_locale}'.$module.$controller.$function.$para,array('_controller' => $ctlStr),array('_locale'=>$this->locale),array('_locale'=> implode(",",$this->supportedLocales))));
+				$routes->add('/{_locale}'.$module.$controller.$function.$para, new \Symfony\Component\Routing\Route('/{_locale}'.$module.$controller.$function.$para,array('_controller' => $ctlStr, '_locale'=>$this->locale),array('_locale'=> implode("|",$this->supportedLocales))));
 				
 			}
 		}

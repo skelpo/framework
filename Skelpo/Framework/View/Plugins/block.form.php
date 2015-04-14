@@ -7,8 +7,8 @@
 * -------------------------------------------------------------
 * File:     block.translate.php
 * Type:     block
-* Name:     translate
-* Purpose:  translate a block of text
+* Name:     form
+* Purpose:  integrates a form into the document.
 * -------------------------------------------------------------
 */
 function smarty_block_form($params, $content, &$smarty, &$repeat)
@@ -23,10 +23,10 @@ function smarty_block_form($params, $content, &$smarty, &$repeat)
 	}
 	$smarty->assign("currentForm","");
 	$form = $smarty->getForm("Form_".$params['name']);
+	$locale = $smarty->smarty->getRequest()->attributes->get('_locale');
 	$view = $form->createView();
 	$renderer = $smarty->getFormRenderer();
-	$c = $renderer->renderForm($view, $form->getName(), $content, $params);
+	$c = $renderer->renderForm($view, $form->getName(), $content, $params, $locale, $smarty->smarty->getDefaultLanguage());
 	return $c;
-	
 }
 ?> 

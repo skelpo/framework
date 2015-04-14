@@ -15,6 +15,7 @@ namespace Skelpo\Framework\View;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Filesystem\Filesystem;
@@ -60,11 +61,13 @@ class View extends Template
 	
 	protected $language;
 	protected $router;
+	protected $request;
+	protected $defaultLanguage;
 	
 	/**
 	 * Creates a new view.
 	 */
-	public function __construct(Framework $f, $rootUrl, $router)
+	public function __construct(Framework $f, $rootUrl, $router, $defaultLanguage)
 	{
 		$this->template_class = "\Skelpo\Framework\View\ViewTemplate";
 		parent::__construct($f, "");
@@ -72,9 +75,32 @@ class View extends Template
 		$this->minifyCss = false;
 		$this->rootUrl = $rootUrl;
 		$this->router = $router;
-		$this->language = new Language($this, "de");
+		$this->defaultLanguage = $defaultLanguage;
+		
 		
 		$this->setupSmarty();
+	}
+	
+	protected function setDefaultLanguage($t)
+	{
+		$this->defaultLanguage = $t;
+	}
+	public function getDefaultLanguage()
+	{
+		return $this->defaultLanguage;
+	}
+	protected function setLanguage($locale)
+	{
+		$this->language = new Language($this, $locale);
+	}
+	
+	/**
+	 * Sets the request.
+	 */
+	public function setRequest(RequestStack $requestStack)
+	{
+		$this->request = $requestStack->getCurrentRequest();
+		$this->setLanguage($this->request->attributes->get('_locale'));
 	}
 	
 	public function getRouter()

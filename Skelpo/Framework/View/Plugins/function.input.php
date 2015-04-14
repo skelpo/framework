@@ -4,8 +4,8 @@
  * -------------------------------------------------------------
  * File:     function.input.php
  * Type:     function
- * Name:     eightball
- * Purpose:  outputs a random magic answer
+ * Name:     input
+ * Purpose:  shows a normal input tag
  * -------------------------------------------------------------
  */
 function smarty_function_input($params, Smarty_Internal_Template $template)
@@ -17,16 +17,5 @@ function smarty_function_input($params, Smarty_Internal_Template $template)
 	$renderer = $template->getFormRenderer();
 	$c = $renderer->renderInput($element, $element->getName(), $params);
 	return $c;
-	//$keys = array_keys($element);
-	return "input: ".print_r($element->getConfig()->getType()->getName(),true); //->templateFile;
-    $answers = array('Yes',
-                     'No',
-                     'No way',
-                     'Outlook not so good',
-                     'Ask again soon',
-                     'Maybe in your reality');
-
-    $result = array_rand($answers);
-    return $answers[$result];
 }
 ?>
