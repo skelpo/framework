@@ -18,7 +18,7 @@ use Symfony\Component\HttpKernel\Kernel;
 /**
  * This is our parent class for every theme.
  */
-abstract class AbstractTheme
+abstract class Theme
 {
 	/**
 	 * The name of our theme.
