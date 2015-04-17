@@ -72,6 +72,13 @@ class Framework extends Bundle
 		return $this->getRootDir().'engine/Skelpo/Framework/View/Plugins/';
 	}
 	/**
+	 * Returns the dir for additional plugins.
+	 */
+	public function getPluginDir()
+	{
+		return $this->getRootDir().'App/Plugins/';
+	}
+	/**
 	 * Pass-through: Returns the current theme.
 	 */
 	public function getTheme()

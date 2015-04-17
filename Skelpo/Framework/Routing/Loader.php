@@ -76,44 +76,67 @@ class Loader implements LoaderInterface
 	private function buildRoutes($routes)
 	{
 		$rootPath = $this->kernel->getRootDir();
-		$routesFile = $rootPath."cache/routes.php";
 		
-		if (file_exists($routesFile))
+		// build all the routes
+		$controllerDirs = array();
+		$controllerDirs[] = "App/Controllers/Frontend/";
+		$controllerDirs[] = "App/Controllers/Backend/";
+		$controllerDirs[] = "App/Controllers/Api/";
+		
+		$pluginDir = $this->kernel->getFramework()->getPluginDir();
+		
+		$file = $this->kernel->getCacheDir()."plugins.php";
+		if (file_exists($file))
 		{
-			include($routesFile);
+			include($file);
 		}
 		else {
-			
-			// build all the routes
-			$routesString = "";
-			$controllerDirs = array();
-			$controllerDirs[] = "App/Controllers/Frontend/";
-			$controllerDirs[] = "App/Controllers/Backend/";
-			$controllerDirs[] = "App/Controllers/Api/";
-			// TODO: Add plugins.
-			$lookFor = "Controller.php";
-			foreach ($controllerDirs as $dir)
+			$plugins = array();
+		}
+		
+		foreach ($plugins as $p)
+		{
+			$pf = $pluginDir . $p['name']."/";
+			if (is_dir($pf))
 			{
-				$path = $rootPath . $dir;
-				
-				$module = substr($path,strpos($path,"Controllers/")+12);
-				$module = strtolower(substr($module,0,-1));
-				
-				$files = scandir($path);
-				foreach ($files as $file)
+				if (is_dir($pf."Controllers/Frontend/"))
 				{
-					$l = strlen($file);
-					if ($l>14)
+					$controllerDirs[] = "App/Plugins/".$p['name']."/Controllers/Frontend/";
+				}
+				if (is_dir($pf."Controllers/Backend/"))
+				{
+					$controllerDirs[] = "App/Plugins/".$p['name']."/Controllers/Backend/";
+				}
+				if (is_dir($pf."Controllers/Api/"))
+				{
+					$controllerDirs[] = "App/Plugins/".$p['name']."/Controllers/Api/";
+				}
+				
+			}
+		}
+		
+		$lookFor = "Controller.php";
+		foreach ($controllerDirs as $dir)
+		{
+			$path = $rootPath . $dir;
+			
+			$module = substr($path,strpos($path,"Controllers/")+12);
+			$module = strtolower(substr($module,0,-1));
+			
+			$files = scandir($path);
+			foreach ($files as $file)
+			{
+				$l = strlen($file);
+				if ($l>14)
+				{
+					if (substr($file,$l-14)==$lookFor)
 					{
-						if (substr($file,$l-14)==$lookFor)
-						{
-							//$routesString .= $this->buildRoutesForClass($path,$file, $module);
-							$this->buildRoutesForClass($path,$file, $module, $routes);
-						}
+						$this->buildRoutesForClass($path,$file, $module, $routes);
 					}
 				}
 			}
 		}
+		
 		return $routes;
 	}
 	/**
@@ -121,7 +144,6 @@ class Loader implements LoaderInterface
 	 */
 	private function buildRoutesForClass($path,$file, $module, $routes)
 	{
-		$s = "";
 		$class = str_replace(".php", "", $file);
 		include_once($path.$file);
 		
@@ -145,18 +167,16 @@ class Loader implements LoaderInterface
 				$ctlStr = $controllerNS.'Controller::'.$functionName."Action";
 				$moduleStr = $module;
 				
-				$s .= $this->getRouteString($moduleStr, strtolower($controller), $functionName, array(), $ctlStr, false, $parameters, $routes);
+				$this->buildRoutesIntern($moduleStr, strtolower($controller), $functionName, array(), $ctlStr, false, $parameters, $routes);
 				
 			}
 		}
-		return $s;
-		
 	}
 	/**
 	 * Internal class to build the route for a specific action. It build all sub-routes as well as the
 	 * language.
 	 */
-	private function getRouteString($module, $controller, $function, $parameter, $ctlStr, $stop, $parameters, $routes)
+	private function buildRoutesIntern($module, $controller, $function, $parameter, $ctlStr, $stop, $parameters, $routes)
 	{
 		if ($module == "frontend") $module = "";
 		else {
@@ -170,12 +190,12 @@ class Loader implements LoaderInterface
 		
 		if ($controller=="index")
 		{
-			$s .= $this->getRouteString($module, "", $function, $parameter, $ctlStr, false, array(), $routes);
+			$s .= $this->buildRoutesIntern($module, "", $function, $parameter, $ctlStr, false, array(), $routes);
 		}
 		 
 		if ($function == "index")
 		{
-			$s .= $this->getRouteString($module, $controller, "", $parameter, $ctlStr, true, array(), $routes);
+			$s .= $this->buildRoutesIntern($module, $controller, "", $parameter, $ctlStr, true, array(), $routes);
 		}
 		
 		if ($stop) return $s;

@@ -107,7 +107,9 @@ class View extends Template
 	public function setRequest(RequestStack $requestStack)
 	{
 		$this->request = $requestStack->getCurrentRequest();
-		$this->setLanguage($this->request->attributes->get('_locale'));
+		$language = $this->request->attributes->get('_locale');
+		if ($language == "") $language = $this->getDefaultLanguage();
+		$this->setLanguage($language);
 	}
 	/**
 	 * Returns the router (needed for smarty plugins).
