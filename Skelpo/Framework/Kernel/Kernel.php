@@ -38,9 +38,14 @@ abstract class Kernel extends \Symfony\Component\HttpKernel\Kernel
 	public function boot()
 	{
 		parent::boot();
-		$this->getContainer()->get("pluginmanager")->loadPlugins();
-		$this->selectTheme();
-        
+		try {
+			$this->getContainer()->get("pluginmanager")->loadPlugins();
+			$this->selectTheme();
+		}
+		catch (\Doctrine\DBAL\DBALException $e)
+		{
+			
+		}
 	}
 	
 	protected function getListOfThemes()

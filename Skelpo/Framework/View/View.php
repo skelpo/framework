@@ -71,7 +71,7 @@ class View extends Template
 	{
 		$this->template_class = "\Skelpo\Framework\View\ViewTemplate";
 		parent::__construct($f, "");
-		$this->minifyJs = true;
+		$this->minifyJs = false;
 		$this->minifyCss = false;
 		$this->rootUrl = $rootUrl;
 		$this->router = $router;
@@ -192,8 +192,8 @@ class View extends Template
 		$response = $cevent->getResponse();
 		if ($response instanceof Response)
 		{
-			die("AF: ".print_r($response,true));
-			die("A:".print_r($cevent,true));
+			//$event->setResponse($response);
+			return;
 		}
 		
 		
@@ -237,11 +237,7 @@ class View extends Template
 				}
 			}
 		}
-		// if still no template there is a problem
-		if ($this->templateFile=="")
-		{
-			throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException("Template does not exist: ".$orf);
-		}
+		
     }
 	/**
 	 * Returns the URL to the less/css-compiled file.
@@ -333,25 +329,21 @@ class View extends Template
 		
 		// get all our JS files 
 		$files = $this->framework->getTheme()->getJSFiles();
-		$files = $files[$this->module];
+		if (isset($files[$this->module])) $files = $files[$this->module];
+		else $files = array();
 		
 		// and all dirs
 		$dirs = $this->framework->getTemplateDirs();
 		$dir_ = $dirs[0];
 		
-		// our output
-		$jsoutput = "";
+		foreach ($files as $a => $file)
+		{
+			$files[$a] = $dir_ . $this->module."/_public/js/".$file;
+		}
 		
 		// get all the files
-		foreach ($files as $file_)
-		{
-			$file = $dir_ . $this->module."/_public/js/".$file_;
-			if ($this->filesystem->exists($file))
-			{
-				$jsoutput.=file_get_contents($file)."\n";
-				
-			}
-		}
+		$jsoutput = $this->loadFiles($files,".js");
+		
 		// shall we minify?
 		if ($this->minifyJs) $jsoutput = \JShrink\Minifier::minify($jsoutput, array('flaggedComments' => false));
 		
@@ -363,6 +355,33 @@ class View extends Template
 		
 		// return the url
 		return $jsurl;
+	}
+	private function loadFiles($files, $ending)
+	{
+		$jsoutput = "";
+		foreach ($files as $file)
+		{
+			if ($this->filesystem->exists($file))
+			{
+				if (is_dir($file))
+				{
+					$ff = scandir($file);
+					$files_ = array();
+					foreach ($ff as $f)
+					{
+						if ($f == ".." || $f == ".") continue;
+						$files_[] = $file . "/" . $f;
+					}
+					$jsoutput .= $this->loadFiles($files_, $ending);
+				}
+				else {
+					if (substr($file,-1*strlen($ending))==$ending)
+						$jsoutput.=file_get_contents($file)."\n";
+					
+				}
+			}
+		}
+		return $jsoutput;
 	}
 	/**
 	 * Copies all items from the theme folder that should be moved.
@@ -380,7 +399,8 @@ class View extends Template
 		////$fs->symlink('/path/to/source', '/path/to/destination', true);
 			
 		$files = $this->framework->getTheme()->getAllStaticFiles();
-		$files = $files[$this->module];
+		if (isset($files[$this->module])) $files = $files[$this->module];
+		else $files = array();
 		
 		// and all dirs
 		$dirs = $this->framework->getTemplateDirs();
@@ -417,6 +437,12 @@ class View extends Template
 		
 		if (in_array($this->module, array("api", "widgets"))) return;
 		
+		// if still no template there is a problem
+		if ($this->templateFile=="")
+		{
+			throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException("Template does not exist: ".$orf);
+		}
+		
 		// load language
 		$lpaths = array();
 		$lpaths[] = "App/Locale/";
@@ -440,6 +466,8 @@ class View extends Template
 		{
 			$this->copyStaticContent();
 		}
+		
+		$this->framework->getTheme()->fixSmarty($this);
 		
 		// get our template
 		$content = $this->fetch($this->templateFile);

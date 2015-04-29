@@ -29,12 +29,7 @@ abstract class MainController extends Controller
 	{
 		return $this->get('view');
 	}
-    /**
-	 * Empty index action to create the routes and show templates.
-	 */
-    public function indexAction()
-    {
-    }
+   
 	/**
 	 * Redirects to a certain route. Checks for beginning "/".
 	 */

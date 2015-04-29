@@ -89,12 +89,15 @@ class Language
 	{
 		foreach ($paths as $p)
 		{
-			$files = scandir($p);
-			foreach ($files as $file)
+			if (is_dir($p))
 			{
-				if ($file==$this->name.".php")
+				$files = scandir($p);
+				foreach ($files as $file)
 				{
-					$this->loadLanguageFile($p.$file);
+					if ($file==$this->name.".php")
+					{
+						$this->loadLanguageFile($p.$file);
+					}
 				}
 			}
 		}

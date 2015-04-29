@@ -71,4 +71,9 @@ abstract class Theme
 	{
 		return $this->kernel->getThemeDir().$this->getName();
 	}
+	
+	public function fixSmarty(\Smarty $s)
+	{
+		
+	}
 }
