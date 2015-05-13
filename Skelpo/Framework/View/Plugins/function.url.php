@@ -27,6 +27,19 @@ function smarty_function_url($params, Smarty_Internal_Template $template)
 	$locale = $template->smarty->getRequest()->attributes->get('_locale');
 	$p = array();
 	$p['_locale'] = $locale;
-	return $router->generate($action, $p, $router::ABSOLUTE_PATH, $template->smarty->getDefaultLanguage());
+	try {
+		$url = $router->generate($action, $p, $router::ABSOLUTE_PATH, $template->smarty->getDefaultLanguage());
+	}
+	
+	catch (\Symfony\Component\Routing\Exception\RouteNotFoundException $e)
+	{
+		$url = "#".$action;	
+	}
+	catch (Exception $e)
+	{
+		$url = "#".$action."#".get_class($e);	
+	}
+	return $url;
 }
+		
 ?>

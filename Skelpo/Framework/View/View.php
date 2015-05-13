@@ -237,7 +237,11 @@ class View extends Template
 				}
 			}
 		}
-		
+		// if still no template there is a problem
+		if ($this->templateFile=="")
+		{
+			throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException("Template does not exist: ".$dir.$templateName);
+		}
     }
 	/**
 	 * Returns the URL to the less/css-compiled file.
@@ -437,11 +441,7 @@ class View extends Template
 		
 		if (in_array($this->module, array("api", "widgets"))) return;
 		
-		// if still no template there is a problem
-		if ($this->templateFile=="")
-		{
-			throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException("Template does not exist: ".$orf);
-		}
+		
 		
 		// load language
 		$lpaths = array();

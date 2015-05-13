@@ -16,6 +16,7 @@ namespace Skelpo\Framework;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
+
 /**
  * Framework bundle to handle all our stuff.
  */
@@ -41,7 +42,7 @@ class Framework extends Bundle
 	 * frontend / backend / api / widgets / mobile
 	 */
 	private $module; 
-	
+
 	/**
 	 * Pass-through: Returns the root dir.
 	 */
@@ -49,6 +50,7 @@ class Framework extends Bundle
 	{
 		return $this->kernel->getRootDir();
 	}
+	
 	/**
 	 * Returns the module.
 	 */
@@ -62,6 +64,13 @@ class Framework extends Bundle
 	public function getRootUrl()
 	{
 		return $this->kernel->getRootUrl();
+	}
+	/**
+	 * Returns the kernel.
+	 */
+	public function getKernel()
+	{
+		return $this->kernel;
 	}
 	
 	/**

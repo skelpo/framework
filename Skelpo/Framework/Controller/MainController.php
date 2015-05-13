@@ -16,6 +16,7 @@ namespace Skelpo\Framework\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Skelpo\Framework\Framework;
 
 /**
  * Parent class for all controllers.
@@ -23,13 +24,26 @@ use Symfony\Component\HttpFoundation\Request;
 abstract class MainController extends Controller
 {
 	/**
+	 * Init functions that matter "before" everything else.
+	 */
+	public function init()
+	{
+		// intentially empty
+	}
+	/**
 	 * Returns our smarty view.
 	 */
 	protected function getView()
 	{
 		return $this->get('view');
 	}
-   
+	/**
+	 * Returns out framework.
+	 */
+	protected function getFramework()
+	{
+		return $this->get('framework');
+	}
 	/**
 	 * Redirects to a certain route. Checks for beginning "/".
 	 */

@@ -14,10 +14,12 @@
 namespace Skelpo\Framework\Kernel;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Skelpo\Framework\Framework;
 use Skelpo\Framework\Plugin\PluginManager;
-use Symfony\Component\Config\Loader\LoaderInterface;
 use Skelpo\Framework\Kernel\KernelInterface;
+use Skelpo\Framework\Cache\FileCache;
+
 /**
  * Kernel class.
  */
@@ -25,6 +27,7 @@ abstract class Kernel extends \Symfony\Component\HttpKernel\Kernel
 {
 	protected $theme;
 	protected $framework;
+	protected $caches;
 	
 	public function __construct($environment, $debug)
     {
@@ -34,7 +37,21 @@ abstract class Kernel extends \Symfony\Component\HttpKernel\Kernel
 		
 		
     }
-	
+	public function getCache($name)
+	{
+		if (is_null($this->caches))
+		{
+			$this->caches = array();
+		}
+		if (array_key_exists($name, $this->caches))
+		{
+			return $this->caches[$name];
+		}
+		else {
+			$this->caches[$name] = new FileCache($this->framework, $name);
+			return $this->caches[$name];
+		}
+	}
 	public function boot()
 	{
 		parent::boot();
@@ -50,8 +67,10 @@ abstract class Kernel extends \Symfony\Component\HttpKernel\Kernel
 	
 	protected function getListOfThemes()
 	{
-		$file = $this->getCacheDir()."themes.php";
-		if (file_exists($file))
+		$c = $this->framework->getKernel()->getCache("themes");
+		$c->setLifetime(0);
+		$themes = $c->getContent();
+		if (is_null($themes))
 		{
 			include($file);
 		}
@@ -70,10 +89,7 @@ abstract class Kernel extends \Symfony\Component\HttpKernel\Kernel
 					);
 				}
 			}
-			$phpcode = '<?php $themes = unserialize("'.addslashes(serialize($themes)).'"); ?>';
-			$f = fopen($file,"w");
-			fwrite($f,$phpcode);
-			fclose($f);
+			$c->setContent($themes);
 		}
 		return $themes;
 	}

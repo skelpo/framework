@@ -18,16 +18,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Skelpo\Framework\View;
+use Skelpo\Framework\Model\Models\Menu\Menu;
 
 /**
  * Controller event class. Carries the controller to the listener.
  */
-class ControllerEvent extends Event
+class MenuBuildingEvent extends Event
 {
 	/**
-	 * The controller we are carrying.
+	 * The menu we are carrying.
 	 */
-    protected $controller;
+    protected $menu;
 	/**
 	 * The request.
 	 */
@@ -39,9 +40,9 @@ class ControllerEvent extends Event
 	/**
 	 * Creates a new event with controller $c.
 	 */
-    public function __construct(Controller $c = null, Request $q = null, Response $r = null)
+    public function __construct(Menu $m = null, Request $q = null, Response $r = null)
     {
-        $this->controller = $c;
+        $this->menu = $m;
 		$this->request = $q;
 		$this->response = $r;
     }
@@ -62,9 +63,9 @@ class ControllerEvent extends Event
 	/**
 	 * Returns the controller.
 	 */
-	public function getController()
+	public function getMenu()
 	{
-		return $this->controller;
+		return $this->menu;
 	}
 	/**
 	 * 

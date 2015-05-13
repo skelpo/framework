@@ -45,6 +45,20 @@ abstract class Model
     {
     	return $this->$name;
     }
+    
+    public function getAsArray($fields = array())
+    {
+    	$ret = array();
+    	if (count($fields)>0) $vars = $fields;
+		else $vars = get_class_vars(get_class($this));
+    	foreach ($vars as $v=>$a)
+    	{
+    		$n = "get".ucwords($v);
+    		$o = $this->$n();
+    		if (!is_object($o)) $ret[$v] = $o;
+    	}
+    	return $ret;
+    }
 	
 	/**
 	 * Manipulates all requests for a generic function "getWHATEVER" and passes on the parameters

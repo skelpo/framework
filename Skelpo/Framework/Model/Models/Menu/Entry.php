@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the skelpo framework.
  * 
@@ -10,17 +9,25 @@
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @copyright 2015 Skelpo Inc. www.skelpo.com
  */
- 
-namespace Skelpo\Framework\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+namespace Skelpo\Framework\Model\Models\Menu;
 
-/**
- * Parent controller class for backend controllers.
- */
-abstract class BackendController extends MainController
+use Skelpo\Framework\Model\Model;
+
+abstract class Entry extends Model
 {
+	protected $label;
+	protected $subMenu;
+	
+	public function __construct($l)
+	{
+		$this->label = $l;
+		$this->subMenu = null;
+	}
+	
+	public function hasSubmenu()
+	{
+		return !is_null($this->subMenu);
+	}
 	
 }

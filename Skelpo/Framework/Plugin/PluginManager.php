@@ -22,12 +22,11 @@ class PluginManager {
 	}
 	public function loadPlugins()
 	{
-		$file = $this->framework->getCacheDir()."plugins.php";
-		if (file_exists($file))
+		$c = $this->framework->getKernel()->getCache("plugins");
+		$c->setLifetime(0);
+		$plugins = $c->getContent();
+		if (is_null($plugins))
 		{
-			include($file);
-		}
-		else {
 			$dbPlugins = $this->entityManager->getRepository('Skelpo\Framework\Model\Models\Plugin')->findAll();
 			$plugins = array();
 			foreach ($dbPlugins as $p)
@@ -41,11 +40,9 @@ class PluginManager {
 					);
 				}
 			}
-			$phpcode = '<?php $plugins = unserialize("'.addslashes(serialize($plugins)).'"); ?>';
-			$f = fopen($file,"w");
-			fwrite($f,$phpcode);
-			fclose($f);
+			$c->setContent($plugins);
 		}
+		
 		
 	}
 	public function installPlugin(Plugin $p)

@@ -120,6 +120,10 @@ class HttpKernel extends \Symfony\Component\HttpKernel\DependencyInjection\Conta
 			$eventName2 = str_replace("\\","_",$controllerName)."_".ucwords($actionName)."_PreDispatch";
 			$d = $this->container->get('framework')->getEventDispatcher();
 			
+			// init the controller
+			$controller[0]->init();
+			
+			
 			if (method_exists($controller[0], 'onPreDispatch')) $d->addListener($eventName1, array($controller[0], 'onPreDispatch'));
 			if (method_exists($controller[0], 'on'.ucwords($actionName).'PreDispatch')) $d->addListener($eventName2, array($controller[0], 'on'.ucwords($actionName).'PreDispatch'));
 			if (method_exists($controller[0], 'onPostDispatch')) $d->addListener($eventName1, array($controller[0], 'onPostDispatch'));
