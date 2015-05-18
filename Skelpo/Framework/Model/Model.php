@@ -59,6 +59,20 @@ abstract class Model
     	}
     	return $ret;
     }
+    
+	public function getKeys()
+    {
+    	$ret = array();
+    	$vars = get_class_vars(get_class($this));
+    	foreach ($vars as $v=>$a)
+    	{
+    		$ret[] = $v;
+    		//$n = "get".ucwords($v);
+    		//$o = $this->$n();
+    		//if (!is_object($o)) $ret[$v] = $o;
+    	}
+    	return $ret;
+    }
 	
 	/**
 	 * Manipulates all requests for a generic function "getWHATEVER" and passes on the parameters

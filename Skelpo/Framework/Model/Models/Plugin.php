@@ -15,6 +15,7 @@ use Skelpo\Framework\Model\Model;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Annotations\CPModel;
 
 
 /**
@@ -22,6 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Entity
  * @ORM\Table(name="plugins")
+ * @CPModel
  */
 class Plugin extends Model
 {
@@ -36,6 +38,7 @@ class Plugin extends Model
 	 * @ORM\Column(type="string", length=255, unique=true, nullable=false)
 	 * @Assert\NotBlank
 	 * @Assert\Length(min=3)
+	 * @CPModel(editable=false, list=false, singleView=true)
 	 */
 	protected $slug;
 	
@@ -43,6 +46,7 @@ class Plugin extends Model
 	 * @ORM\Column(type="string", length=255, nullable=false)
 	 * @Assert\NotBlank
 	 * @Assert\Length(min=3)
+	 * @CPModel(editable=false, list=true, singleView=true)
 	 */
 	protected $title;
 	
@@ -50,11 +54,13 @@ class Plugin extends Model
 	 * @ORM\Column(type="string", length=255, nullable=false)
 	 * @Assert\NotBlank
 	 * @Assert\Length(min=3)
+	 * @CPModel(editable=false, list=false, singleView=true)
 	 */
 	protected $name;
 	 
 	/**
 	 * @ORM\Column(type="string", length=255, nullable=false)
+	 * @CPModel(editable=false, list=true, singleView=false)
 	 * 
 	 */
 	protected $author;

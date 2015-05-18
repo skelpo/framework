@@ -237,11 +237,7 @@ class View extends Template
 				}
 			}
 		}
-		// if still no template there is a problem
-		if ($this->templateFile=="")
-		{
-			throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException("Template does not exist: ".$dir.$templateName);
-		}
+		
     }
 	/**
 	 * Returns the URL to the less/css-compiled file.
@@ -468,6 +464,12 @@ class View extends Template
 		}
 		
 		$this->framework->getTheme()->fixSmarty($this);
+		
+		// if still no template there is a problem
+		if ($this->templateFile=="")
+		{
+			throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException("Template does not exist: ".$dir.$templateName);
+		}
 		
 		// get our template
 		$content = $this->fetch($this->templateFile);

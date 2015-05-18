@@ -14,7 +14,7 @@ namespace Skelpo\Framework\Model\Models\Menu;
 
 use Skelpo\Framework\Model\Model;
 
-abstract class Entry extends Model
+ class Entry extends Model
 {
 	protected $label;
 	protected $subMenu;

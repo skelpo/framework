@@ -14,7 +14,7 @@ namespace Skelpo\Framework\Model\Models\Menu;
 
 use Skelpo\Framework\Model\Model;
 
-abstract class Menu extends Model
+ class Menu extends Model
 {
 	protected $entries;
 	
