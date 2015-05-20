@@ -79,6 +79,8 @@ abstract class Model
 	 * so that we get and set all varialbes.
 	 */
 	public function __call($method, $arguments_) {
+		$arguments = array();
+				
 		if (strlen($method)>3)
 		{
 			$vO = substr($method,0,3);
@@ -87,6 +89,7 @@ abstract class Model
 				$v = substr($method,3);
 				$v1 = strtolower(substr($v,0,1)).substr($v,1);
 				$arguments = array();
+				
 				$arguments[] = $v1;
 				if (isset($arguments_[0]))
 				{
