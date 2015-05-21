@@ -73,6 +73,10 @@ class Language
 		$this->messages = array();
 		
 	}
+	public function getName()
+	{
+		return $this->name;
+	}
 	/**
 	 * Loads one individual language file.
 	 */

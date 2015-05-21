@@ -102,6 +102,13 @@ class View extends Template
 		$this->language = new Language($this, $locale);
 	}
 	/**
+	 * Returns the language.
+	 */
+	protected function getLanguage()
+	{
+		return $this->language;
+	}
+	/**
 	 * Sets the request.
 	 */
 	public function setRequest(RequestStack $requestStack)
