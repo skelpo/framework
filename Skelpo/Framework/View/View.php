@@ -100,6 +100,15 @@ class View extends Template
 	protected function setLanguage($locale)
 	{
 		$this->language = new Language($this, $locale);
+		// load language
+		$lpaths = array();
+		$lpaths[] = "App/Locale/";
+		$tpaths = $this->framework->getTemplateDirs();
+		foreach ($tpaths as $p)
+		{
+			$lpaths[] = $p."Locale/";
+		}
+		$this->language->loadLanguageFiles($lpaths);
 	}
 	/**
 	 * Returns the language.
@@ -445,16 +454,6 @@ class View extends Template
 		if (in_array($this->module, array("api", "widgets"))) return;
 		
 		
-		
-		// load language
-		$lpaths = array();
-		$lpaths[] = "App/Locale/";
-		$tpaths = $this->framework->getTemplateDirs();
-		foreach ($tpaths as $p)
-		{
-			$lpaths[] = $p."Locale/";
-		}
-		$this->language->loadLanguageFiles($lpaths);
 		
 		// get the compressed urls
 		$cssUrl = $this->getLessUrl();

@@ -73,9 +73,23 @@ class Language
 		$this->messages = array();
 		
 	}
+	/**
+	 * Returns the name of this language.
+	 * @return
+	 * 		String
+	 */
 	public function getName()
 	{
 		return $this->name;
+	}
+	/**
+	 * Returns all messages saved for this language.
+	 * @return 
+	 * 		String
+	 */
+	public function getMessages()
+	{
+		return $this->messages;
 	}
 	/**
 	 * Loads one individual language file.
@@ -153,7 +167,11 @@ class Language
 			{
 				$paras = array();
 				$paras[0] = $k;
-				$k = "not.found";
+				$k = "not.found.";
+				if (!array_key_exists($k, $this->messages))
+				{
+					$k = "not.found.".$paras[0];
+				}
 				if ($this->writeMissingFile)
 				{
 					$this->addToMissingFile($k, $paras);

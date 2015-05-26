@@ -38,6 +38,13 @@ abstract class MainController extends Controller
 		return $this->get('view');
 	}
 	/**
+	 * Returns the current language.
+	 */
+	protected function getLanguage()
+	{
+		return $this->getView()->getLanguage();
+	}
+	/**
 	 * Returns out framework.
 	 */
 	protected function getFramework()
