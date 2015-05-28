@@ -81,11 +81,11 @@ abstract class Model
 	public function __toString()
 	{
 		$keys = $this->getKeys();
-		if (in_array($keys, "name"))
+		if (in_array("name", $keys))
 		{
 			return $this->getName();
 		}
-		else if (in_array($keys, "title"))
+		else if (in_array("title", $keys))
 		{
 			return $this->getTitle();
 		}
