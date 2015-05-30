@@ -2,20 +2,18 @@
 
 /**
  * This file is part of the skelpo framework.
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- * 
+ *
  * @version 1.0.0-alpha
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @copyright 2015 Skelpo Inc. www.skelpo.com
  */
-
 namespace Skelpo\Framework;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-
 
 /**
  * Framework bundle to handle all our stuff.
@@ -41,7 +39,7 @@ class Framework extends Bundle
 	 * The module we are using.
 	 * frontend / backend / api / widgets / mobile
 	 */
-	private $module; 
+	private $module;
 
 	/**
 	 * Pass-through: Returns the root dir.
@@ -50,7 +48,7 @@ class Framework extends Bundle
 	{
 		return $this->kernel->getRootDir();
 	}
-	
+
 	/**
 	 * Returns the module.
 	 */
@@ -58,6 +56,7 @@ class Framework extends Bundle
 	{
 		return $this->module;
 	}
+
 	/**
 	 * Pass-through: Returns the root url.
 	 */
@@ -65,6 +64,7 @@ class Framework extends Bundle
 	{
 		return $this->kernel->getRootUrl();
 	}
+
 	/**
 	 * Returns the kernel.
 	 */
@@ -72,21 +72,23 @@ class Framework extends Bundle
 	{
 		return $this->kernel;
 	}
-	
+
 	/**
 	 * Returns the dir for additional smarty plugins.
 	 */
 	public function getSmartyPluginDir()
 	{
-		return $this->getRootDir().'engine/Skelpo/Framework/View/Plugins/';
+		return $this->getRootDir() . 'engine/Skelpo/Framework/View/Plugins/';
 	}
+
 	/**
 	 * Returns the dir for additional plugins.
 	 */
 	public function getPluginDir()
 	{
-		return $this->getRootDir().'App/Plugins/';
+		return $this->getRootDir() . 'App/Plugins/';
 	}
+
 	/**
 	 * Pass-through: Returns the current theme.
 	 */
@@ -94,6 +96,7 @@ class Framework extends Bundle
 	{
 		return $this->kernel->getTheme();
 	}
+
 	/**
 	 * Pass-through: Returns the theme dir.
 	 */
@@ -101,7 +104,7 @@ class Framework extends Bundle
 	{
 		return $this->kernel->getThemeDir();
 	}
-	
+
 	/**
 	 * Returns all dirs that could contain templates.
 	 */
@@ -109,26 +112,29 @@ class Framework extends Bundle
 	{
 		$a = $this->getTheme()->getPath();
 		$dirs = array();
-		$d = $a."/";
-		/*$dirs_ = scandir($d);
-		foreach ($dirs_ as $da)
-		{
-			if (is_dir($da))
-			{
-				$dirs[] = $da;
-			}
-		}*/
+		$d = $a . "/";
+		/*
+		 * $dirs_ = scandir($d);
+		 * foreach ($dirs_ as $da)
+		 * {
+		 * if (is_dir($da))
+		 * {
+		 * $dirs[] = $da;
+		 * }
+		 * }
+		 */
 		$dirs[] = $d;
 		return $dirs;
-		
 	}
+
 	/**
 	 * Pass-through: Returns the cache dir.
 	 */
 	public function getCacheDir()
-    {
-    	return $this->kernel->getCacheDir();
-    }
+	{
+		return $this->kernel->getCacheDir();
+	}
+
 	/**
 	 * Creates a new instance with the kernel as an argument.
 	 */
@@ -139,6 +145,7 @@ class Framework extends Bundle
 		// default
 		$this->module = "frontend";
 	}
+
 	/**
 	 * Returns information.
 	 */
@@ -146,6 +153,7 @@ class Framework extends Bundle
 	{
 		return "Skelpo Inc.";
 	}
+
 	/**
 	 * Returns the event dispatcher.
 	 */
@@ -153,5 +161,4 @@ class Framework extends Bundle
 	{
 		return $this->eventDispatcher;
 	}
-	
 }

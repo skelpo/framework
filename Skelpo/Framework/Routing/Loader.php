@@ -2,15 +2,14 @@
 
 /**
  * This file is part of the skelpo framework.
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- * 
+ *
  * @version 1.0.0-alpha
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @copyright 2015 Skelpo Inc. www.skelpo.com
  */
-
 namespace Skelpo\Framework\Routing;
 
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -23,16 +22,17 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 /**
- * This class creates routes for all controllers with all actions. Makes it significantly easier
+ * This class creates routes for all controllers with all actions.
+ * Makes it significantly easier
  * to build further pages and actions.
  */
 class Loader implements LoaderInterface
 {
-    private $loaded = false;
+	private $loaded = false;
 	private $locale;
 	private $supportedLocales;
 	private $kernel;
-	
+
 	/**
 	 * Construct the clas.
 	 */
@@ -40,14 +40,16 @@ class Loader implements LoaderInterface
 	{
 		$this->kernel = $k;
 	}
+
 	/**
 	 * Load configuration and start building the routes.
 	 */
-    public function load($resource, $type = null)
-    {
-        if (true === $this->loaded) {
-            throw new \RuntimeException('Framework can only be loaded once.');
-        }
+	public function load($resource, $type = null)
+	{
+		if (true === $this->loaded)
+		{
+			throw new \RuntimeException('Framework can only be loaded once.');
+		}
 		$routes = new RouteCollection();
 		
 		$container = new ContainerBuilder();
@@ -57,20 +59,21 @@ class Loader implements LoaderInterface
 		$this->locale = $container->getParameter('locale');
 		$this->supportedLocales = explode(",", $container->getParameter('supportedLocales'));
 		
-		if (!in_array($this->locale, $this->supportedLocales))
+		if (! in_array($this->locale, $this->supportedLocales))
 		{
 			$this->locale = $this->supportedLocales[0];
 		}
 		
 		$routes = $this->buildRoutes($routes);
-
-        $this->loaded = true;
 		
-        return $routes;
-    }
+		$this->loaded = true;
+		
+		return $routes;
+	}
+
 	/**
 	 * Build the routes for all controllers.
-	 * 
+	 *
 	 * @return The routes as a RouteCollection.
 	 */
 	private function buildRoutes($routes)
@@ -85,33 +88,33 @@ class Loader implements LoaderInterface
 		
 		$pluginDir = $this->kernel->getFramework()->getPluginDir();
 		
-		$file = $this->kernel->getCacheDir()."plugins.php";
+		$file = $this->kernel->getCacheDir() . "plugins.php";
 		if (file_exists($file))
 		{
-			include($file);
+			include ($file);
 		}
-		else {
+		else
+		{
 			$plugins = array();
 		}
 		
 		foreach ($plugins as $p)
 		{
-			$pf = $pluginDir . $p['name']."/";
+			$pf = $pluginDir . $p['name'] . "/";
 			if (is_dir($pf))
 			{
-				if (is_dir($pf."Controllers/Frontend/"))
+				if (is_dir($pf . "Controllers/Frontend/"))
 				{
-					$controllerDirs[] = "App/Plugins/".$p['name']."/Controllers/Frontend/";
+					$controllerDirs[] = "App/Plugins/" . $p['name'] . "/Controllers/Frontend/";
 				}
-				if (is_dir($pf."Controllers/Backend/"))
+				if (is_dir($pf . "Controllers/Backend/"))
 				{
-					$controllerDirs[] = "App/Plugins/".$p['name']."/Controllers/Backend/";
+					$controllerDirs[] = "App/Plugins/" . $p['name'] . "/Controllers/Backend/";
 				}
-				if (is_dir($pf."Controllers/Api/"))
+				if (is_dir($pf . "Controllers/Api/"))
 				{
-					$controllerDirs[] = "App/Plugins/".$p['name']."/Controllers/Api/";
+					$controllerDirs[] = "App/Plugins/" . $p['name'] . "/Controllers/Api/";
 				}
-				
 			}
 		}
 		
@@ -120,18 +123,18 @@ class Loader implements LoaderInterface
 		{
 			$path = $rootPath . $dir;
 			
-			$module = substr($path,strpos($path,"Controllers/")+12);
-			$module = strtolower(substr($module,0,-1));
+			$module = substr($path, strpos($path, "Controllers/") + 12);
+			$module = strtolower(substr($module, 0, - 1));
 			
 			$files = scandir($path);
 			foreach ($files as $file)
 			{
 				$l = strlen($file);
-				if ($l>14)
+				if ($l > 14)
 				{
-					if (substr($file,$l-14)==$lookFor)
+					if (substr($file, $l - 14) == $lookFor)
 					{
-						$this->buildRoutesForClass($path,$file, $module, $routes);
+						$this->buildRoutesForClass($path, $file, $module, $routes);
 					}
 				}
 			}
@@ -139,109 +142,135 @@ class Loader implements LoaderInterface
 		
 		return $routes;
 	}
+
 	/**
 	 * Internal function to build the routes for a specific class.
 	 */
-	private function buildRoutesForClass($path,$file, $module, $routes)
+	private function buildRoutesForClass($path, $file, $module, $routes)
 	{
 		$class = str_replace(".php", "", $file);
-		include_once($path.$file);
+		include_once ($path . $file);
 		
-		$content = file_get_contents($path.$file);
-		$n = substr($content, strpos($content, "namespace ")+10);
-		$n = substr($n,0,strpos($n,";"));
-		$controller = str_replace("Controller","",$class);
-		$class = $n."\\".$class;
-		$controllerNS = $n."\\".$controller;
+		$content = file_get_contents($path . $file);
+		$n = substr($content, strpos($content, "namespace ") + 10);
+		$n = substr($n, 0, strpos($n, ";"));
+		$controller = str_replace("Controller", "", $class);
+		$class = $n . "\\" . $class;
+		$controllerNS = $n . "\\" . $controller;
 		
 		$_reflection = new \ReflectionClass($class);
 		$functions = $_reflection->getMethods();
 		
 		foreach ($functions as $function)
 		{
-			if (substr($function->getName(),strlen($function->getName())-6)=="Action")
+			if (substr($function->getName(), strlen($function->getName()) - 6) == "Action")
 			{
-				$functionName = str_replace("Action","",$function->getName());
+				$functionName = str_replace("Action", "", $function->getName());
 				$parameters = $function->getParameters();
 				
-				$ctlStr = $controllerNS.'Controller::'.$functionName."Action";
+				$ctlStr = $controllerNS . 'Controller::' . $functionName . "Action";
 				$moduleStr = $module;
 				
 				$this->buildRoutesIntern($moduleStr, strtolower($controller), $functionName, array(), $ctlStr, false, $parameters, $routes);
-				
 			}
 		}
 	}
+
 	/**
-	 * Internal class to build the route for a specific action. It build all sub-routes as well as the
+	 * Internal class to build the route for a specific action.
+	 * It build all sub-routes as well as the
 	 * language.
 	 */
 	private function buildRoutesIntern($module, $controller, $function, $parameter, $ctlStr, $stop, $parameters, $routes)
 	{
-		if ($module == "frontend") $module = "";
-		else {
-			if (!stristr($module,"/")) 
+		if ($module == "frontend")
+			$module = "";
+		else
+		{
+			if (! stristr($module, "/"))
 			{
-				$module = "/".$module;
+				$module = "/" . $module;
 			}
 		}
 		
 		$s = "";
 		
-		if ($controller=="index")
+		if ($controller == "index")
 		{
 			$s .= $this->buildRoutesIntern($module, "", $function, $parameter, $ctlStr, false, array(), $routes);
 		}
-		 
+		
 		if ($function == "index")
 		{
 			$s .= $this->buildRoutesIntern($module, $controller, "", $parameter, $ctlStr, true, array(), $routes);
 		}
 		
-		if ($stop) return $s;
+		if ($stop)
+			return $s;
 		
-		if ($function != "") $function = "/".$function;
-		if ($controller != "") $controller = "/".$controller;
+		if ($function != "")
+			$function = "/" . $function;
+		if ($controller != "")
+			$controller = "/" . $controller;
 		$valid = false;
 		
-		if ($controller != "" && $function != "") $valid = true;
-		if ($controller == "" && $function == "") $valid = true;
+		if ($controller != "" && $function != "")
+			$valid = true;
+		if ($controller == "" && $function == "")
+			$valid = true;
 		
-		if ($valid) {	
-			$routes->add($module.$controller.$function, new \Symfony\Component\Routing\Route($module.$controller.$function,array('_controller' => $ctlStr)));
-			$routes->add('/{_locale}'.$module.$controller.$function, new \Symfony\Component\Routing\Route('/{_locale}'.$module.$controller.$function.'',array('_controller' => $ctlStr, '_locale'=> $this->locale),array('_locale'=> implode("|",$this->supportedLocales))));
+		if ($valid)
+		{
+			$routes->add($module . $controller . $function, new \Symfony\Component\Routing\Route($module . $controller . $function, array(
+					'_controller' => $ctlStr 
+			)));
+			$routes->add('/{_locale}' . $module . $controller . $function, new \Symfony\Component\Routing\Route('/{_locale}' . $module . $controller . $function . '', array(
+					'_controller' => $ctlStr,
+					'_locale' => $this->locale 
+			), array(
+					'_locale' => implode("|", $this->supportedLocales) 
+			)));
 			$para = "";
 			foreach ($parameters as $p)
 			{
-				$para .= "/{".$p->name."}";
+				$para .= "/{" . $p->name . "}";
 				
-				$routes->add($module.$controller.$function.$para, new \Symfony\Component\Routing\Route($module.$controller.$function.$para,array('_controller' => $ctlStr)));
-				$routes->add('/{_locale}'.$module.$controller.$function.$para, new \Symfony\Component\Routing\Route('/{_locale}'.$module.$controller.$function.$para,array('_controller' => $ctlStr, '_locale'=>$this->locale),array('_locale'=> implode("|",$this->supportedLocales))));
-				
+				$routes->add($module . $controller . $function . $para, new \Symfony\Component\Routing\Route($module . $controller . $function . $para, array(
+						'_controller' => $ctlStr 
+				)));
+				$routes->add('/{_locale}' . $module . $controller . $function . $para, new \Symfony\Component\Routing\Route('/{_locale}' . $module . $controller . $function . $para, array(
+						'_controller' => $ctlStr,
+						'_locale' => $this->locale 
+				), array(
+						'_locale' => implode("|", $this->supportedLocales) 
+				)));
 			}
 		}
 	}
+
 	/**
 	 * Tells symfony what type this load is.
 	 */
-    public function supports($resource, $type = null)
-    {
-        return 'extra' === $type;
-    }
+	public function supports($resource, $type = null)
+	{
+		return 'extra' === $type;
+	}
+
 	/**
 	 * Has to be supported for the interface.
 	 */
-    public function getResolver()
-    {
-        // needed, but can be blank, unless you want to load other resources
-        // and if you do, using the Loader base class is easier (see below)
-    }
+	public function getResolver()
+	{
+		// needed, but can be blank, unless you want to load other resources
+		// and if you do, using the Loader base class is easier (see below)
+	}
+
 	/**
 	 * Not necessary.
 	 */
-    public function setResolver(LoaderResolverInterface $resolver)
-    {
-        // same as above
-    }
+	public function setResolver(LoaderResolverInterface $resolver)
+	{
+		// same as above
+	}
 }
 ?>

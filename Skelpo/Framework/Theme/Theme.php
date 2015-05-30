@@ -2,15 +2,14 @@
 
 /**
  * This file is part of the skelpo framework.
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- * 
+ *
  * @version 1.0.0-alpha
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @copyright 2015 Skelpo Inc. www.skelpo.com
  */
-
 namespace Skelpo\Framework\Theme;
 
 use Symfony\Component\HttpKernel\Kernel;
@@ -40,7 +39,7 @@ abstract class Theme
 	 * The kernel.
 	 */
 	protected $kernel;
-	
+
 	/**
 	 * Creates a new theme instance.
 	 */
@@ -48,32 +47,31 @@ abstract class Theme
 	{
 		$this->kernel = $k;
 	}
-	
+
 	/**
 	 * Returns all javascript files that are needed.
-	 */ 
+	 */
 	public abstract function getJSFiles();
-	
+
 	/**
 	 * Returns all static files that are necessary.
 	 */
 	public abstract function getAllStaticFiles();
-	
+
 	/**
 	 * Returns the name.
 	 */
 	public abstract function getName();
-	
+
 	/**
 	 * Returns the path to this theme.
 	 */
 	public function getPath()
 	{
-		return $this->kernel->getThemeDir().$this->getName();
+		return $this->kernel->getThemeDir() . $this->getName();
 	}
-	
+
 	public function fixSmarty(\Smarty $s)
 	{
-		
 	}
 }

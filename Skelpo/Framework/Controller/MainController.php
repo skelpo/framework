@@ -2,15 +2,14 @@
 
 /**
  * This file is part of the skelpo framework.
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- * 
+ *
  * @version 1.0.0-alpha
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @copyright 2015 Skelpo Inc. www.skelpo.com
  */
- 
 namespace Skelpo\Framework\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -23,6 +22,7 @@ use Skelpo\Framework\Framework;
  */
 abstract class MainController extends Controller
 {
+
 	/**
 	 * Init functions that matter "before" everything else.
 	 */
@@ -30,6 +30,7 @@ abstract class MainController extends Controller
 	{
 		// intentially empty
 	}
+
 	/**
 	 * Returns our smarty view.
 	 */
@@ -37,6 +38,7 @@ abstract class MainController extends Controller
 	{
 		return $this->get('view');
 	}
+
 	/**
 	 * Returns the current language.
 	 */
@@ -44,6 +46,7 @@ abstract class MainController extends Controller
 	{
 		return $this->getView()->getLanguage();
 	}
+
 	/**
 	 * Returns out framework.
 	 */
@@ -51,12 +54,15 @@ abstract class MainController extends Controller
 	{
 		return $this->get('framework');
 	}
+
 	/**
-	 * Redirects to a certain route. Checks for beginning "/".
+	 * Redirects to a certain route.
+	 * Checks for beginning "/".
 	 */
 	protected function redirectToRoute($route, array $parameters = array(), $status = 302)
-    {
-    	if (substr($route,0,1)!="/") $route = "/".$route;
-        return $this->redirect($this->generateUrl($route, $parameters), $status);
-    }
+	{
+		if (substr($route, 0, 1) != "/")
+			$route = "/" . $route;
+		return $this->redirect($this->generateUrl($route, $parameters), $status);
+	}
 }
