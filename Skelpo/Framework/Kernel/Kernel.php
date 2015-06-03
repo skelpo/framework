@@ -124,6 +124,6 @@ abstract class Kernel extends \Symfony\Component\HttpKernel\Kernel
 
 	public function getRootUrl()
 	{
-		return "/";
+		return $this->getContainer()->getParameter('rootUrl');
 	}
 }
