@@ -17,7 +17,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Skelpo\Framework\View;
-use Skelpo\Framework\Model\Models\Menu\Menu;
 
 /**
  * Controller event class.

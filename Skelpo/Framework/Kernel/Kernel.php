@@ -52,49 +52,6 @@ abstract class Kernel extends \Symfony\Component\HttpKernel\Kernel
 		}
 	}
 
-	public function boot()
-	{
-		parent::boot();
-		try
-		{
-			$this->getContainer()->get("pluginmanager")->loadPlugins();
-			$this->selectTheme();
-		}
-		catch (\Doctrine\DBAL\DBALException $e)
-		{
-		}
-	}
-
-	protected function getListOfThemes()
-	{
-		$c = $this->framework->getKernel()->getCache("themes");
-		$c->setLifetime(0);
-		$themes = $c->getContent();
-		if (is_null($themes))
-		{
-			include ($file);
-		}
-		else
-		{
-			$dbThemes = $this->getContainer()->get("doctrine")->getEntityManager()->getRepository('Skelpo\Framework\Model\Models\Theme')->findAll();
-			$themes = array();
-			foreach ($dbThemes as $p)
-			{
-				if ($p->getActive() == 1)
-				{
-					$themes[] = array(
-							"name" => $p->getName(),
-							"slug" => $p->getSlug(),
-							"active" => $p->getActive(),
-							"folder" => $this->getThemeDir() . $p->getName() 
-					);
-				}
-			}
-			$c->setContent($themes);
-		}
-		return $themes;
-	}
-
 	protected function selectTheme()
 	{
 		$themes = $this->getListOfThemes();
@@ -105,7 +62,6 @@ abstract class Kernel extends \Symfony\Component\HttpKernel\Kernel
 	}
 
 	/**
-	 *
 	 * @ERROR!!! @api
 	 */
 	public function handle(Request $request, $type = \Symfony\Component\HttpKernel\HttpKernelInterface::MASTER_REQUEST, $catch = true)
@@ -134,7 +90,6 @@ abstract class Kernel extends \Symfony\Component\HttpKernel\Kernel
 	}
 
 	/**
-	 *
 	 * @ERROR!!! @api
 	 */
 	public function getRootDir()

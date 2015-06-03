@@ -49,14 +49,14 @@ class PluginManager
 	/**
 	 * Load all plugins.
 	 */
-	public function loadPlugins()
+	public function loadPlugins($modelNamespace)
 	{
 		$c = $this->framework->getKernel()->getCache("plugins");
 		$c->setLifetime(0);
 		$plugins = $c->getContent();
 		if (is_null($plugins))
 		{
-			$dbPlugins = $this->entityManager->getRepository('Skelpo\Framework\Model\Models\Plugin')->findAll();
+			$dbPlugins = $this->entityManager->getRepository($modelNamespace)->findAll();
 			$plugins = array();
 			foreach ($dbPlugins as $p)
 			{
@@ -75,7 +75,7 @@ class PluginManager
 
 	/**
 	 * Installs a plugin
-	 * 
+	 *
 	 * @param Plugin $p
 	 */
 	public function installPlugin(Plugin $p)
@@ -85,7 +85,7 @@ class PluginManager
 
 	/**
 	 * Deinstalls a plugin.
-	 * 
+	 *
 	 * @param Plugin $p
 	 */
 	public function deinstallPlugin(Plugin $p)
