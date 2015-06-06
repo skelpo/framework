@@ -31,53 +31,87 @@ abstract class Model
 
 	/**
 	 * Returns variable $name.
+	 * 
+	 * @return ($name)
 	 */
 	protected function getVar($name)
 	{
 		return $this->$name;
 	}
 
+	/**
+	 * Sets variable $name to $value.
+	 * 
+	 * @param String $name
+	 * @param Object $value
+	 */
 	public function __set($name, $value)
 	{
 		$this->$name = $value;
 	}
 
+	/**
+	 * Returns variable $name.
+	 * 
+	 * @param String $name
+	 * @return ($name)
+	 */
 	public function __get($name)
 	{
 		return $this->$name;
 	}
 
+	/**
+	 * Returns an array containing all fields, that aren't objects, and their values.
+	 * 
+	 * @param Array(String) $fields
+	 * @return Array(String=>String)
+	 */
 	public function getAsArray($fields = array())
 	{
 		$ret = array();
 		if (count($fields) > 0)
 			$vars = $fields;
 		else
-			$vars = get_class_vars(get_class($this));
-		foreach ($vars as $v => $a)
+			$vars = $this->getKeys();
+		foreach ($vars as $a)
 		{
-			$n = "get" . ucwords($v);
+			$n = "get" . ucwords($a);
 			$o = $this->$n();
 			if (! is_object($o))
-				$ret[$v] = $o;
+				$ret[$a] = $o;
 		}
 		return $ret;
 	}
 
+	/**
+	 * Returns all keys of this model.
+	 * Excludes the proxy keys of doctrine though.
+	 * 
+	 * @return Array(String)
+	 */
 	public function getKeys()
 	{
 		$ret = array();
-		$vars = get_class_vars(get_class($this));
-		foreach ($vars as $v => $a)
+		
+		$reflect = new \ReflectionClass($this);
+		$vars = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED);
+		foreach ($vars as $a)
 		{
-			$ret[] = $v;
-			// $n = "get".ucwords($v);
-			// $o = $this->$n();
-			// if (!is_object($o)) $ret[$v] = $o;
+			// we have to filter doctrine here
+			if (! stristr($a->class, "__CG__"))
+				$ret[] = $a->getName();
 		}
 		return $ret;
 	}
 
+	/**
+	 * Formats this model as a string.
+	 * Tries to look for the name and the title but if not found
+	 * will return the model's class name and the id.
+	 * 
+	 * @return String
+	 */
 	public function __toString()
 	{
 		$keys = $this->getKeys();
@@ -91,7 +125,7 @@ abstract class Model
 		}
 		else
 		{
-			return "<" . get_class($this) . "> ID<" . $this->getId() . ">";
+			return "<" . get_class($this) . "> <" . $this->getId() . ">";
 		}
 	}
 
