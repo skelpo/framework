@@ -31,7 +31,7 @@ abstract class Model
 
 	/**
 	 * Returns variable $name.
-	 * 
+	 *
 	 * @return ($name)
 	 */
 	protected function getVar($name)
@@ -41,7 +41,7 @@ abstract class Model
 
 	/**
 	 * Sets variable $name to $value.
-	 * 
+	 *
 	 * @param String $name
 	 * @param Object $value
 	 */
@@ -52,7 +52,7 @@ abstract class Model
 
 	/**
 	 * Returns variable $name.
-	 * 
+	 *
 	 * @param String $name
 	 * @return ($name)
 	 */
@@ -63,7 +63,7 @@ abstract class Model
 
 	/**
 	 * Returns an array containing all fields, that aren't objects, and their values.
-	 * 
+	 *
 	 * @param Array(String) $fields
 	 * @return Array(String=>String)
 	 */
@@ -87,7 +87,7 @@ abstract class Model
 	/**
 	 * Returns all keys of this model.
 	 * Excludes the proxy keys of doctrine though.
-	 * 
+	 *
 	 * @return Array(String)
 	 */
 	public function getKeys()
@@ -109,7 +109,7 @@ abstract class Model
 	 * Formats this model as a string.
 	 * Tries to look for the name and the title but if not found
 	 * will return the model's class name and the id.
-	 * 
+	 *
 	 * @return String
 	 */
 	public function __toString()
