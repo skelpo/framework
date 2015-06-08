@@ -1,3 +1,6 @@
-.DS_Store
 /composer.phar
 /vendor/
+.project
+.pydevproject
+.buildpath
+.settings
