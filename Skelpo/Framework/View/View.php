@@ -225,13 +225,12 @@ class View extends Template
 		
 		// the module we are using right now
 		$module = substr($controllerName, strpos($controllerName, "Controllers") + 12);
-		$this->module = strtolower(substr($module, 0, strpos($module, "\\")));
+		$moduleName = strtolower(substr($module, 0, strpos($module, "\\")));
+		
+		$this->module = $this->framework->getKernel()->getModuleByName($moduleName);
 		
 		// if we are not returning a template stop here
-		if (in_array($this->module, array(
-				"api",
-				"widgets" 
-		)))
+		if ($this->module->isBasedOnTemplates() == false)
 			return;
 			
 			// the template name
@@ -274,7 +273,7 @@ class View extends Template
 	 */
 	private function getLessUrl()
 	{
-		$p = $this->framework->getRootDir() . "static/" . $this->module . "/css/";
+		$p = $this->framework->getRootDir() . "static/" . $this->module->getPathName() . "/css/";
 		
 		if (! $this->filesystem->exists($p))
 		{
@@ -282,7 +281,7 @@ class View extends Template
 		}
 		
 		$cssfile = $p . "all.css";
-		$cssurl = $this->rootUrl . "static/" . $this->module . "/css/all.css";
+		$cssurl = $this->rootUrl . "static/" . $this->module->getPathName() . "/css/all.css";
 		
 		// in case we have it in cache just return the url
 		if ($this->filesystem->exists($cssfile) && ! $this->isCacheDue())
@@ -299,7 +298,7 @@ class View extends Template
 		// go through all the dirs to find the all.less
 		foreach ($dirs as $dir_)
 		{
-			$file = $dir_ . $this->module . "/_public/less/all.less";
+			$file = $dir_ . $this->module->getPathName() . "/_public/less/all.less";
 			if ($this->filesystem->exists($file))
 			{
 				$allLess = $file;
@@ -346,7 +345,7 @@ class View extends Template
 	 */
 	private function getJSUrl()
 	{
-		$p = $this->framework->getRootDir() . "static/" . $this->module . "/js/";
+		$p = $this->framework->getRootDir() . "static/" . $this->module->getPathName() . "/js/";
 		
 		if (! $this->filesystem->exists($p))
 		{
@@ -354,7 +353,7 @@ class View extends Template
 		}
 		
 		$jsfile = $p . "all.js";
-		$jsurl = $this->rootUrl . "static/" . $this->module . "/js/all.js";
+		$jsurl = $this->rootUrl . "static/" . $this->module->getPathName() . "/js/all.js";
 		
 		// check if we have it in cache
 		if ($this->filesystem->exists($jsfile) && ! $this->isCacheDue())
@@ -364,8 +363,8 @@ class View extends Template
 		
 		// get all our JS files
 		$files = $this->framework->getTheme()->getJSFiles();
-		if (isset($files[$this->module]))
-			$files = $files[$this->module];
+		if (isset($files[$this->module->getPathName()]))
+			$files = $files[$this->module->getPathName()];
 		else
 			$files = array();
 			
@@ -375,7 +374,7 @@ class View extends Template
 		
 		foreach ($files as $a => $file)
 		{
-			$files[$a] = $dir_ . $this->module . "/_public/js/" . $file;
+			$files[$a] = $dir_ . $this->module->getPathName() . "/_public/js/" . $file;
 		}
 		
 		// get all the files
@@ -401,7 +400,7 @@ class View extends Template
 	/**
 	 * Loadas all files from the file system with a certain endings.
 	 * Works its way recursively through a dictionary.
-	 * 
+	 *
 	 * @param Array $files
 	 * @param string $ending
 	 * @return string
@@ -440,7 +439,7 @@ class View extends Template
 	 */
 	private function copyStaticContent()
 	{
-		$baseFolder = $this->framework->getRootDir() . "static/" . $this->module . "/";
+		$baseFolder = $this->framework->getRootDir() . "static/" . $this->module->getPathName() . "/";
 		
 		if (! $this->filesystem->exists($baseFolder))
 		{
@@ -451,8 +450,8 @@ class View extends Template
 		// //$fs->symlink('/path/to/source', '/path/to/destination', true);
 		
 		$files = $this->framework->getTheme()->getAllStaticFiles();
-		if (isset($files[$this->module]))
-			$files = $files[$this->module];
+		if (isset($files[$this->module->getPathName()]))
+			$files = $files[$this->module->getPathName()];
 		else
 			$files = array();
 			
@@ -463,7 +462,7 @@ class View extends Template
 		// get all the files
 		foreach ($files as $file_)
 		{
-			$file = $dir_ . $this->module . "/_public/" . $file_;
+			$file = $dir_ . $this->module->getPathName() . "/_public/" . $file_;
 			$target = $baseFolder . $file_;
 			if ($this->filesystem->exists($file))
 			{
@@ -488,10 +487,7 @@ class View extends Template
 		$dispatcher->dispatch($this->eventName1, $cevent);
 		$dispatcher->dispatch($this->eventName2, $cevent);
 		
-		if (in_array($this->module, array(
-				"api",
-				"widgets" 
-		)))
+		if ($this->module->isBasedOnTemplates() == false)
 			return;
 			
 			// get the compressed urls

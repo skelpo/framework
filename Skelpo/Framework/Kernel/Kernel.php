@@ -78,6 +78,24 @@ abstract class Kernel extends \Symfony\Component\HttpKernel\Kernel
 	}
 
 	/**
+	 * Returns a module based on the name
+	 * 
+	 * @param string $name
+	 * @return Module
+	 */
+	public function getModuleByName($name)
+	{
+		$name_ = strtolower($name);
+		foreach ($this->modules as $m)
+		{
+			if (strtolower($m->getName()) == $name_)
+			{
+				return $m;
+			}
+		}
+	}
+
+	/**
 	 * Returns the cache for a given name.
 	 *
 	 * @param string $name

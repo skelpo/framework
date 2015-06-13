@@ -43,6 +43,16 @@ abstract class Module
 	}
 
 	/**
+	 * Returns the name of this module for paths (lower case).
+	 *
+	 * @return string
+	 */
+	public function getPathName()
+	{
+		return strtolower($this->name);
+	}
+
+	/**
 	 * Returns whether this module is based on templates.
 	 *
 	 * @return boolean
