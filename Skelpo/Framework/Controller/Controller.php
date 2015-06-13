@@ -12,7 +12,7 @@
  */
 namespace Skelpo\Framework\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Skelpo\Framework\Framework;
@@ -20,7 +20,7 @@ use Skelpo\Framework\Framework;
 /**
  * Parent class for all controllers.
  */
-abstract class MainController extends Controller
+abstract class Controller extends BaseController
 {
 
 	/**
