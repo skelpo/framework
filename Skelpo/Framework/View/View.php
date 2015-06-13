@@ -55,6 +55,7 @@ class View extends Template
 	private $eventName1;
 	private $eventName2;
 	private $rootUrl;
+	private $technicalTemplateName;
 	protected $language;
 	protected $router;
 	protected $request;
@@ -266,6 +267,8 @@ class View extends Template
 				}
 			}
 		}
+		
+		$this->technicalTemplateName = $dir . $templateName;
 	}
 
 	/**
@@ -509,7 +512,7 @@ class View extends Template
 		// if still no template there is a problem
 		if ($this->templateFile == "")
 		{
-			throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException("Template does not exist: " . $dir . $templateName);
+			throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException("Template does not exist: " . $this->technicalTemplateName);
 		}
 		
 		// get our template
