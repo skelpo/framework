@@ -28,7 +28,7 @@ class FileCache implements Cacheable
 
 	/**
 	 * Create a new cache.
-	 * 
+	 *
 	 * @param \Skelpo\Framework\Framework $framework
 	 * @param string $name
 	 * @param integer $lifetime
@@ -44,7 +44,7 @@ class FileCache implements Cacheable
 
 	/**
 	 * Is an update of the cache required?
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function needUpdate()
@@ -74,7 +74,7 @@ class FileCache implements Cacheable
 
 	/**
 	 * Sets the lifetime for this cache.
-	 * 
+	 *
 	 * @param integer $t
 	 */
 	public function setLifetime($t)
@@ -84,7 +84,7 @@ class FileCache implements Cacheable
 
 	/**
 	 * Returns the lifetime of this cache.
-	 * 
+	 *
 	 * @return integer
 	 */
 	public function getLifetime()
@@ -94,7 +94,7 @@ class FileCache implements Cacheable
 
 	/**
 	 * Sets the content of this cache.
-	 * 
+	 *
 	 * @param \Serializable $c
 	 */
 	public function setContent($c)
@@ -132,12 +132,14 @@ class FileCache implements Cacheable
 
 	/**
 	 * Returns the content of this cache.
-	 * 
+	 *
 	 * @return
 	 *
 	 */
 	public function getContent()
 	{
+		if (trim($this->content) == "")
+			return null;
 		return unserialize($this->content);
 	}
 }

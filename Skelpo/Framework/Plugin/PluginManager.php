@@ -54,7 +54,7 @@ class PluginManager
 		$c = $this->framework->getKernel()->getCache("plugins");
 		$c->setLifetime(0);
 		$plugins = $c->getContent();
-		if (is_null($plugins))
+		if (is_null($plugins) || $plugins == "")
 		{
 			$dbPlugins = $this->entityManager->getRepository($modelNamespace)->findAll();
 			$plugins = array();
@@ -70,6 +70,14 @@ class PluginManager
 				}
 			}
 			$c->setContent($plugins);
+		}
+		$this->plugins = array();
+		foreach ($plugins as $plugin)
+		{
+			$pluginRefClass = new \ReflectionClass('App\\Plugins\\' . $plugin['name'] . '\\' . $plugin['name']);
+			$plugin = $pluginRefClass->newInstance($this->framework, $this->framework->getKernel());
+			$plugin->boot();
+			$this->plugins[] = $plugin;
 		}
 	}
 

@@ -12,6 +12,9 @@
  */
 namespace Skelpo\Framework\Plugin;
 
+use Skelpo\Framework\Kernel\Kernel;
+use Skelpo\Framework\Framework;
+
 /**
  * Parent class for all plugins.
  */
@@ -20,8 +23,16 @@ abstract class Plugin
 	protected $framework;
 	protected $kernel;
 
-	public function __construct($framework, $kernel)
+	/**
+	 * Initializes a new plugin.
+	 *
+	 * @param \Skelpo\Framework\Framework $framework
+	 * @param \Skelpo\Framework\Kernel\Kernel $kernel
+	 */
+	public function __construct(\Skelpo\Framework\Framework $framework, \Skelpo\Framework\Kernel\Kernel $kernel)
 	{
+		$this->framework = $framework;
+		$this->kernel = $kernel;
 	}
 
 	/**
@@ -38,6 +49,26 @@ abstract class Plugin
 	 * Uninstall the plugin.
 	 */
 	protected abstract function uninstall();
+
+	/**
+	 * Returns the kernel.
+	 * 
+	 * @return Kernel
+	 */
+	protected function getKernel()
+	{
+		return $this->kernel;
+	}
+
+	/**
+	 * Returns the framework.
+	 * 
+	 * @return Framework
+	 */
+	protected function getFramework()
+	{
+		return $this->framework;
+	}
 
 	/**
 	 * This function is called when the plugin is updating.

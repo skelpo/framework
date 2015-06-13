@@ -90,12 +90,9 @@ class Loader implements LoaderInterface
 		
 		$pluginDir = $this->kernel->getFramework()->getPluginDir();
 		
-		$file = $this->kernel->getCacheDir() . "plugins.php";
-		if (file_exists($file))
-		{
-			include ($file);
-		}
-		else
+		$file = $this->kernel->getCache("plugins");
+		$plugins = $file->getContent();
+		if ($plugins == "")
 		{
 			$plugins = array();
 		}
@@ -115,11 +112,13 @@ class Loader implements LoaderInterface
 				}
 			}
 		}
-		
 		$lookFor = "Controller.php";
 		foreach ($controllerDirs as $dir)
 		{
 			$path = $rootPath . $dir;
+			
+			if (! is_dir($path))
+				continue;
 			
 			$module = substr($path, strpos($path, "Controllers/") + 12);
 			$module = strtolower(substr($module, 0, - 1));

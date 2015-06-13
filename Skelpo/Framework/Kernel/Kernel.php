@@ -79,7 +79,7 @@ abstract class Kernel extends \Symfony\Component\HttpKernel\Kernel
 
 	/**
 	 * Returns a module based on the name
-	 * 
+	 *
 	 * @param string $name
 	 * @return Module
 	 */
@@ -128,8 +128,8 @@ abstract class Kernel extends \Symfony\Component\HttpKernel\Kernel
 		$themes = $this->getListOfThemes();
 		$theme = $themes[0];
 		$n = "\\Themes\\" . $theme['name'] . "\\" . $theme['name'];
-		// out of lazyness we just skip doing it properly right now
-		$this->theme = new $n($this);
+		$ref = new \ReflectionClass($n);
+		$this->theme = $ref->newInstance($this);
 	}
 
 	/**

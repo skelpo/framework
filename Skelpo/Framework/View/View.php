@@ -321,6 +321,14 @@ class View extends Template
 			// are we minifying?
 			\Less_Parser::$options['compress'] = $this->minifyCss;
 			
+			$vars = array();
+			foreach ($this->getTemplateVars() as $k => $v)
+			{
+				$vars[$k] = '\'' . $v . '\'';
+			}
+			
+			$parser->ModifyVars($vars);
+			
 			// parse our output
 			$parser->parseFile($allLess, '/static/');
 			
@@ -463,13 +471,25 @@ class View extends Template
 		$dir_ = $dirs[0];
 		
 		// get all the files
-		foreach ($files as $file_)
+		foreach ($files as $f2 => $file_)
 		{
-			$file = $dir_ . $this->module->getPathName() . "/_public/" . $file_;
-			$target = $baseFolder . $file_;
+			if (! is_numeric($f2))
+			{
+				$file = $dir_ . $this->module->getPathName() . "/_public/" . $f2;
+				$target = $baseFolder . $file_;
+			}
+			else
+			{
+				$file = $dir_ . $this->module->getPathName() . "/_public/" . $file_;
+				$target = $baseFolder . $file_;
+			}
 			if ($this->filesystem->exists($file))
 			{
 				$this->filesystem->symlink($file, $target, true);
+			}
+			else
+			{
+				throw new \InvalidArgumentException($file . " does not exist.");
 			}
 		}
 	}
