@@ -14,6 +14,8 @@ namespace Skelpo\Framework;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Skelpo\Framework\Module;
+use Skelpo\Framework\Model\ThemeInterface;
 
 /**
  * Framework bundle to handle all our stuff.
@@ -34,12 +36,6 @@ class Framework extends Bundle
 	 * The kernel.
 	 */
 	private $kernel;
-	
-	/**
-	 * The module we are using.
-	 * frontend / backend / api / widgets / mobile
-	 */
-	private $module;
 
 	/**
 	 * Pass-through: Returns the root dir.
@@ -51,10 +47,22 @@ class Framework extends Bundle
 
 	/**
 	 * Returns the module.
+	 *
+	 * @return Module
 	 */
 	public function getModule()
 	{
 		return $this->module;
+	}
+
+	/**
+	 * Sets the module.
+	 *
+	 * @param Module $m
+	 */
+	public function setModule(Module $m)
+	{
+		$this->module = $m;
 	}
 
 	/**
@@ -91,6 +99,8 @@ class Framework extends Bundle
 
 	/**
 	 * Pass-through: Returns the current theme.
+	 *
+	 * @return ThemeInterface
 	 */
 	public function getTheme()
 	{
@@ -142,8 +152,6 @@ class Framework extends Bundle
 	{
 		$this->kernel = $kernel;
 		$this->eventDispatcher = new EventDispatcher();
-		// default
-		$this->module = "frontend";
 	}
 
 	/**

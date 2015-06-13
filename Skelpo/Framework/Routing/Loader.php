@@ -80,11 +80,13 @@ class Loader implements LoaderInterface
 	{
 		$rootPath = $this->kernel->getRootDir();
 		
+		$modules = $this->kernel->getModules();
 		// build all the routes
 		$controllerDirs = array();
-		$controllerDirs[] = "App/Controllers/Frontend/";
-		$controllerDirs[] = "App/Controllers/Backend/";
-		$controllerDirs[] = "App/Controllers/Api/";
+		foreach ($modules as $module)
+		{
+			$controllerDirs[] = "App/Controllers/" . $module->getName() . "/";
+		}
 		
 		$pluginDir = $this->kernel->getFramework()->getPluginDir();
 		
@@ -103,17 +105,13 @@ class Loader implements LoaderInterface
 			$pf = $pluginDir . $p['name'] . "/";
 			if (is_dir($pf))
 			{
-				if (is_dir($pf . "Controllers/Frontend/"))
+				
+				foreach ($modules as $module)
 				{
-					$controllerDirs[] = "App/Plugins/" . $p['name'] . "/Controllers/Frontend/";
-				}
-				if (is_dir($pf . "Controllers/Backend/"))
-				{
-					$controllerDirs[] = "App/Plugins/" . $p['name'] . "/Controllers/Backend/";
-				}
-				if (is_dir($pf . "Controllers/Api/"))
-				{
-					$controllerDirs[] = "App/Plugins/" . $p['name'] . "/Controllers/Api/";
+					if (is_dir($pf . "Controllers/" . $module->getName() . "/"))
+					{
+						$controllerDirs[] = "App/Plugins/" . $p['name'] . "/Controllers/" . $module->getName() . "/";
+					}
 				}
 			}
 		}
