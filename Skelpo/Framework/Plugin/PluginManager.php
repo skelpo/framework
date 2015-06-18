@@ -86,6 +86,13 @@ class PluginManager
 		}
 	}
 
+	/**
+	 * Returns a plugin based on it's name
+	 *
+	 * @param String $name
+	 * @throws \InvalidArgumentException
+	 * @return Plugin
+	 */
 	protected function getPlugin($name)
 	{
 		foreach ($this->plugins as $plugin)
@@ -97,6 +104,34 @@ class PluginManager
 			}
 		}
 		throw new \InvalidArgumentException("Plugin not found");
+	}
+
+	/**
+	 * Returns all paths for the plugins.
+	 *
+	 * @return Array<String>
+	 */
+	public function getPluginPaths()
+	{
+		$paths = array();
+		foreach ($this->plugins as $plugin)
+		{
+			$pluginRefClass = new \ReflectionClass($plugin);
+			$p = "App/Plugins/" . $pluginRefClass->getShortName() . "/";
+			if (is_dir($p))
+				$paths[] = $p;
+		}
+		return $paths;
+	}
+
+	/**
+	 * Returns all plugins.
+	 *
+	 * @return array
+	 */
+	public function getPlugins()
+	{
+		return $this->plugins;
 	}
 
 	/**

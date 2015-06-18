@@ -60,11 +60,12 @@ class View extends Template
 	protected $router;
 	protected $request;
 	protected $defaultLanguage;
+	protected $pluginManager;
 
 	/**
 	 * Creates a new view.
 	 */
-	public function __construct(Framework $f, $rootUrl, $router, $defaultLanguage)
+	public function __construct(Framework $f, $rootUrl, $router, $defaultLanguage, $pluginManager)
 	{
 		$this->template_class = "\Skelpo\Framework\View\ViewTemplate";
 		parent::__construct($f, "");
@@ -73,6 +74,7 @@ class View extends Template
 		$this->rootUrl = $rootUrl;
 		$this->router = $router;
 		$this->defaultLanguage = $defaultLanguage;
+		$this->pluginManager = $pluginManager;
 		
 		$this->setupSmarty();
 	}
@@ -103,7 +105,13 @@ class View extends Template
 		$lpaths = array();
 		$lpaths[] = "App/Locale/";
 		$tpaths = $this->framework->getTemplateDirs();
+		
 		foreach ($tpaths as $p)
+		{
+			$lpaths[] = $p . "Locale/";
+		}
+		$pluginPaths = $this->pluginManager->getPluginPaths();
+		foreach ($pluginPaths as $p)
 		{
 			$lpaths[] = $p . "Locale/";
 		}

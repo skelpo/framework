@@ -115,6 +115,7 @@ class Language
 				$files = scandir($p);
 				foreach ($files as $file)
 				{
+					
 					if ($file == $this->name . ".php")
 					{
 						$this->loadLanguageFile($p . $file);
