@@ -36,23 +36,33 @@ abstract class Plugin
 	}
 
 	/**
+	 * Returns doctrine so that plugins can work with the database.
+	 *
+	 * @return EntityManager
+	 */
+	protected function getEntityManager()
+	{
+		return $this->kernel->getContainer()->get("doctrine.orm.entity_manager");
+	}
+
+	/**
 	 * Initialize the plugin.
 	 */
-	protected abstract function init();
+	public abstract function init();
 
 	/**
 	 * Install the plugin
 	 */
-	protected abstract function install();
+	public abstract function install();
 
 	/**
 	 * Uninstall the plugin.
 	 */
-	protected abstract function uninstall();
+	public abstract function uninstall();
 
 	/**
 	 * Returns the kernel.
-	 * 
+	 *
 	 * @return Kernel
 	 */
 	protected function getKernel()
@@ -62,7 +72,7 @@ abstract class Plugin
 
 	/**
 	 * Returns the framework.
-	 * 
+	 *
 	 * @return Framework
 	 */
 	protected function getFramework()

@@ -50,28 +50,63 @@ abstract class Theme
 
 	/**
 	 * Returns all javascript files that are needed.
+	 *
+	 * @return array
 	 */
 	public abstract function getJSFiles();
 
 	/**
 	 * Returns all static files that are necessary.
+	 *
+	 * @return array
 	 */
 	public abstract function getAllStaticFiles();
 
 	/**
 	 * Returns the name.
+	 *
+	 * @return string
 	 */
-	public abstract function getName();
-
-	/**
-	 * Returns the path to this theme.
-	 */
-	public function getPath()
+	public function getName()
 	{
-		return $this->kernel->getThemeDir() . $this->getName();
+		$refC = new \ReflectionClass($this);
+		return $refC->getShortName();
 	}
 
+	/**
+	 * Returns the paths to this theme.
+	 *
+	 * @return array
+	 */
+	public function getPaths()
+	{
+		$paths = array();
+		$baseDir = $this->kernel->getThemeDir();
+		$refC = new \ReflectionClass($this);
+		$name = $refC->getShortName();
+		$paths[] = $baseDir . $name . "/";
+		$c = 0;
+		while ($name != "Skelpo\\Framework\\Theme\\Theme" && $c <= 10)
+		{
+			$parent = $refC->getParentClass();
+			$name = $parent->getName();
+			$refC = new \ReflectionClass($name);
+			
+			if ($name != "Skelpo\\Framework\\Theme\\Theme")
+				$paths[] = $baseDir . $refC->getShortName() . "/";
+			$c ++;
+		}
+		return $paths;
+	}
+
+	/**
+	 * An empty function to provide the theme the possibility to modify
+	 * some smarty parameters.
+	 *
+	 * @param \Smarty $s
+	 */
 	public function fixSmarty(\Smarty $s)
 	{
+		// intentially empty
 	}
 }

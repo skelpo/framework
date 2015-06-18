@@ -38,24 +38,24 @@ class View extends Template
 	/**
 	 * The current module (api/backend/frontend/widgets)
 	 */
-	private $module;
+	protected $module;
 	/**
 	 * Are we minifying javascript?
 	 */
-	private $minifyJs;
+	protected $minifyJs;
 	/**
 	 * Are we minifying css?
 	 */
-	private $minifyCss;
+	protected $minifyCss;
 	/**
 	 * Our forms.
 	 */
 	protected $forms;
 	protected $templates;
-	private $eventName1;
-	private $eventName2;
-	private $rootUrl;
-	private $technicalTemplateName;
+	protected $eventName1;
+	protected $eventName2;
+	protected $rootUrl;
+	protected $technicalTemplateName;
 	protected $language;
 	protected $router;
 	protected $request;
@@ -155,16 +155,6 @@ class View extends Template
 	}
 
 	/**
-	 * This function will add template dirs.
-	 * This is necessary for plugins.
-	 */
-	private function setupTemplateDirs()
-	{
-		$startDirs = array();
-		// $startDirs = $this->framework->getTemplateDirs();
-	}
-
-	/**
 	 * Do we need to refresh the cache.
 	 */
 	public function isCacheDue()
@@ -252,8 +242,6 @@ class View extends Template
 				break;
 			}
 		}
-		
-		$orf = $dir . $templateName;
 		
 		// if we haven't found the template let's look for the default template
 		if ($this->templateFile == "")
@@ -468,26 +456,31 @@ class View extends Template
 			
 			// and all dirs
 		$dirs = $this->framework->getTemplateDirs();
-		$dir_ = $dirs[0];
+		$dirsCount = count($dirs);
 		
 		// get all the files
 		foreach ($files as $f2 => $file_)
 		{
-			if (! is_numeric($f2))
+			$found = false;
+			for($a = 1; $a < $dirsCount + 1; $a ++)
 			{
-				$file = $dir_ . $this->module->getPathName() . "/_public/" . $f2;
-				$target = $baseFolder . $file_;
+				if (! is_numeric($f2))
+				{
+					$file = $dirs[$dirsCount - $a] . $this->module->getPathName() . "/_public/" . $f2;
+					$target = $baseFolder . $file_;
+				}
+				else
+				{
+					$file = $dirs[$dirsCount - $a] . $this->module->getPathName() . "/_public/" . $file_;
+					$target = $baseFolder . $file_;
+				}
+				if ($this->filesystem->exists($file))
+				{
+					$this->filesystem->symlink($file, $target, true);
+					$found = true;
+				}
 			}
-			else
-			{
-				$file = $dir_ . $this->module->getPathName() . "/_public/" . $file_;
-				$target = $baseFolder . $file_;
-			}
-			if ($this->filesystem->exists($file))
-			{
-				$this->filesystem->symlink($file, $target, true);
-			}
-			else
+			if ($found == false)
 			{
 				throw new \InvalidArgumentException($file . " does not exist.");
 			}

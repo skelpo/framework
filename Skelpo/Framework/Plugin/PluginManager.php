@@ -14,6 +14,9 @@ namespace Skelpo\Framework\Plugin;
 
 use Skelpo\Framework\Framework;
 use Doctrine\ORM\EntityManager;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\StringInput;
+use Symfony\Component\Console\Output\StreamOutput;
 
 /**
  * The plugin manager installs/uninstalls and works with the plugins.
@@ -23,6 +26,7 @@ class PluginManager
 	protected $framework;
 	protected $entityManager;
 	protected $plugins;
+	protected $modelNamespace;
 
 	/**
 	 * Create a new plugin manager.
@@ -51,12 +55,13 @@ class PluginManager
 	 */
 	public function loadPlugins($modelNamespace)
 	{
+		$this->modelNamespace = $modelNamespace;
 		$c = $this->framework->getKernel()->getCache("plugins");
 		$c->setLifetime(0);
 		$plugins = $c->getContent();
 		if (is_null($plugins) || $plugins == "")
 		{
-			$dbPlugins = $this->entityManager->getRepository($modelNamespace)->findAll();
+			$dbPlugins = $this->entityManager->getRepository($this->modelNamespace)->findAll();
 			$plugins = array();
 			foreach ($dbPlugins as $p)
 			{
@@ -81,23 +86,89 @@ class PluginManager
 		}
 	}
 
+	protected function getPlugin($name)
+	{
+		foreach ($this->plugins as $plugin)
+		{
+			$pluginRefClass = new \ReflectionClass($plugin);
+			if ($pluginRefClass->getShortName() == $name)
+			{
+				return $plugin;
+			}
+		}
+		throw new \InvalidArgumentException("Plugin not found");
+	}
+
 	/**
 	 * Installs a plugin
 	 *
-	 * @param Plugin $p
+	 * @param integer $p
 	 */
-	public function installPlugin(Plugin $p)
+	public function installPlugin($pluginId)
 	{
-		// TODO: complete this section
+		$plugins = $this->entityManager->getRepository($this->modelNamespace)->findById($pluginId);
+		if (count($plugins) != 1)
+		{
+			throw new PluginNotFoundException("The plugin cannot be found");
+		}
+		$plugin = $plugins[0];
+		if ($plugin->isActive())
+		{
+			throw new PluginStatusException("Plugin is already installed.");
+		}
+		$pluginInstance = $this->getPlugin($plugin->getName());
+		$plugin->setActivated(true);
+		$app = new Application($this->framework->getKernel());
+		$app->setAutoExit(false);
+		$input = new StringInput("doctrine:schema:update --force");
+		$fp = fopen('php://temp/maxmemory:' . (1024 * 1024 * 512), 'r+');
+		$output = new StreamOutput($fp);
+		$error = $app->run($input, $output);
+		rewind($fp);
+		if ($error != 0)
+		{
+			$msg = ("Error: $error\n" . stream_get_contents($fp));
+			throw new PluginStatusException($msg);
+		}
+		else
+			$msg = stream_get_contents($fp);
+		
+		$this->entityManager->flush();
+		
+		$pluginInstance->install();
+	}
+
+	/**
+	 * Reinstalls a plugin.
+	 *
+	 * @param integer $p
+	 */
+	public function reinstallPlugin($pluginId)
+	{
+		$this->uninstallPlugin($pluginId);
+		$this->installPlugin($pluginId);
 	}
 
 	/**
 	 * Deinstalls a plugin.
 	 *
-	 * @param Plugin $p
+	 * @param integer $p
 	 */
-	public function deinstallPlugin(Plugin $p)
+	public function uninstallPlugin($pluginId)
 	{
-		// TODO: complete this section
+		$plugins = $this->entityManager->getRepository($this->modelNamespace)->findById($pluginId);
+		if (count($plugins) != 1)
+		{
+			throw new PluginNotFoundException("The plugin cannot be found");
+		}
+		$plugin = $plugins[0];
+		if (! $plugin->isActive())
+		{
+			throw new PluginStatusException("Plugin is already uninstalled.");
+		}
+		$pluginInstance = $this->getPlugin($plugin->getName());
+		$pluginInstance->uninstall();
+		$plugin->setActive(0);
+		$this->entityManager->flush();
 	}
 }

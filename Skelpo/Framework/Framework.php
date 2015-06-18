@@ -120,20 +120,7 @@ class Framework extends Bundle
 	 */
 	public function getTemplateDirs()
 	{
-		$a = $this->getTheme()->getPath();
-		$dirs = array();
-		$d = $a . "/";
-		/*
-		 * $dirs_ = scandir($d);
-		 * foreach ($dirs_ as $da)
-		 * {
-		 * if (is_dir($da))
-		 * {
-		 * $dirs[] = $da;
-		 * }
-		 * }
-		 */
-		$dirs[] = $d;
+		$dirs = $this->getTheme()->getPaths();
 		return $dirs;
 	}
 
