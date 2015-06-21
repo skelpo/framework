@@ -6,7 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version 1.0.0-alpha
+ * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @copyright 2015 Skelpo Inc. www.skelpo.com
  */
@@ -40,28 +40,36 @@ use Skelpo\Framework\View\View;
 class Language
 {
 	/**
-	 * The name of the language (de, de_DE, en_EN,...)
+	 *
+	 * @var string The name of the language (de, de_DE, en_EN,...)
 	 */
 	protected $name;
 	/**
-	 * All messages that are translations of keys.
+	 *
+	 * @var string[] All messages that are translations of keys.
 	 */
 	protected $messages;
 	/**
-	 * Reference to the view object.
+	 *
+	 * @var Skelpo\Framework\View\View Reference to the view object.
 	 */
 	protected $view;
 	/**
-	 * Are we writing a file with all missing messages?
+	 *
+	 * @var boolean Are we writing a file with all missing messages?
 	 */
 	protected $writeMissingFile;
 	/**
-	 * File in which we write all missing messages.
+	 *
+	 * @var string File in which we write all missing messages.
 	 */
 	protected $missingFile;
 
 	/**
 	 * Creates a new language, initialed with a name and the view.
+	 *
+	 * @param View $v The view we are using.
+	 * @param string $name The name of this language.
 	 */
 	public function __construct(View $v, $name)
 	{
@@ -75,7 +83,7 @@ class Language
 	/**
 	 * Returns the name of this language.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function getName()
 	{
@@ -84,8 +92,8 @@ class Language
 
 	/**
 	 * Returns all messages saved for this language.
-	 *
-	 * @return String
+	 * 
+	 * @return string
 	 */
 	public function getMessages()
 	{
@@ -94,6 +102,8 @@ class Language
 
 	/**
 	 * Loads one individual language file.
+	 *
+	 * @param string $path The path of the language file.
 	 */
 	public function loadLanguageFile($path)
 	{
@@ -105,6 +115,8 @@ class Language
 	/**
 	 * Loads all files from the given paths.
 	 * Only the files matching the name of this language file will be loaded.
+	 *
+	 * @param string[] $paths The paths to all language file paths.
 	 */
 	public function loadLanguageFiles($paths)
 	{
@@ -128,6 +140,8 @@ class Language
 	/**
 	 * Adds a whole array of key to the existing messages.
 	 * Keys will be overwritten.
+	 *
+	 * @param string[] $data Messages to add.
 	 */
 	public function addMessages($data)
 	{
@@ -136,6 +150,9 @@ class Language
 
 	/**
 	 * Adds an individual message to the array.
+	 *
+	 * @param string $key The key for this message.
+	 * @param string $value The value for this message.
 	 */
 	public function addMessage($key, $value)
 	{
@@ -144,6 +161,9 @@ class Language
 
 	/**
 	 * Translates a string.
+	 *
+	 * @param string $termn The term to translate.
+	 * @return string Translated term.
 	 */
 	public function getString($term)
 	{

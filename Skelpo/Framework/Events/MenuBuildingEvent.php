@@ -6,7 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version 1.0.0-alpha
+ * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @copyright 2015 Skelpo Inc. www.skelpo.com
  */
@@ -21,24 +21,36 @@ use Skelpo\Framework\View;
 /**
  * Controller event class.
  * Carries the controller to the listener.
+ *
+ * TODO: Proper documentation.
  */
 class MenuBuildingEvent extends Event
 {
 	/**
 	 * The menu we are carrying.
+	 *
+	 * @var Menu
 	 */
 	protected $menu;
 	/**
 	 * The request.
+	 *
+	 * @var Request
 	 */
 	protected $request;
 	/**
 	 * The response.
+	 *
+	 * @var Response
 	 */
 	protected $response;
 
 	/**
 	 * Creates a new event with controller $c.
+	 *
+	 * @param Menu $m
+	 * @param Request $q
+	 * @param Response $r
 	 */
 	public function __construct(Menu $m = null, Request $q = null, Response $r = null)
 	{
@@ -49,6 +61,8 @@ class MenuBuildingEvent extends Event
 
 	/**
 	 * Returns the request object.
+	 *
+	 * @return Request
 	 */
 	public function getRequest()
 	{
@@ -57,6 +71,8 @@ class MenuBuildingEvent extends Event
 
 	/**
 	 * Returns the response object.
+	 *
+	 * @return Response
 	 */
 	public function getResponse()
 	{
@@ -65,6 +81,8 @@ class MenuBuildingEvent extends Event
 
 	/**
 	 * Returns the controller.
+	 *
+	 * @return Menu
 	 */
 	public function getMenu()
 	{
@@ -72,6 +90,9 @@ class MenuBuildingEvent extends Event
 	}
 
 	/**
+	 * Sets the response.
+	 * 
+	 * @param Response $q
 	 */
 	public function setResponse(Response $q)
 	{

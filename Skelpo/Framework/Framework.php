@@ -6,7 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version 1.0.0-alpha
+ * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @copyright 2015 Skelpo Inc. www.skelpo.com
  */
@@ -19,26 +19,38 @@ use Skelpo\Framework\Model\ThemeInterface;
 
 /**
  * Framework bundle to handle all our stuff.
+ * This class is closely connected
+ * to the Kernel class. The big difference between the two classes is that the
+ * framework class is entirely the framework, without any influence from outsite,
+ * while the Kernel class is the core of the application and can be changed in many ways.
  */
 class Framework extends Bundle
 {
 	/**
 	 * Our event dispatcher to deal with events.
+	 *
+	 * @var Symfony\Component\EventDispatcher\EventDispatcher
 	 */
 	private $eventDispatcher;
 	
 	/**
 	 * The environment we are using (dev/prod/test).
+	 *
+	 * @var string
 	 */
 	private $environment;
 	
 	/**
 	 * The kernel.
+	 *
+	 * @var Skelpo\Framework\Kernel\KernelInterface
 	 */
 	private $kernel;
 
 	/**
-	 * Pass-through: Returns the root dir.
+	 * Returns the root dir of the application.
+	 * 
+	 * @return string
 	 */
 	public function getRootDir()
 	{
@@ -47,8 +59,8 @@ class Framework extends Bundle
 
 	/**
 	 * Returns the module.
-	 *
-	 * @return Module
+	 * 
+	 * @return Skelpo\Framework\Module
 	 */
 	public function getModule()
 	{
@@ -58,7 +70,7 @@ class Framework extends Bundle
 	/**
 	 * Sets the module.
 	 *
-	 * @param Module $m
+	 * @param Skelpo\Framework\Module $m
 	 */
 	public function setModule(Module $m)
 	{
@@ -66,7 +78,13 @@ class Framework extends Bundle
 	}
 
 	/**
-	 * Pass-through: Returns the root url.
+	 * Returns the root URL for this application.
+	 * Consider though that
+	 * this is not necessarily the only URL that is valid. Depending on
+	 * your domain settings other domains count as well. But this one works
+	 * 100% for sure.
+	 *
+	 * @return string The root URL that is used for this application.
 	 */
 	public function getRootUrl()
 	{
@@ -75,6 +93,8 @@ class Framework extends Bundle
 
 	/**
 	 * Returns the kernel.
+	 * 
+	 * @return Skelpo\Framework\Kernel
 	 */
 	public function getKernel()
 	{
@@ -83,6 +103,8 @@ class Framework extends Bundle
 
 	/**
 	 * Returns the dir for additional smarty plugins.
+	 * 
+	 * @return string
 	 */
 	public function getSmartyPluginDir()
 	{
@@ -91,6 +113,8 @@ class Framework extends Bundle
 
 	/**
 	 * Returns the dir for additional plugins.
+	 * 
+	 * @return string
 	 */
 	public function getPluginDir()
 	{
@@ -98,9 +122,9 @@ class Framework extends Bundle
 	}
 
 	/**
-	 * Pass-through: Returns the current theme.
-	 *
-	 * @return ThemeInterface
+	 * Returns the current theme.
+	 * 
+	 * @return Skelpo\Framework\Theme\Theme
 	 */
 	public function getTheme()
 	{
@@ -108,7 +132,9 @@ class Framework extends Bundle
 	}
 
 	/**
-	 * Pass-through: Returns the theme dir.
+	 * Returns the theme dir.
+	 * 
+	 * @return string
 	 */
 	public function getThemeDir()
 	{
@@ -117,8 +143,8 @@ class Framework extends Bundle
 
 	/**
 	 * Returns all dirs that could contain templates.
-	 *
-	 * @return Array
+	 * 
+	 * @return string[]
 	 */
 	public function getTemplateDirs()
 	{
@@ -146,7 +172,9 @@ class Framework extends Bundle
 	}
 
 	/**
-	 * Pass-through: Returns the cache dir.
+	 * Returns the cache dir.
+	 * 
+	 * @return string
 	 */
 	public function getCacheDir()
 	{
@@ -155,8 +183,10 @@ class Framework extends Bundle
 
 	/**
 	 * Creates a new instance with the kernel as an argument.
+	 *
+	 * @param Skelpo\Framework\Kernel\KernelInterface
 	 */
-	public function __construct($kernel)
+	public function __construct(Skelpo\Framework\Kernel\KernelInterface $kernel)
 	{
 		$this->kernel = $kernel;
 		$this->eventDispatcher = new EventDispatcher();
@@ -164,14 +194,20 @@ class Framework extends Bundle
 
 	/**
 	 * Returns information.
+	 * 
+	 * @return string[]
 	 */
 	public function getInfo()
 	{
-		return "Skelpo Inc.";
+		return array(
+				'author' => "Skelpo Inc." 
+		);
 	}
 
 	/**
 	 * Returns the event dispatcher.
+	 * 
+	 * @return Symfony\Component\EventDispatcher\EventDispatcher
 	 */
 	public function getEventDispatcher()
 	{

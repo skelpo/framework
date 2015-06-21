@@ -6,7 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version 1.0.0-alpha
+ * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @copyright 2015 Skelpo Inc. www.skelpo.com
  */
@@ -22,11 +22,23 @@ use Skelpo\Framework\Framework;
  */
 class SmartyRendererEngine extends AbstractRendererEngine implements SmartyRendererEngineInterface
 {
+	/**
+	 * The framework.
+	 *
+	 * @var Skelpo\Framework\Framework
+	 */
 	protected $framework;
+	/**
+	 * The router instance.
+	 *
+	 * @var Skelpo\Framework\Routing\Router
+	 */
 	protected $router;
 
 	/**
 	 * Sets the framework.
+	 *
+	 * @param Skelpo\Framework\Framework $s The framework instance to be set.
 	 */
 	public function setFramework(Framework $s)
 	{
@@ -35,6 +47,8 @@ class SmartyRendererEngine extends AbstractRendererEngine implements SmartyRende
 
 	/**
 	 * Sets the router.
+	 *
+	 * @param Skelpo\Framework\Routing\Router $router
 	 */
 	public function setRouter($router)
 	{
@@ -43,6 +57,8 @@ class SmartyRendererEngine extends AbstractRendererEngine implements SmartyRende
 
 	/**
 	 * Returns the router.
+	 *
+	 * @return Skelpo\Framework\Routing\Router
 	 */
 	public function getRouter()
 	{
@@ -51,6 +67,10 @@ class SmartyRendererEngine extends AbstractRendererEngine implements SmartyRende
 
 	/**
 	 * Returns a template for a type of input within a form.
+	 *
+	 * @param string $typeName Type of the input (text, password,..)
+	 * @param string $formName Name of the form.
+	 * @return string
 	 */
 	protected function getTemplate($typeName, $formName)
 	{
@@ -74,6 +94,11 @@ class SmartyRendererEngine extends AbstractRendererEngine implements SmartyRende
 
 	/**
 	 * Renders an input.
+	 *
+	 * @param \Symfony\Component\Form\FormInterface $view The view for this input.
+	 * @param string $blockName Name of the block.
+	 * @param string[] $params Paremters for this input.
+	 * @return string
 	 */
 	public function renderInput(\Symfony\Component\Form\FormInterface $view, $blockName, $params)
 	{
@@ -109,6 +134,14 @@ class SmartyRendererEngine extends AbstractRendererEngine implements SmartyRende
 
 	/**
 	 * Renders a form.
+	 *
+	 * @param FormView $view The view for this form.
+	 * @param string $blockName Name of the block.
+	 * @param string $content Content of this form.
+	 * @param string[] $params Parameters for this form.
+	 * @param string $requestLocale Locale of the request. (de,en,..)
+	 * @param string $defaultLocale Default locale.
+	 * @return string
 	 */
 	public function renderForm(FormView $view, $blockName, $content, $params, $requestLocale, $defaultLocale)
 	{
@@ -146,9 +179,12 @@ class SmartyRendererEngine extends AbstractRendererEngine implements SmartyRende
 	}
 
 	/**
+	 * Renders a block.
 	 *
-	 * @ERROR!!!
-	 *
+	 * @param FormView $view
+	 * @param string $resource
+	 * @param string $blockName
+	 * @param array $variables
 	 */
 	public function renderBlock(FormView $view, $resource, $blockName, array $variables = array())
 	{

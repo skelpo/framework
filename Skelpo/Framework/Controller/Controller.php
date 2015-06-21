@@ -6,7 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version 1.0.0-alpha
+ * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @copyright 2015 Skelpo Inc. www.skelpo.com
  */
@@ -32,7 +32,9 @@ abstract class Controller extends BaseController
 	}
 
 	/**
-	 * Returns our smarty view.
+	 * Returns our View.
+	 * 
+	 * @return Skelpo\Framework\View\View
 	 */
 	protected function getView()
 	{
@@ -41,6 +43,8 @@ abstract class Controller extends BaseController
 
 	/**
 	 * Returns the current language.
+	 * 
+	 * @return Skelpo\Framework\Language\Language
 	 */
 	protected function getLanguage()
 	{
@@ -48,7 +52,9 @@ abstract class Controller extends BaseController
 	}
 
 	/**
-	 * Returns out framework.
+	 * Returns our framework.
+	 * 
+	 * @return Skelpo\Framework\Framework
 	 */
 	protected function getFramework()
 	{
@@ -58,6 +64,11 @@ abstract class Controller extends BaseController
 	/**
 	 * Redirects to a certain route.
 	 * Checks for beginning "/".
+	 *
+	 * @param string $route The route to direct to.
+	 * @param string[] $parameters Parameters for this route
+	 * @param int $status The status for this redirect.
+	 * @return Symfony\Component\HttpFoundation\Response The response redirecting us.
 	 */
 	protected function redirectToRoute($route, array $parameters = array(), $status = 302)
 	{

@@ -6,7 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version 1.0.0-alpha
+ * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @copyright 2015 Skelpo Inc. www.skelpo.com
  */
@@ -21,6 +21,7 @@ use Skelpo\Framework\Framework;
 class SmartyRenderer extends FormRenderer implements SmartyRendererInterface
 {
 	/**
+	 * The rendering engine.
 	 *
 	 * @var SmartyRendererEngineInterface
 	 */
@@ -28,6 +29,14 @@ class SmartyRenderer extends FormRenderer implements SmartyRendererInterface
 
 	/**
 	 * Render a form.
+	 *
+	 * @param Symfony\Component\Form\FormView $view The view for this form.
+	 * @param string $blockName Name of this block.
+	 * @param string $content Content for the form.
+	 * @param string[] $params Parameters for the form.
+	 * @param string $requestLocale The locale (language) from the request.
+	 * @param string $defaultLocale The locale that is used if the request locale is not available.
+	 * @return string
 	 */
 	public function renderForm(\Symfony\Component\Form\FormView $view, $blockName, $content, $params, $requestLocale, $defaultLocale)
 	{
@@ -36,6 +45,11 @@ class SmartyRenderer extends FormRenderer implements SmartyRendererInterface
 
 	/**
 	 * Render an input within a form.
+	 *
+	 * @param Symfony\Component\Form\FormInterface $view The form view for this input.
+	 * @param string $blockName Name of the block.
+	 * @param string[] $params Parameters of this input.
+	 * @return string
 	 */
 	public function renderInput(\Symfony\Component\Form\FormInterface $view, $blockName, $params)
 	{
@@ -44,6 +58,9 @@ class SmartyRenderer extends FormRenderer implements SmartyRendererInterface
 
 	/**
 	 * Creates a new instance.
+	 *
+	 * @param Skelpo\Framework\Form\SmartyRendererEngineInterface $engine The rendering engine.
+	 * @param object $csrfTokenManager Token manager to manage csrf.
 	 */
 	public function __construct(SmartyRendererEngineInterface $engine, $csrfTokenManager = null)
 	{
@@ -53,12 +70,13 @@ class SmartyRenderer extends FormRenderer implements SmartyRendererInterface
 	}
 
 	/**
+	 * Sets the framework.
 	 *
-	 * @ERROR!!!
+	 * @param Skelpo\Framework\Framework $framework
 	 *
 	 */
-	public function setFramework(Framework $s)
+	public function setFramework(Framework $framework)
 	{
-		$this->engine->setFramework($s);
+		$this->engine->setFramework($framework);
 	}
 }

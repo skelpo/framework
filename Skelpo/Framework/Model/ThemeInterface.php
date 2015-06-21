@@ -6,14 +6,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version 1.0.0-alpha
+ * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @copyright 2015 Skelpo Inc. www.skelpo.com
  */
 namespace Skelpo\Framework\Model;
 
 /**
- * Plugin interface to ensure our plugin model has all we need.
+ * Plugin interface to ensure our theme model has all we need.
  */
 interface ThemeInterface
 {

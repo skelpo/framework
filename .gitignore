@@ -4,3 +4,5 @@
 .pydevproject
 .buildpath
 .settings
+/phpDocumentor.phar
+/docs/

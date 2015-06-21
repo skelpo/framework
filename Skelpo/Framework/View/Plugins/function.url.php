@@ -6,7 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version 1.0.0-alpha
+ * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @copyright 2015 Skelpo Inc. www.skelpo.com
  */
@@ -19,6 +19,14 @@
  * Name: url
  * Purpose: Formats an URL correctly
  * -------------------------------------------------------------
+ */
+/**
+ * Formats a URL.
+ * This function is used like {url action="frontend/index/action"}.
+ *
+ * @param string[] $params
+ * @param Smarty_Internal_Template $template
+ * @return string
  */
 function smarty_function_url($params, Smarty_Internal_Template $template)
 {

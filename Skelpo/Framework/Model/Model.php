@@ -6,7 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version 1.0.0-alpha
+ * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @copyright 2015 Skelpo Inc. www.skelpo.com
  */
@@ -23,6 +23,9 @@ abstract class Model
 
 	/**
 	 * Sets variable $name to $value.
+	 *
+	 * @param string $name
+	 * @param object $value
 	 */
 	protected function setVar($name, $value)
 	{
@@ -32,7 +35,8 @@ abstract class Model
 	/**
 	 * Returns variable $name.
 	 *
-	 * @return ($name)
+	 * @param string $name Name of the var.
+	 * @return object
 	 */
 	protected function getVar($name)
 	{
@@ -42,8 +46,8 @@ abstract class Model
 	/**
 	 * Sets variable $name to $value.
 	 *
-	 * @param String $name
-	 * @param Object $value
+	 * @param string $name
+	 * @param object $value
 	 */
 	public function __set($name, $value)
 	{
@@ -53,8 +57,8 @@ abstract class Model
 	/**
 	 * Returns variable $name.
 	 *
-	 * @param String $name
-	 * @return ($name)
+	 * @param string $name
+	 * @return object
 	 */
 	public function __get($name)
 	{
@@ -64,8 +68,8 @@ abstract class Model
 	/**
 	 * Returns an array containing all fields, that aren't objects, and their values.
 	 *
-	 * @param Array(String) $fields
-	 * @return Array(String=>String)
+	 * @param string[] $fields
+	 * @return string[] The model in an array.
 	 */
 	public function getAsArray($fields = array())
 	{
@@ -88,7 +92,7 @@ abstract class Model
 	 * Returns all keys of this model.
 	 * Excludes the proxy keys of doctrine though.
 	 *
-	 * @return Array(String)
+	 * @return string[]
 	 */
 	public function getKeys()
 	{
@@ -110,7 +114,7 @@ abstract class Model
 	 * Tries to look for the name and the title but if not found
 	 * will return the model's class name and the id.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function __toString()
 	{
@@ -132,6 +136,9 @@ abstract class Model
 	/**
 	 * Manipulates all requests for a generic function "getWHATEVER" and passes on the parameters
 	 * so that we get and set all varialbes.
+	 *
+	 * @param string $method The method.
+	 * @param string[] $arguments_ The arguments.
 	 */
 	public function __call($method, $arguments_)
 	{

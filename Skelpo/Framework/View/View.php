@@ -6,7 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version 1.0.0-alpha
+ * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @copyright 2015 Skelpo Inc. www.skelpo.com
  */
@@ -24,7 +24,6 @@ use Skelpo\Framework\Events\ControllerEvent;
 use Skelpo\Framework\Framework;
 use Skelpo\Framework\Language\Language;
 use Skelpo\Framework\View\Template;
-// use Skelpo\Framework\Forms\Form;
 
 /**
  * View service class.
@@ -37,35 +36,94 @@ class View extends Template
 {
 	/**
 	 * The current module (api/backend/frontend/widgets)
+	 *
+	 * @var Skelpo\Framework\Module\Module
 	 */
 	protected $module;
 	/**
 	 * Are we minifying javascript?
+	 *
+	 * @var boolean
 	 */
 	protected $minifyJs;
 	/**
 	 * Are we minifying css?
+	 *
+	 * @var boolean
 	 */
 	protected $minifyCss;
 	/**
 	 * Our forms.
+	 *
+	 * @var Symfony\Component\Form\Form[]
 	 */
 	protected $forms;
-	protected $templates;
+	/**
+	 * The name of the first event to fire.
+	 *
+	 * @var string
+	 */
 	protected $eventName1;
+	/**
+	 * The name of the second event to fire.
+	 *
+	 * @var string
+	 */
 	protected $eventName2;
+	/**
+	 * The root url.
+	 *
+	 * @var string
+	 */
 	protected $rootUrl;
+	/**
+	 * The technical name of the template (even if the template is not available, this variable says
+	 * what it is supposed to be.
+	 *
+	 * @var string
+	 */
 	protected $technicalTemplateName;
+	/**
+	 * The language used.
+	 *
+	 * @var Skelpo\Framework\Language\Language
+	 */
 	protected $language;
+	/**
+	 * The router used.
+	 *
+	 * @var Skelpo\Framework\Routing\Router
+	 */
 	protected $router;
+	/**
+	 * The request we are dealing with.
+	 *
+	 * @var Symfony\Component\HttpFoundation\Request
+	 */
 	protected $request;
+	/**
+	 * Default language.
+	 *
+	 * @var string
+	 */
 	protected $defaultLanguage;
+	/**
+	 * Plugin manager service.
+	 *
+	 * @var Skelpo\Framework\Plugin\PluginManager
+	 */
 	protected $pluginManager;
 
 	/**
 	 * Creates a new view.
+	 *
+	 * @param Framework $f
+	 * @param string $rootUrl
+	 * @param Skelpo\Framework\Routing\Router $router
+	 * @param string $defaultLanguage
+	 * @param Skelpo\Framework\Plugin\PluginManager $pluginManager
 	 */
-	public function __construct(Framework $f, $rootUrl, $router, $defaultLanguage, $pluginManager)
+	public function __construct(Framework $f, $rootUrl, $router, $defaultLanguage, Skelpo\Framework\Plugin\PluginManager $pluginManager)
 	{
 		$this->template_class = "\Skelpo\Framework\View\ViewTemplate";
 		parent::__construct($f, "");
@@ -80,15 +138,19 @@ class View extends Template
 	}
 
 	/**
-	 * Sets the default language to $t.
+	 * Sets the default language to $defaultLanguage.
+	 *
+	 * @param string $defaultLanguage The language.
 	 */
-	protected function setDefaultLanguage($t)
+	protected function setDefaultLanguage($defaultLanguage)
 	{
-		$this->defaultLanguage = $t;
+		$this->defaultLanguage = $defaultLanguage;
 	}
 
 	/**
 	 * Returns the default language.
+	 *
+	 * @return string
 	 */
 	public function getDefaultLanguage()
 	{
@@ -97,6 +159,9 @@ class View extends Template
 
 	/**
 	 * Sets the language.
+	 * The internal variable $language will be of Skelpo\Framework\Language\Language type.
+	 *
+	 * @param string $locale (en,de)
 	 */
 	protected function setLanguage($locale)
 	{
@@ -120,6 +185,8 @@ class View extends Template
 
 	/**
 	 * Returns the language.
+	 *
+	 * @return Skelpo\Framework\Language\Language
 	 */
 	protected function getLanguage()
 	{
@@ -128,6 +195,8 @@ class View extends Template
 
 	/**
 	 * Sets the request.
+	 *
+	 * @param RequestStack $requestStack All requests.
 	 */
 	public function setRequest(RequestStack $requestStack)
 	{
@@ -140,6 +209,8 @@ class View extends Template
 
 	/**
 	 * Returns the router (needed for smarty plugins).
+	 *
+	 * @return Skelpo\Framework\Routing\Router
 	 */
 	public function getRouter()
 	{
@@ -148,6 +219,8 @@ class View extends Template
 
 	/**
 	 * Adds a form to this page.
+	 *
+	 * @param Symfony\Component\Form\Form $f
 	 */
 	public function addForm(Form $f)
 	{
@@ -156,6 +229,9 @@ class View extends Template
 
 	/**
 	 * Returns a form.
+	 *
+	 * @param string $name
+	 * @return Symfony\Component\Form\Form
 	 */
 	public function getForm($name)
 	{
@@ -164,6 +240,8 @@ class View extends Template
 
 	/**
 	 * Do we need to refresh the cache.
+	 *
+	 * @return boolean
 	 */
 	public function isCacheDue()
 	{
@@ -174,6 +252,8 @@ class View extends Template
 	 * Event that begins before the controllers are called.
 	 * Initializes
 	 * Smarty and sets the template.
+	 *
+	 * @param FilterControllerEvent $event The event.
 	 */
 	public function onKernelController(FilterControllerEvent $event)
 	{
@@ -269,6 +349,8 @@ class View extends Template
 
 	/**
 	 * Returns the URL to the less/css-compiled file.
+	 *
+	 * @return string
 	 */
 	private function getLessUrl()
 	{
@@ -349,6 +431,8 @@ class View extends Template
 
 	/**
 	 * Returns the JS url, compressed and only one file.
+	 *
+	 * @return string
 	 */
 	private function getJSUrl()
 	{
@@ -425,7 +509,7 @@ class View extends Template
 	 * Loadas all files from the file system with a certain endings.
 	 * Works its way recursively through a dictionary.
 	 *
-	 * @param Array $files
+	 * @param string[] $files
 	 * @param string $ending
 	 * @return string
 	 */
@@ -529,6 +613,8 @@ class View extends Template
 	/**
 	 * This event is being triggered after the controllers we called and before the response is checked.
 	 * Because our html controllers don't return anything we build the response here.
+	 *
+	 * @param GetResponseForControllerResultEvent $event The event.
 	 */
 	public function onViewResponse(GetResponseForControllerResultEvent $event)
 	{
@@ -582,6 +668,9 @@ class View extends Template
 
 	/**
 	 * Parses our content for language elements.
+	 *
+	 * @param string $content The content to parse.
+	 * @return The parsed content.
 	 */
 	protected function parseLanguage($content)
 	{

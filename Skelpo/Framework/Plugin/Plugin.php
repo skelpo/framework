@@ -6,7 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version 1.0.0-alpha
+ * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @copyright 2015 Skelpo Inc. www.skelpo.com
  */
@@ -20,10 +20,35 @@ use Skelpo\Framework\Framework;
  */
 abstract class Plugin
 {
+	/**
+	 * The framework.
+	 *
+	 * @var Skelpo\Framework\Framework
+	 */
 	protected $framework;
+	/**
+	 * The kernel.
+	 *
+	 * @var Skelpo\Framework\Kernel\Kernel
+	 */
 	protected $kernel;
+	/**
+	 * Static files that this plugin is adding to the pile.
+	 *
+	 * @var string[]
+	 */
 	protected $staticFiles;
+	/**
+	 * Theme files that are overwritten.
+	 *
+	 * @var string[]
+	 */
 	protected $themeFiles;
+	/**
+	 * JS files that are added and included in the "all.js".
+	 *
+	 * @var string[]
+	 */
 	protected $jsFiles;
 
 	/**
@@ -44,7 +69,8 @@ abstract class Plugin
 	/**
 	 * Adds a new static file to be included.
 	 *
-	 * @param String $file
+	 * @param string $file
+	 * @param string $module
 	 */
 	protected function addStaticFile($file, $module)
 	{
@@ -54,7 +80,8 @@ abstract class Plugin
 	/**
 	 * Adds a new static file to be included.
 	 *
-	 * @param String $file
+	 * @param string $file
+	 * @param string $module
 	 */
 	protected function addJsFile($file, $module)
 	{
@@ -64,7 +91,8 @@ abstract class Plugin
 	/**
 	 * Adds a new static file to be included.
 	 *
-	 * @param String $file
+	 * @param string $file
+	 * @param string $module
 	 */
 	protected function addThemeFile($file, $module)
 	{
@@ -74,7 +102,7 @@ abstract class Plugin
 	/**
 	 * Returns all static files.
 	 *
-	 * @return Array
+	 * @return string[]
 	 */
 	public function getJsFiles()
 	{
@@ -84,7 +112,7 @@ abstract class Plugin
 	/**
 	 * Returns all static files.
 	 *
-	 * @return Array
+	 * @return string[]
 	 */
 	public function getStaticFiles()
 	{
@@ -94,7 +122,7 @@ abstract class Plugin
 	/**
 	 * Returns all static files.
 	 *
-	 * @return Array
+	 * @return string[]
 	 */
 	public function getThemefiles()
 	{
@@ -155,11 +183,13 @@ abstract class Plugin
 	}
 
 	/**
+	 * Subscribes to an event to change behaviour.
 	 *
-	 * @param unknown $eventName
-	 * @param unknown $function
+	 * @param string $eventName
+	 * @param string $function
 	 */
 	public function subscribeEvent($eventName, $function)
 	{
+		// TODO: Finish this section.
 	}
 }

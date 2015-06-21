@@ -6,7 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version 1.0.0-alpha
+ * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @copyright 2015 Skelpo Inc. www.skelpo.com
  */
@@ -26,19 +26,29 @@ class ControllerEvent extends Event
 {
 	/**
 	 * The controller we are carrying.
+	 * 
+	 * @var Symfony\Bundle\FrameworkBundle\Controller\Controller
 	 */
 	protected $controller;
 	/**
 	 * The request.
+	 * 
+	 * @var Symfony\Component\HttpFoundation\Request
 	 */
 	protected $request;
 	/**
 	 * The response.
+	 * 
+	 * @var Symfony\Component\HttpFoundation\Response
 	 */
 	protected $response;
 
 	/**
 	 * Creates a new event with controller $c.
+	 *
+	 * @param Symfony\Bundle\FrameworkBundle\Controller\Controller $c The controller for this event.
+	 * @param Symfony\Component\HttpFoundation\Request $q The request.
+	 * @param Symfony\Component\HttpFoundation\Response $r The response.
 	 */
 	public function __construct(Controller $c = null, Request $q = null, Response $r = null)
 	{
@@ -49,6 +59,8 @@ class ControllerEvent extends Event
 
 	/**
 	 * Returns the request object.
+	 * 
+	 * @return Symfony\Component\HttpFoundation\Request
 	 */
 	public function getRequest()
 	{
@@ -57,6 +69,8 @@ class ControllerEvent extends Event
 
 	/**
 	 * Returns the response object.
+	 * 
+	 * @return Symfony\Component\HttpFoundation\Response
 	 */
 	public function getResponse()
 	{
@@ -65,6 +79,8 @@ class ControllerEvent extends Event
 
 	/**
 	 * Returns the controller.
+	 * 
+	 * @return Symfony\Bundle\FrameworkBundle\Controller\Controller
 	 */
 	public function getController()
 	{
@@ -72,6 +88,9 @@ class ControllerEvent extends Event
 	}
 
 	/**
+	 * Sets the response.
+	 *
+	 * @param Response $q
 	 */
 	public function setResponse(Response $q)
 	{

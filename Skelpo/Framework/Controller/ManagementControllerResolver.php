@@ -6,7 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version 1.0.0-alpha
+ * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @copyright 2015 Skelpo Inc. www.skelpo.com
  */
@@ -18,15 +18,33 @@ use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
+/**
+ * This class is managing all controllers.
+ * The primary difference to the
+ * smarty controller is that this controller "knows" all controllers at all times.
+ * Symfony is just loading the controller that is needed, we know and load
+ * all of them to efficiently use them.
+ */
 class ManagementControllerResolver implements ControllerResolverInterface
 {
+	/**
+	 * Our container.
+	 *
+	 * @var Symfony\Component\DependencyInjection\ContainerInterface
+	 */
 	protected $container;
+	/**
+	 * All controllers that are known to the system.
+	 * This includes controllers from plugins.
+	 *
+	 * @var Symfony\Bundle\FrameworkBundle\Controller\Controller[]
+	 */
 	protected $controllers;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param LoggerInterface $logger A LoggerInterface instance
+	 * @param Symfony\Component\DependencyInjection\ContainerInterface $container The container for this management class.
 	 */
 	public function __construct($container = null)
 	{
@@ -35,15 +53,15 @@ class ManagementControllerResolver implements ControllerResolverInterface
 	}
 
 	/**
+	 * This method looks for a '_controller' request attribute that represents
+	 * the controller name (a string like ClassName::MethodName).
 	 *
-	 * @ERROR!!! This method looks for a '_controller' request attribute that represents
-	 *           the controller name (a string like ClassName::MethodName).
-	 *          
-	 *           @api
+	 * @param Symfony\Component\HttpFoundation\Request $request The request we are handeling.
+	 * @throws InvalidArgumentException If the controller is not callable.
+	 * @return Symfony\Bundle\FrameworkBundle\Controller\Controller The controller.
 	 */
 	public function getController(Request $request)
 	{
-		// die("hier we go!".print_r($request,true));
 		if (! $controller = $request->attributes->get('_controller'))
 		{
 			if (null !== $this->logger)
@@ -92,8 +110,11 @@ class ManagementControllerResolver implements ControllerResolverInterface
 	}
 
 	/**
+	 * Returns the arguments of a request.
 	 *
-	 * @ERROR!!! @api
+	 * @param Symfony\Component\HttpFoundation\Request $request
+	 * @param Symfony\Bundle\FrameworkBundle\Controller\Controller The controller.
+	 * @return string[]
 	 */
 	public function getArguments(Request $request, $controller)
 	{
@@ -116,6 +137,12 @@ class ManagementControllerResolver implements ControllerResolverInterface
 
 	/**
 	 * Checks for all the get arguments.
+	 *
+	 * @param Symfony\Component\HttpFoundation\Request $request
+	 * @param Symfony\Bundle\FrameworkBundle\Controller\Controller $controller The controller.
+	 * @param string[] $parameters All parameters.
+	 * @throws \RuntimeException If an argument is not given
+	 * @return string[]
 	 */
 	protected function doGetArguments(Request $request, $controller, array $parameters)
 	{

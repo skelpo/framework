@@ -6,7 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version 1.0.0-alpha
+ * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @copyright 2015 Skelpo Inc. www.skelpo.com
  */
@@ -28,21 +28,48 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
  */
 class Loader implements LoaderInterface
 {
+	/**
+	 * Is the loader already loaded?
+	 *
+	 * @var boolean
+	 */
 	private $loaded = false;
+	/**
+	 * The locale we are using.
+	 *
+	 * @var string
+	 */
 	private $locale;
+	/**
+	 * All supported locales.
+	 *
+	 * @var string[]
+	 */
 	private $supportedLocales;
+	/**
+	 * Our kernel.
+	 *
+	 * @var Skelpo\Framework\Kernel\Kernel
+	 */
 	private $kernel;
 
 	/**
 	 * Construct the clas.
+	 *
+	 * @param Skelpo\Framework\Kernel\Kernel $k The kernel.
 	 */
-	public function __construct($k)
+	public function __construct(\Skelpo\Framework\Kernel\Kernel $k)
 	{
 		$this->kernel = $k;
 	}
 
 	/**
 	 * Load configuration and start building the routes.
+	 *
+	 * @param object $resource
+	 * @param string $type
+	 * @throws RuntimeException If the framework is already loaded.
+	 * @return Symfony\Component\Routing\Route[]
 	 */
 	public function load($resource, $type = null)
 	{
@@ -74,6 +101,7 @@ class Loader implements LoaderInterface
 	/**
 	 * Build the routes for all controllers.
 	 *
+	 * @param Symfony\Component\Routing\Route[] $routes The routes that are already established.
 	 * @return The routes as a RouteCollection.
 	 */
 	private function buildRoutes($routes)
@@ -142,6 +170,11 @@ class Loader implements LoaderInterface
 
 	/**
 	 * Internal function to build the routes for a specific class.
+	 *
+	 * @param string $path
+	 * @param string $file
+	 * @param string $module
+	 * @param Route[] $routes
 	 */
 	private function buildRoutesForClass($path, $file, $module, $routes)
 	{
@@ -177,6 +210,16 @@ class Loader implements LoaderInterface
 	 * Internal class to build the route for a specific action.
 	 * It build all sub-routes as well as the
 	 * language.
+	 *
+	 * @param string $module
+	 * @param string $controller
+	 * @param string $function
+	 * @param string $parameter
+	 * @param string $ctlStr
+	 * @param string $stop
+	 * @param string $parameters
+	 * @param Route[] $routes
+	 * @return Route[]
 	 */
 	private function buildRoutesIntern($module, $controller, $function, $parameter, $ctlStr, $stop, $parameters, $routes)
 	{
@@ -247,6 +290,10 @@ class Loader implements LoaderInterface
 
 	/**
 	 * Tells symfony what type this load is.
+	 *
+	 * @param object $resource
+	 * @param string $type
+	 * @return boolean
 	 */
 	public function supports($resource, $type = null)
 	{
@@ -264,6 +311,8 @@ class Loader implements LoaderInterface
 
 	/**
 	 * Not necessary.
+	 *
+	 * @param LoaderResolverInterface $resolver
 	 */
 	public function setResolver(LoaderResolverInterface $resolver)
 	{

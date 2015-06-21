@@ -6,7 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version 1.0.0-alpha
+ * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @copyright 2015 Skelpo Inc. www.skelpo.com
  */
@@ -22,12 +22,35 @@ use Skelpo\Framework\Routing\Loader;
  */
 class ViewTemplate extends \Smarty_Internal_Template
 {
+	/**
+	 * A form view.
+	 *
+	 * @var Skelpo\Framework\Viwe\FormView
+	 */
 	protected $formview;
+	/**
+	 * The smarty renderer.
+	 *
+	 * @var SmartyRenderer
+	 */
 	protected $smartyrenderer;
+	/**
+	 * The rendering engine.
+	 *
+	 * @var SmartyRendererEngine
+	 */
 	protected $smartyrendererengine;
 
 	/**
 	 * Creates a new instance.
+	 *
+	 * @param object $template_resource
+	 * @param Smarty $smarty
+	 * @param string $_parent
+	 * @param string $_cache_id
+	 * @param string $_compile_id
+	 * @param string $_caching
+	 * @param string $_cache_lifetime
 	 */
 	public function __construct($template_resource, $smarty, $_parent = null, $_cache_id = null, $_compile_id = null, $_caching = null, $_cache_lifetime = null)
 	{
@@ -43,6 +66,8 @@ class ViewTemplate extends \Smarty_Internal_Template
 
 	/**
 	 * Returns the form renderer.
+	 *
+	 * @return SmartyRenderer
 	 */
 	public function getFormRenderer()
 	{
@@ -51,6 +76,8 @@ class ViewTemplate extends \Smarty_Internal_Template
 
 	/**
 	 * Returns the form view.
+	 *
+	 * @return Skelpo\Framework\View\FormView
 	 */
 	public function getFormView()
 	{
@@ -59,6 +86,9 @@ class ViewTemplate extends \Smarty_Internal_Template
 
 	/**
 	 * Returns a form under a specific name.
+	 *
+	 * @param string $name Name of the form.
+	 * @return Symfony\Component\Form\Form
 	 */
 	public function getForm($name)
 	{

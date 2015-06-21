@@ -6,7 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version 1.0.0-alpha
+ * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @copyright 2015 Skelpo Inc. www.skelpo.com
  */
@@ -22,7 +22,6 @@ use Symfony\Component\Form\Form;
 use Skelpo\Framework\Events\ControllerEvent;
 use Skelpo\Framework\Framework;
 use Skelpo\Framework\Language\Language;
-// use Skelpo\Framework\Forms\Form;
 
 /**
  * A simple template build on top of smarty.
@@ -31,20 +30,29 @@ class Template extends \Smarty
 {
 	/**
 	 * The framework instance.
+	 *
+	 * @var Skelpo\Framework\Framework
 	 */
 	protected $framework;
 	/**
 	 * The current template file.
 	 * (not the theme)
+	 *
+	 * @var string
 	 */
 	protected $templateFile;
 	/**
 	 * The file system.
+	 *
+	 * @var Symfony\Component\Filesystem\Filesystem
 	 */
 	protected $filesystem;
 
 	/**
 	 * Creates a new view.
+	 *
+	 * @param Skelpo\Framework\Framework $f The framework instance.
+	 * @param string $templateFile The file for this template.
 	 */
 	public function __construct(Framework $f, $templateFile = "")
 	{
@@ -60,6 +68,8 @@ class Template extends \Smarty
 
 	/**
 	 * Returns the framework.
+	 *
+	 * @return Skelpo\Framework\Framework
 	 */
 	public function getFramework()
 	{
@@ -68,6 +78,8 @@ class Template extends \Smarty
 
 	/**
 	 * Returns the content of our specific file.
+	 *
+	 * @return string
 	 */
 	public function getContent()
 	{
@@ -77,6 +89,8 @@ class Template extends \Smarty
 
 	/**
 	 * Does this template exist?
+	 *
+	 * @return boolean
 	 */
 	public function exists()
 	{
@@ -105,14 +119,18 @@ class Template extends \Smarty
 
 	/**
 	 * Change the template file.
+	 *
+	 * @param string $file
 	 */
-	public function setTemplateFile($t)
+	public function setTemplateFile($file)
 	{
-		$this->templateFile = $t;
+		$this->templateFile = $file;
 	}
 
 	/**
 	 * Returns the template file.
+	 *
+	 * @return string
 	 */
 	public function getTemplateFile()
 	{

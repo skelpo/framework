@@ -6,7 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version 1.0.0-alpha
+ * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @copyright 2015 Skelpo Inc. www.skelpo.com
  */
@@ -21,27 +21,39 @@ abstract class Theme
 {
 	/**
 	 * The name of our theme.
+	 *
+	 * @var string
 	 */
 	protected $name;
 	/**
 	 * The folder to our theme.
+	 *
+	 * @var string
 	 */
 	protected $folder;
 	/**
 	 * All files that are written in less.
+	 *
+	 * @var string[]
 	 */
 	protected $lessFiles;
 	/**
 	 * All needed javascript files.
+	 *
+	 * @var string[]
 	 */
 	protected $javascriptFiles;
 	/**
 	 * The kernel.
+	 *
+	 * @var Skelpo\Framework\Kernel\Kernel
 	 */
 	protected $kernel;
 
 	/**
 	 * Creates a new theme instance.
+	 *
+	 * @param Skelpo\Framework\Kernel\Kernel $k The kernel.
 	 */
 	public function __construct(Kernel $k)
 	{
@@ -51,14 +63,14 @@ abstract class Theme
 	/**
 	 * Returns all javascript files that are needed.
 	 *
-	 * @return array
+	 * @return string[]
 	 */
 	public abstract function getJSFiles();
 
 	/**
 	 * Returns all static files that are necessary.
 	 *
-	 * @return array
+	 * @return string[]
 	 */
 	public abstract function getAllStaticFiles();
 
@@ -76,7 +88,7 @@ abstract class Theme
 	/**
 	 * Returns all themes that this theme is based on.
 	 *
-	 * @return Array
+	 * @return string[]
 	 */
 	public function getThemeHierachy()
 	{
@@ -101,7 +113,7 @@ abstract class Theme
 	/**
 	 * Returns the paths to this theme.
 	 *
-	 * @return array
+	 * @return string[]
 	 */
 	public function getPaths()
 	{

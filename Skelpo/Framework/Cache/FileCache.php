@@ -6,7 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version 1.0.0-alpha
+ * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @copyright 2015 Skelpo Inc. www.skelpo.com
  */
@@ -16,24 +16,49 @@ use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Class that represents a file cache.
- * Can save simple arrays with configuration information.
+ * Can save simple arrays and objects with configuration information.
  */
 class FileCache implements Cacheable
 {
+	/**
+	 * The file we are using.
+	 *
+	 * @var string
+	 */
 	protected $file;
+	/**
+	 * The content
+	 *
+	 * @var object
+	 */
 	protected $content;
+	/**
+	 * The framework.
+	 *
+	 * @var Skelpo\Framework\Framework
+	 */
 	protected $framework;
+	/**
+	 * Lifetime of this cache.
+	 *
+	 * @var integer
+	 */
 	protected $lifetime;
+	/**
+	 * The filesystem class to work with files.
+	 *
+	 * @var Symfony\Component\Filesystem\Filesystem
+	 */
 	protected $filesystem;
 
 	/**
 	 * Create a new cache.
 	 *
-	 * @param \Skelpo\Framework\Framework $framework
+	 * @param Skelpo\Framework\Framework $framework
 	 * @param string $name
 	 * @param integer $lifetime
 	 */
-	public function __construct($framework, $name, $lifetime = 3600)
+	public function __construct(Skelpo\Framework\Framework $framework, $name, $lifetime = 3600)
 	{
 		$this->framework = $framework;
 		$this->file = $this->framework->getCacheDir() . "filecache_" . $name . ".php";
@@ -43,9 +68,9 @@ class FileCache implements Cacheable
 	}
 
 	/**
-	 * Is an update of the cache required?
+	 * Does this cache need an update?
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function needUpdate()
 	{
@@ -61,7 +86,7 @@ class FileCache implements Cacheable
 	}
 
 	/**
-	 * Loads the content of the cache.
+	 * Loads this cache.
 	 */
 	public function load()
 	{
@@ -73,7 +98,7 @@ class FileCache implements Cacheable
 	}
 
 	/**
-	 * Sets the lifetime for this cache.
+	 * Sets the lifetime of this cache
 	 *
 	 * @param integer $t
 	 */
@@ -83,7 +108,7 @@ class FileCache implements Cacheable
 	}
 
 	/**
-	 * Returns the lifetime of this cache.
+	 * Returns the lifetime of this cache
 	 *
 	 * @return integer
 	 */
@@ -104,7 +129,7 @@ class FileCache implements Cacheable
 	}
 
 	/**
-	 * Clears this cache.
+	 * Empties the cache.
 	 */
 	public function clear()
 	{
@@ -113,7 +138,9 @@ class FileCache implements Cacheable
 	}
 
 	/**
-	 * Does this cache (file) exist?
+	 * Does this cache exist?
+	 * 
+	 * @return boolean
 	 */
 	public function exists()
 	{
@@ -122,7 +149,6 @@ class FileCache implements Cacheable
 
 	/**
 	 * Saves this cache.
-	 * Caches are saved as php files.
 	 */
 	public function save()
 	{
@@ -132,9 +158,8 @@ class FileCache implements Cacheable
 
 	/**
 	 * Returns the content of this cache.
-	 *
-	 * @return
-	 *
+	 * 
+	 * @return \Serializable
 	 */
 	public function getContent()
 	{

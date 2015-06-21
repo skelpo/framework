@@ -6,8 +6,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version 1.0.0-alpha
+ * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
+ * @author symfony Team
  * @copyright 2015 Skelpo Inc. www.skelpo.com
  */
 namespace Skelpo\Framework\Kernel;
@@ -33,6 +34,7 @@ use Skelpo\Framework\Events\ControllerEvent;
 
 /**
  * HttpKernel Class that is very similar to the standard symfony kernel, we just deal with controllers a little different.
+ * A good bit of this file is simply copied and pasted from the standard bunble.
  */
 class HttpKernel extends \Symfony\Component\HttpKernel\DependencyInjection\ContainerAwareHttpKernel implements HttpKernelInterface, TerminableInterface
 {
@@ -247,9 +249,13 @@ class HttpKernel extends \Symfony\Component\HttpKernel\DependencyInjection\Conta
 	}
 
 	/**
+	 * Function that is handleing a request.
 	 *
-	 * @ERROR!!!
-	 *
+	 * @param Request $request
+	 * @param string $type
+	 * @param boolean $catch
+	 * @throws Exception
+	 * @return Response
 	 */
 	public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
 	{

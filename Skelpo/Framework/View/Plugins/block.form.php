@@ -6,7 +6,7 @@
 	 * For the full copyright and license information, please view the LICENSE
 	 * file that was distributed with this source code.
 	 *
-	 * @version 1.0.0-alpha
+	 * @version 1.0.0
 	 * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
 	 * @copyright 2015 Skelpo Inc. www.skelpo.com
 	 */
@@ -20,6 +20,15 @@
 	 * Name: form
 	 * Purpose: integrates a form into the document.
 	 * -------------------------------------------------------------
+	 */
+	/**
+	 * Renders a form in smarty.
+	 *
+	 * @param string[] $params
+	 * @param string $content
+	 * @param \Smarty $smarty
+	 * @param boolean $repeat
+	 * @return void|string
 	 */
 	function smarty_block_form($params, $content, &$smarty, &$repeat)
 	{
@@ -41,4 +50,4 @@
 		$c = $renderer->renderForm($view, $form->getName(), $content, $params, $locale, $smarty->smarty->getDefaultLanguage());
 		return $c;
 	}
-	?> 
+	?>

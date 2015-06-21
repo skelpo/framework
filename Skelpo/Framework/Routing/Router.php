@@ -6,7 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version 1.0.0-alpha
+ * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @copyright 2015 Skelpo Inc. www.skelpo.com
  */
@@ -23,6 +23,12 @@ class Router extends \Symfony\Bundle\FrameworkBundle\Routing\Router
 	 * Returns the generated url.
 	 *
 	 * In addition to the normal router we add the locale as well.
+	 *
+	 * @param string $name Name of the route.
+	 * @param string[] $parameters Parameters for the route.
+	 * @param string $referenceType Absolute or relevate path?
+	 * @param string $defaultLocale What is the default locale?
+	 * @return string
 	 */
 	public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH, $defaultLocale = "en")
 	{

@@ -6,7 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version 1.0.0-alpha
+ * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @copyright 2015 Skelpo Inc. www.skelpo.com
  */
@@ -23,9 +23,30 @@ use Symfony\Component\Console\Output\StreamOutput;
  */
 class PluginManager
 {
+	/**
+	 * The framework.
+	 *
+	 * @var Skelpo\Framework\Framework
+	 */
 	protected $framework;
+	/**
+	 * Entity manager to work with the database.
+	 *
+	 * @var Doctrine\ORM\EntityManager
+	 */
 	protected $entityManager;
+	/**
+	 * All our plugins.
+	 *
+	 * @var Plugin[]
+	 */
 	protected $plugins;
+	/**
+	 * This string defines what our model is for plugins.
+	 * E.g. something like App\Models\Plugin\Plugin
+	 *
+	 * @var string
+	 */
 	protected $modelNamespace;
 
 	/**
@@ -52,6 +73,8 @@ class PluginManager
 
 	/**
 	 * Load all plugins.
+	 *
+	 * @param string $modelNamespace
 	 */
 	public function loadPlugins($modelNamespace)
 	{
@@ -109,7 +132,7 @@ class PluginManager
 	/**
 	 * Returns all paths for the plugins.
 	 *
-	 * @return Array<String>
+	 * @return string[]
 	 */
 	public function getPluginPaths()
 	{
@@ -127,7 +150,7 @@ class PluginManager
 	/**
 	 * Returns all plugins.
 	 *
-	 * @return array
+	 * @return Plugin[]
 	 */
 	public function getPlugins()
 	{
