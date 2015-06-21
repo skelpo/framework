@@ -117,10 +117,31 @@ class Framework extends Bundle
 
 	/**
 	 * Returns all dirs that could contain templates.
+	 *
+	 * @return Array
 	 */
 	public function getTemplateDirs()
 	{
 		$dirs = $this->getTheme()->getPaths();
+		
+		// get the template paths from the plugins
+		$pluginPaths = $this->kernel->getContainer()->get('pluginmanager')->getPluginPaths();
+		$themeHiearchy = $this->getTheme()->getThemeHierachy();
+		foreach ($pluginPaths as $p)
+		{
+			foreach ($themeHiearchy as $themeName)
+			{
+				$d = $this->getKernel()->getRootDir() . $p . "Themes/" . $themeName . "/";
+				if (is_dir($d))
+				{
+					$dirs[] = $d;
+				}
+				else
+				{
+					$dirs2[] = $d;
+				}
+			}
+		}
 		return $dirs;
 	}
 

@@ -74,17 +74,16 @@ abstract class Theme
 	}
 
 	/**
-	 * Returns the paths to this theme.
+	 * Returns all themes that this theme is based on.
 	 *
-	 * @return array
+	 * @return Array
 	 */
-	public function getPaths()
+	public function getThemeHierachy()
 	{
-		$paths = array();
-		$baseDir = $this->kernel->getThemeDir();
+		$themes = array();
 		$refC = new \ReflectionClass($this);
 		$name = $refC->getShortName();
-		$paths[] = $baseDir . $name . "/";
+		$themes[] = $name;
 		$c = 0;
 		while ($name != "Skelpo\\Framework\\Theme\\Theme" && $c <= 10)
 		{
@@ -93,8 +92,25 @@ abstract class Theme
 			$refC = new \ReflectionClass($name);
 			
 			if ($name != "Skelpo\\Framework\\Theme\\Theme")
-				$paths[] = $baseDir . $refC->getShortName() . "/";
+				$themes[] = $refC->getShortName();
 			$c ++;
+		}
+		return $themes;
+	}
+
+	/**
+	 * Returns the paths to this theme.
+	 *
+	 * @return array
+	 */
+	public function getPaths()
+	{
+		$paths = array();
+		$baseDir = $this->kernel->getThemeDir();
+		$themes = $this->getThemeHierachy();
+		foreach ($themes as $theme)
+		{
+			$paths[] = $baseDir . $theme . "/";
 		}
 		return $paths;
 	}

@@ -22,6 +22,9 @@ abstract class Plugin
 {
 	protected $framework;
 	protected $kernel;
+	protected $staticFiles;
+	protected $themeFiles;
+	protected $jsFiles;
 
 	/**
 	 * Initializes a new plugin.
@@ -33,6 +36,69 @@ abstract class Plugin
 	{
 		$this->framework = $framework;
 		$this->kernel = $kernel;
+		$this->staticFiles = array();
+		$this->themeFiles = array();
+		$this->jsFiles = array();
+	}
+
+	/**
+	 * Adds a new static file to be included.
+	 *
+	 * @param String $file
+	 */
+	protected function addStaticFile($file, $module)
+	{
+		$this->staticFiles[$module][] = $file;
+	}
+
+	/**
+	 * Adds a new static file to be included.
+	 *
+	 * @param String $file
+	 */
+	protected function addJsFile($file, $module)
+	{
+		$this->jsFiles[$module][] = $file;
+	}
+
+	/**
+	 * Adds a new static file to be included.
+	 *
+	 * @param String $file
+	 */
+	protected function addThemeFile($file, $module)
+	{
+		$this->themeFiles[$module][] = $file;
+	}
+
+	/**
+	 * Returns all static files.
+	 *
+	 * @return Array
+	 */
+	public function getJsFiles()
+	{
+		return $this->jsFiles;
+	}
+
+	/**
+	 * Returns all static files.
+	 *
+	 * @return Array
+	 */
+	public function getStaticFiles()
+	{
+		return $this->staticFiles;
+	}
+
+	/**
+	 * Returns all static files.
+	 *
+	 * @return Array
+	 */
+	public function getThemefiles()
+	{
+		return $this->themeFiles;
 	}
 
 	/**

@@ -371,17 +371,34 @@ class View extends Template
 		// get all our JS files
 		$files = $this->framework->getTheme()->getJSFiles();
 		if (isset($files[$this->module->getPathName()]))
+		{
 			$files = $files[$this->module->getPathName()];
+		}
 		else
+		{
 			$files = array();
-			
-			// and all dirs
+		}
+		
+		// add the files for the plugins
+		$plugins = $this->pluginManager->getPlugins();
+		foreach ($plugins as $plugin)
+		{
+			$pluginFiles = $plugin->getJsFiles();
+			if (array_key_exists($this->module->getPathName(), $pluginFiles))
+				$files = array_merge($files, $pluginFiles[$this->module->getPathName()]);
+		}
+		
+		// and all dirs
 		$dirs = $this->framework->getTemplateDirs();
-		$dir_ = $dirs[0];
 		
 		foreach ($files as $a => $file)
 		{
-			$files[$a] = $dir_ . $this->module->getPathName() . "/_public/js/" . $file;
+			foreach ($dirs as $dir_)
+			{
+				$f = $dir_ . $this->module->getPathName() . "/_public/js/" . $file;
+				if (file_exists($f))
+					$files[$a] = $f;
+			}
 		}
 		
 		// get all the files
@@ -454,16 +471,30 @@ class View extends Template
 			$this->filesystem->mkdir($baseFolder);
 		}
 		
-		// //$fs->symlink('/path/to/source', '/path/to/destination', true);
-		
-		$files = $this->framework->getTheme()->getAllStaticFiles();
-		if (isset($files[$this->module->getPathName()]))
-			$files = $files[$this->module->getPathName()];
-		else
-			$files = array();
-			
-			// and all dirs
+		// all dirs from the template
 		$dirs = $this->framework->getTemplateDirs();
+		
+		// our initial static files
+		$files = $this->framework->getTheme()->getAllStaticFiles();
+		// specify
+		if (isset($files[$this->module->getPathName()]))
+		{
+			$files = $files[$this->module->getPathName()];
+		}
+		else
+		{
+			$files = array();
+		}
+		
+		// add the files for the plugins
+		$plugins = $this->pluginManager->getPlugins();
+		foreach ($plugins as $plugin)
+		{
+			$pluginFiles = $plugin->getStaticFiles();
+			if (array_key_exists($this->module->getPathName(), $pluginFiles))
+				$files = array_merge($files, $pluginFiles[$this->module->getPathName()]);
+		}
+		
 		$dirsCount = count($dirs);
 		
 		// get all the files
