@@ -123,7 +123,7 @@ class View extends Template
 	 * @param string $defaultLanguage
 	 * @param Skelpo\Framework\Plugin\PluginManager $pluginManager
 	 */
-	public function __construct(Framework $f, $rootUrl, $router, $defaultLanguage, Skelpo\Framework\Plugin\PluginManager $pluginManager)
+	public function __construct(Framework $f, $rootUrl, $router, $defaultLanguage, \Skelpo\Framework\Plugin\PluginManager $pluginManager)
 	{
 		$this->template_class = "\Skelpo\Framework\View\ViewTemplate";
 		parent::__construct($f, "");
@@ -413,9 +413,10 @@ class View extends Template
 			// and get it as css
 			$css = $parser->getCss();
 		}
-		catch (Exception $e)
+		catch (\Exception $e)
 		{
-			// TODO: do something with the arrow
+			// TODO: do something with the error
+			$css = "";
 		}
 		
 		// remove the file if it exists

@@ -58,7 +58,7 @@ class FileCache implements Cacheable
 	 * @param string $name
 	 * @param integer $lifetime
 	 */
-	public function __construct(Skelpo\Framework\Framework $framework, $name, $lifetime = 3600)
+	public function __construct(\Skelpo\Framework\Framework $framework, $name, $lifetime = 3600)
 	{
 		$this->framework = $framework;
 		$this->file = $this->framework->getCacheDir() . "filecache_" . $name . ".php";
@@ -139,7 +139,7 @@ class FileCache implements Cacheable
 
 	/**
 	 * Does this cache exist?
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function exists()
@@ -158,7 +158,7 @@ class FileCache implements Cacheable
 
 	/**
 	 * Returns the content of this cache.
-	 * 
+	 *
 	 * @return \Serializable
 	 */
 	public function getContent()

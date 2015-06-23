@@ -43,13 +43,13 @@ class Framework extends Bundle
 	/**
 	 * The kernel.
 	 *
-	 * @var Skelpo\Framework\Kernel\KernelInterface
+	 * @var Skelpo\Framework\Kernel\Kernel
 	 */
 	private $kernel;
 
 	/**
 	 * Returns the root dir of the application.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getRootDir()
@@ -59,7 +59,7 @@ class Framework extends Bundle
 
 	/**
 	 * Returns the module.
-	 * 
+	 *
 	 * @return Skelpo\Framework\Module
 	 */
 	public function getModule()
@@ -93,7 +93,7 @@ class Framework extends Bundle
 
 	/**
 	 * Returns the kernel.
-	 * 
+	 *
 	 * @return Skelpo\Framework\Kernel
 	 */
 	public function getKernel()
@@ -103,7 +103,7 @@ class Framework extends Bundle
 
 	/**
 	 * Returns the dir for additional smarty plugins.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getSmartyPluginDir()
@@ -113,7 +113,7 @@ class Framework extends Bundle
 
 	/**
 	 * Returns the dir for additional plugins.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getPluginDir()
@@ -123,7 +123,7 @@ class Framework extends Bundle
 
 	/**
 	 * Returns the current theme.
-	 * 
+	 *
 	 * @return Skelpo\Framework\Theme\Theme
 	 */
 	public function getTheme()
@@ -133,7 +133,7 @@ class Framework extends Bundle
 
 	/**
 	 * Returns the theme dir.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getThemeDir()
@@ -143,7 +143,7 @@ class Framework extends Bundle
 
 	/**
 	 * Returns all dirs that could contain templates.
-	 * 
+	 *
 	 * @return string[]
 	 */
 	public function getTemplateDirs()
@@ -173,7 +173,7 @@ class Framework extends Bundle
 
 	/**
 	 * Returns the cache dir.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getCacheDir()
@@ -186,7 +186,7 @@ class Framework extends Bundle
 	 *
 	 * @param Skelpo\Framework\Kernel\KernelInterface
 	 */
-	public function __construct(Skelpo\Framework\Kernel\KernelInterface $kernel)
+	public function __construct(\Skelpo\Framework\Kernel\Kernel $kernel)
 	{
 		$this->kernel = $kernel;
 		$this->eventDispatcher = new EventDispatcher();
@@ -194,7 +194,7 @@ class Framework extends Bundle
 
 	/**
 	 * Returns information.
-	 * 
+	 *
 	 * @return string[]
 	 */
 	public function getInfo()
@@ -206,7 +206,7 @@ class Framework extends Bundle
 
 	/**
 	 * Returns the event dispatcher.
-	 * 
+	 *
 	 * @return Symfony\Component\EventDispatcher\EventDispatcher
 	 */
 	public function getEventDispatcher()
