@@ -199,6 +199,7 @@ class Loader implements LoaderInterface
 				$parameters = $function->getParameters();
 				
 				$ctlStr = $controllerNS . 'Controller::' . $functionName . "Action";
+				
 				$moduleStr = $module;
 				
 				$this->buildRoutesIntern($moduleStr, strtolower($controller), $functionName, array(), $ctlStr, false, $parameters, $routes);

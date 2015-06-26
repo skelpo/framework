@@ -598,10 +598,36 @@ class View extends Template
 					$file = $dirs[$dirsCount - $a] . $this->module->getPathName() . "/_public/" . $file_;
 					$target = $baseFolder . $file_;
 				}
-				if ($this->filesystem->exists($file))
+				if (stristr($file, "*"))
 				{
-					$this->filesystem->symlink($file, $target, true);
 					$found = true;
+					$d = str_replace("*", "", $file);
+					if (is_dir($d))
+					{
+						$files = scandir($d);
+						$target = str_replace("*", "", $target);
+						// die("F:" . $target);
+						if (! is_dir($target))
+							mkdir($target);
+						foreach ($files as $file_)
+						{
+							if ($file_ == "." || $file_ == "..")
+								continue;
+							if ($this->filesystem->exists($d . $file_))
+							{
+								
+								$this->filesystem->symlink($file . $file_, $target . $file_, true);
+							}
+						}
+					}
+				}
+				else
+				{
+					if ($this->filesystem->exists($file))
+					{
+						$this->filesystem->symlink($file, $target, true);
+						$found = true;
+					}
 				}
 			}
 			if ($found == false)
