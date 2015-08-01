@@ -408,7 +408,7 @@ class View extends Template
 			$parser->ModifyVars($vars);
 			
 			// parse our output
-			$parser->parseFile($allLess, '/static/');
+			$parser->parseFile($allLess, $this->rootUrl . 'static/' . $this->module->getPathName());
 			
 			// and get it as css
 			$css = $parser->getCss();

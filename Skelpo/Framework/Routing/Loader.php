@@ -81,7 +81,7 @@ class Loader implements LoaderInterface
 		
 		$container = new ContainerBuilder();
 		$loader = new YamlFileLoader($container, new FileLocator($this->kernel->getConfigDir()));
-		$loader->load('parameters.yml');
+		$loader->load('parameters.php');
 		
 		$this->locale = $container->getParameter('locale');
 		$this->supportedLocales = explode(",", $container->getParameter('supportedLocales'));
