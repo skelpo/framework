@@ -163,7 +163,7 @@ class View extends Template
 	 *
 	 * @param string $locale (en,de)
 	 */
-	protected function setLanguage($locale)
+	public function setLanguage($locale)
 	{
 		$this->language = new Language($this, $locale);
 		// load language
@@ -188,7 +188,7 @@ class View extends Template
 	 *
 	 * @return Skelpo\Framework\Language\Language
 	 */
-	protected function getLanguage()
+	public function getLanguage()
 	{
 		return $this->language;
 	}
