@@ -19,7 +19,7 @@ use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 
 /**
  * This class creates routes for all controllers with all actions.
@@ -80,7 +80,7 @@ class Loader implements LoaderInterface
 		$routes = new RouteCollection();
 		
 		$container = new ContainerBuilder();
-		$loader = new YamlFileLoader($container, new FileLocator($this->kernel->getConfigDir()));
+		$loader = new PhpFileLoader($container, new FileLocator($this->kernel->getConfigDir()));
 		$loader->load('parameters.php');
 		
 		$this->locale = $container->getParameter('locale');

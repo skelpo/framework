@@ -103,6 +103,16 @@ class Template extends \Smarty
 	}
 
 	/**
+	 * Returns the rendereted file.
+	 *
+	 * @return String
+	 */
+	public function render()
+	{
+		return $this->fetch($this->templateFile);
+	}
+
+	/**
 	 * Internal class to setup smarty with a bunch of config parameters.
 	 */
 	protected function setupSmarty()
