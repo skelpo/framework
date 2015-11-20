@@ -174,7 +174,7 @@ class HttpKernel extends \Symfony\Component\HttpKernel\DependencyInjection\Conta
 			
 			if (! $response instanceof Response)
 			{
-				$msg = sprintf('The controller must return a response (%s given).', $this->varToString($response));
+				$msg = sprintf('The controller must return a response (%s given).', $this->varToString_($response));
 				
 				// the user may have forgotten to return something
 				if (null === $response)
@@ -186,6 +186,40 @@ class HttpKernel extends \Symfony\Component\HttpKernel\DependencyInjection\Conta
 		}
 		
 		return $this->filterResponse($response, $request, $type);
+	}
+
+	private function varToString_($var)
+	{
+		if (is_object($var))
+		{
+			return sprintf('Object(%s)', get_class($var));
+		}
+		if (is_array($var))
+		{
+			$a = array();
+			foreach ($var as $k => $v)
+			{
+				$a[] = sprintf('%s => %s', $k, $this->varToString_($v));
+			}
+			return sprintf('Array(%s)', implode(', ', $a));
+		}
+		if (is_resource($var))
+		{
+			return sprintf('Resource(%s)', get_resource_type($var));
+		}
+		if (null === $var)
+		{
+			return 'null';
+		}
+		if (false === $var)
+		{
+			return 'false';
+		}
+		if (true === $var)
+		{
+			return 'true';
+		}
+		return (string) $var;
 	}
 
 	/**

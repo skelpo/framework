@@ -347,6 +347,16 @@ class View extends Template
 		$this->technicalTemplateName = $dir . $templateName;
 	}
 
+	public function getRootUrl()
+	{
+		return $this->rootUrl;
+	}
+
+	public function getStaticFilesUrl()
+	{
+		return $this->getRootUrl() . "static/";
+	}
+
 	/**
 	 * Returns the URL to the less/css-compiled file.
 	 *
@@ -398,11 +408,11 @@ class View extends Template
 			
 			// are we minifying?
 			\Less_Parser::$options['compress'] = $this->minifyCss;
-			
 			$vars = array();
 			foreach ($this->getTemplateVars() as $k => $v)
 			{
-				$vars[$k] = '\'' . $v . '\'';
+				if (! is_object($v) && ! is_array($v))
+					$vars[$k] = '\'' . $v . '\'';
 			}
 			
 			$parser->ModifyVars($vars);
@@ -417,6 +427,7 @@ class View extends Template
 		{
 			// TODO: do something with the error
 			$css = "";
+			die("A:" . $e->getMessage());
 		}
 		
 		// remove the file if it exists
@@ -485,7 +496,6 @@ class View extends Template
 					$files[$a] = $f;
 			}
 		}
-		
 		// get all the files
 		$jsoutput = $this->loadFiles($files, ".js");
 		
