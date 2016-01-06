@@ -8,7 +8,7 @@
  *
  * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
- * @copyright 2015 Skelpo Inc. www.skelpo.com
+ * @copyright 2016 Skelpo Inc. www.skelpo.com
  */
 
 /*
@@ -39,7 +39,7 @@ function smarty_function_url($params, Smarty_Internal_Template $template)
 	{
 		$url = $router->generate($action, $p, $router::ABSOLUTE_PATH, $template->smarty->getDefaultLanguage());
 	}
-
+	
 	catch (\Symfony\Component\Routing\Exception\RouteNotFoundException $e)
 	{
 		$url = "#" . $action;

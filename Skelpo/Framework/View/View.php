@@ -8,22 +8,20 @@
  *
  * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
- * @copyright 2015 Skelpo Inc. www.skelpo.com
+ * @copyright 2016 Skelpo Inc. www.skelpo.com
  */
 namespace Skelpo\Framework\View;
 
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Form\Form;
 use Skelpo\Framework\Events\ControllerEvent;
 use Skelpo\Framework\Framework;
 use Skelpo\Framework\Language\Language;
 use Skelpo\Framework\View\Template;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 
 /**
  * View service class.
@@ -245,7 +243,8 @@ class View extends Template
 	 */
 	public function isCacheDue()
 	{
-		return true; // TODO: Fix this.
+		// TODO: For now it is due every time. At some point soon this should be replaced by a smart algorithmn.
+		return true;
 	}
 
 	/**
@@ -347,11 +346,21 @@ class View extends Template
 		$this->technicalTemplateName = $dir . $templateName;
 	}
 
+	/**
+	 * Returns the root url of this application.
+	 *
+	 * @return string
+	 */
 	public function getRootUrl()
 	{
 		return $this->rootUrl;
 	}
 
+	/**
+	 * Returns the root url to all static files.
+	 *
+	 * @return string
+	 */
 	public function getStaticFilesUrl()
 	{
 		return $this->getRootUrl() . "static/";
@@ -425,9 +434,8 @@ class View extends Template
 		}
 		catch (\Exception $e)
 		{
-			// TODO: do something with the error
+			// TODO: Do something with the error.
 			$css = "";
-			die("A:" . $e->getMessage());
 		}
 		
 		// remove the file if it exists
@@ -711,7 +719,10 @@ class View extends Template
 	 */
 	protected function parseLanguage($content)
 	{
-		$ret = preg_replace("/##(.+?)##/e", "\$this->language->getString('\\1')", $content);
+		$ret = preg_replace_callback("/##(.+?)##/", array(
+				$this->language,
+				"getString" 
+		), $content);
 		return $ret;
 	}
 }

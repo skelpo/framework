@@ -8,7 +8,7 @@
  *
  * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
- * @copyright 2015 Skelpo Inc. www.skelpo.com
+ * @copyright 2016 Skelpo Inc. www.skelpo.com
  */
 namespace Skelpo\Framework\Form;
 
@@ -34,7 +34,6 @@ class FormType extends AbstractType
 	public function getName()
 	{
 		$n = get_class($this);
-		// TODO: change it to dynamic values
 		$n = substr($n, 10, - 4);
 		$n = str_replace("\\", "_", $n);
 		return "Form_" . $n;

@@ -8,7 +8,7 @@
  *
  * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
- * @copyright 2015 Skelpo Inc. www.skelpo.com
+ * @copyright 2016 Skelpo Inc. www.skelpo.com
  */
 namespace Skelpo\Framework\Events;
 
@@ -26,19 +26,19 @@ class ControllerEvent extends Event
 {
 	/**
 	 * The controller we are carrying.
-	 * 
+	 *
 	 * @var Symfony\Bundle\FrameworkBundle\Controller\Controller
 	 */
 	protected $controller;
 	/**
 	 * The request.
-	 * 
+	 *
 	 * @var Symfony\Component\HttpFoundation\Request
 	 */
 	protected $request;
 	/**
 	 * The response.
-	 * 
+	 *
 	 * @var Symfony\Component\HttpFoundation\Response
 	 */
 	protected $response;
@@ -59,7 +59,7 @@ class ControllerEvent extends Event
 
 	/**
 	 * Returns the request object.
-	 * 
+	 *
 	 * @return Symfony\Component\HttpFoundation\Request
 	 */
 	public function getRequest()
@@ -69,7 +69,7 @@ class ControllerEvent extends Event
 
 	/**
 	 * Returns the response object.
-	 * 
+	 *
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
 	public function getResponse()
@@ -79,7 +79,7 @@ class ControllerEvent extends Event
 
 	/**
 	 * Returns the controller.
-	 * 
+	 *
 	 * @return Symfony\Bundle\FrameworkBundle\Controller\Controller
 	 */
 	public function getController()

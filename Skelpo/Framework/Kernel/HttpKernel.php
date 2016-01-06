@@ -9,28 +9,24 @@
  * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @author symfony Team
- * @copyright 2015 Skelpo Inc. www.skelpo.com
+ * @copyright 2016 Skelpo Inc. www.skelpo.com
  */
 namespace Skelpo\Framework\Kernel;
 
-use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\TerminableInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Skelpo\Framework\Events\ControllerEvent;
+use Symfony\Component\HttpKernel\TerminableInterface;
 
 /**
  * HttpKernel Class that is very similar to the standard symfony kernel, we just deal with controllers a little different.
@@ -188,6 +184,13 @@ class HttpKernel extends \Symfony\Component\HttpKernel\DependencyInjection\Conta
 		return $this->filterResponse($response, $request, $type);
 	}
 
+	/**
+	 * Converts a variable (object, array, resource, string, .
+	 * ..) into a String.
+	 * 
+	 * @param Object $var
+	 * @return string
+	 */
 	private function varToString_($var)
 	{
 		if (is_object($var))

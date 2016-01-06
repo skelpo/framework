@@ -8,7 +8,7 @@
  *
  * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
- * @copyright 2015 Skelpo Inc. www.skelpo.com
+ * @copyright 2016 Skelpo Inc. www.skelpo.com
  */
 namespace Skelpo\Framework\Language;
 
@@ -92,7 +92,7 @@ class Language
 
 	/**
 	 * Returns all messages saved for this language.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getMessages()
@@ -167,7 +167,12 @@ class Language
 	 */
 	public function getString($term)
 	{
-		$ret = preg_replace("/##(.+?)##/e", "\$this->getString('\\1')", $term);
+		if (is_array($term))
+			$term = $term[1];
+		$ret = preg_replace_callback("/##(.+?)##/", array(
+				$this,
+				"getString" 
+		), $term);
 		if (substr($term, - 2) != "##" && substr($term, 0, 2) != "##")
 		{
 			$k = $term;

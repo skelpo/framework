@@ -8,14 +8,13 @@
  *
  * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
- * @copyright 2015 Skelpo Inc. www.skelpo.com
+ * @copyright 2016 Skelpo Inc. www.skelpo.com
  */
 namespace Skelpo\Framework;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Skelpo\Framework\Module;
-use Skelpo\Framework\Model\ThemeInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * Framework bundle to handle all our stuff.
@@ -184,7 +183,7 @@ class Framework extends Bundle
 	/**
 	 * Creates a new instance with the kernel as an argument.
 	 *
-	 * @param Skelpo\Framework\Kernel\KernelInterface
+	 * @param \Skelpo\Framework\Kernel\Kernel
 	 */
 	public function __construct(\Skelpo\Framework\Kernel\Kernel $kernel)
 	{

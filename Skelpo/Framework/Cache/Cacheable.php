@@ -8,7 +8,7 @@
  *
  * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
- * @copyright 2015 Skelpo Inc. www.skelpo.com
+ * @copyright 2016 Skelpo Inc. www.skelpo.com
  */
 namespace Skelpo\Framework\Cache;
 
@@ -30,7 +30,7 @@ interface Cacheable
 
 	/**
 	 * Sets the content of the cache.
-	 * 
+	 *
 	 * @param object $c
 	 */
 	public function setContent($c);
@@ -42,7 +42,7 @@ interface Cacheable
 
 	/**
 	 * Does this cache exist?
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function exists();
@@ -54,7 +54,7 @@ interface Cacheable
 
 	/**
 	 * Returns the saved content.
-	 * 
+	 *
 	 * @return object
 	 */
 	public function getContent();

@@ -8,14 +8,13 @@
  *
  * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
- * @copyright 2015 Skelpo Inc. www.skelpo.com
+ * @copyright 2016 Skelpo Inc. www.skelpo.com
  */
 namespace Skelpo\Framework\View;
 
-use Skelpo\Framework\View\FormView;
 use Skelpo\Framework\Form\SmartyRenderer;
 use Skelpo\Framework\Form\SmartyRendererEngine;
-use Skelpo\Framework\Routing\Loader;
+use Skelpo\Framework\View\FormView;
 
 /**
  * The internal template for smarty.

@@ -8,17 +8,15 @@
  *
  * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
- * @copyright 2015 Skelpo Inc. www.skelpo.com
+ * @copyright 2016 Skelpo Inc. www.skelpo.com
  */
 namespace Skelpo\Framework\Kernel;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Config\Loader\LoaderInterface;
-use Skelpo\Framework\Framework;
-use Skelpo\Framework\Plugin\PluginManager;
-use Skelpo\Framework\Kernel\KernelInterface;
 use Skelpo\Framework\Cache\FileCache;
+use Skelpo\Framework\Framework;
 use Skelpo\Framework\Module\Module;
+use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Kernel class.

@@ -8,7 +8,7 @@
  *
  * @version 1.0.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
- * @copyright 2015 Skelpo Inc. www.skelpo.com
+ * @copyright 2016 Skelpo Inc. www.skelpo.com
  */
 namespace Skelpo\Framework\Controller;
 
@@ -33,7 +33,7 @@ abstract class Controller extends BaseController
 
 	/**
 	 * Returns our View.
-	 * 
+	 *
 	 * @return Skelpo\Framework\View\View
 	 */
 	protected function getView()
@@ -43,7 +43,7 @@ abstract class Controller extends BaseController
 
 	/**
 	 * Returns the current language.
-	 * 
+	 *
 	 * @return Skelpo\Framework\Language\Language
 	 */
 	protected function getLanguage()
@@ -53,7 +53,7 @@ abstract class Controller extends BaseController
 
 	/**
 	 * Returns our framework.
-	 * 
+	 *
 	 * @return Skelpo\Framework\Framework
 	 */
 	protected function getFramework()
