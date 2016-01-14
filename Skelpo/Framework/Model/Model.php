@@ -154,7 +154,15 @@ abstract class Model
 				$arguments = array();
 				
 				$arguments[] = $v1;
-				$arguments[] = $arguments_[0];
+				if (isset($arguments_[0]))
+				{
+					$arguments[] = $arguments_[0];
+				}
+				else
+				{
+					// fix to make sure null is set
+					$arguments[] = null;
+				}
 				$method = $vO . "Var";
 			}
 		}
