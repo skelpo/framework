@@ -579,6 +579,7 @@ class View extends Template
 		
 		// our initial static files
 		$files = $this->framework->getTheme()->getAllStaticFiles();
+		
 		// specify
 		if (isset($files[$this->module->getPathName()]))
 		{
@@ -650,7 +651,8 @@ class View extends Template
 			}
 			if ($found == false)
 			{
-				throw new \InvalidArgumentException($file . " does not exist.");
+				// we won't throw an error anymore because the file may exist in another dir
+				// throw new \InvalidArgumentException($file . " does not exist.");
 			}
 		}
 	}
