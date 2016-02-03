@@ -182,6 +182,26 @@ class View extends Template
 	}
 
 	/**
+	 * Is javascript to be minified?
+	 *
+	 * @param boolean $b
+	 */
+	public function setMinifyJs($b)
+	{
+		$this->minifyJs = $b;
+	}
+
+	/**
+	 * Is css to be minified?
+	 *
+	 * @param boolean $b
+	 */
+	public function setMinifyCss($b)
+	{
+		$this->minifyCss = $b;
+	}
+
+	/**
 	 * Returns the language.
 	 *
 	 * @return Skelpo\Framework\Language\Language
