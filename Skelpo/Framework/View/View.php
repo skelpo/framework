@@ -74,6 +74,12 @@ class View extends Template
 	 * @var string
 	 */
 	protected $rootUrl;
+	
+	/**
+	 * Caching on/off.
+	 */
+	protected $cacheOn;
+	
 	/**
 	 * The technical name of the template (even if the template is not available, this variable says
 	 * what it is supposed to be.
@@ -131,7 +137,7 @@ class View extends Template
 		$this->router = $router;
 		$this->defaultLanguage = $defaultLanguage;
 		$this->pluginManager = $pluginManager;
-		
+		$this->cacheOn = false;
 		$this->setupSmarty();
 	}
 
@@ -257,14 +263,23 @@ class View extends Template
 	}
 
 	/**
+	 * Sets the cache on/off.
+	 *
+	 * @param boolean $on
+	 */
+	public function setCacheOn($on)
+	{
+		$this->cacheOn = $on;
+	}
+
+	/**
 	 * Do we need to refresh the cache.
 	 *
 	 * @return boolean
 	 */
 	public function isCacheDue()
 	{
-		// TODO: For now it is due every time. At some point soon this should be replaced by a smart algorithmn.
-		return true;
+		return ! $this->cacheOn;
 	}
 
 	/**
