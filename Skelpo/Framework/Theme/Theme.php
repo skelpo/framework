@@ -92,6 +92,16 @@ abstract class Theme
 	}
 
 	/**
+	 * Returns the css compiler for this theme.
+	 *
+	 * @return string
+	 */
+	public function getCssCompiler()
+	{
+		return $this->cssCompiler;
+	}
+
+	/**
 	 * Sets the css compiler.
 	 *
 	 * @param String $c
