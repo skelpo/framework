@@ -489,6 +489,14 @@ class View extends Template
 				$scssData = file_get_contents($allLess);
 				$scss->setImportPaths($paths);
 				$scss->setVariables($vars);
+				if ($this->minifyCss)
+				{
+					$scss->setFormatter(\Leafo\ScssPhp\Formatter\Crunched);
+				}
+				else
+				{
+					$scss->setFormatter(\Leafo\ScssPhp\Formatter\Expanded);
+				}
 				echo $scss->compile($scssData);
 			}
 			else if ($c == "css")
