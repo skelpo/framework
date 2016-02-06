@@ -418,13 +418,11 @@ class View extends Template
 		
 		$cssfile = $p . "all.css";
 		$cssurl = $this->rootUrl . "static/" . $this->module->getPathName() . "/css/all.css";
-		
 		// in case we have it in cache just return the url
 		if ($this->filesystem->exists($cssfile) && ! $this->isCacheDue())
 		{
 			return $cssurl;
 		}
-		
 		// if not go through all the dirs
 		$dirs = $this->framework->getTemplateDirs();
 		
@@ -437,7 +435,7 @@ class View extends Template
 		// go through all the dirs to find the all.less
 		foreach ($dirs as $dir_)
 		{
-			$file = $dir_ . $this->module->getPathName() . "/_public/" . $this->framework->getTheme()->getCssCompiler() . "/all.less";
+			$file = $dir_ . $this->module->getPathName() . "/_public/" . $this->framework->getTheme()->getCssCompiler() . "/all." . $this->framework->getTheme()->getCssCompiler();
 			if ($this->filesystem->exists($file))
 			{
 				$paths[] = $dir_ . $this->module->getPathName() . "/_public/" . $this->framework->getTheme()->getCssCompiler() . "/";
@@ -491,11 +489,11 @@ class View extends Template
 				$scss->setVariables($vars);
 				if ($this->minifyCss)
 				{
-					$scss->setFormatter(\Leafo\ScssPhp\Formatter\Crunched);
+					$scss->setFormatter("Leafo\ScssPhp\Formatter\Crunched");
 				}
 				else
 				{
-					$scss->setFormatter(\Leafo\ScssPhp\Formatter\Expanded);
+					$scss->setFormatter("Leafo\ScssPhp\Formatter\Expanded");
 				}
 				$css = $scss->compile($scssData);
 			}
@@ -697,7 +695,6 @@ class View extends Template
 					{
 						$files = scandir($d);
 						$target = str_replace("*", "", $target);
-						// die("F:" . $target);
 						if (! is_dir($target))
 							mkdir($target);
 						foreach ($files as $file_)
