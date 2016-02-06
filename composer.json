@@ -15,7 +15,8 @@
     "incenteev/composer-parameter-handler" : "~2.0",
     "smarty/smarty" : "=3.1.24",
     "oyejorge/less.php" : ">=1.7",
-    "tedivm/jshrink" : "~1.0"
+    "tedivm/jshrink" : "~1.0",
+    "leafo/scssphp" : "v0.6.3"
   },
   "require-dev" : {
     "sensio/generator-bundle" : "~2.3"

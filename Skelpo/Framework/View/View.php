@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Leafo\ScssPhp\Compiler;
 
 /**
  * View service class.
@@ -430,12 +431,16 @@ class View extends Template
 		// our output
 		$allLess = "";
 		
+		// paths with potential scss/less files
+		$paths = array();
+		
 		// go through all the dirs to find the all.less
 		foreach ($dirs as $dir_)
 		{
-			$file = $dir_ . $this->module->getPathName() . "/_public/less/all.less";
+			$file = $dir_ . $this->module->getPathName() . "/_public/" . $this->framework->getTheme()->getCssCompiler() . "/all.less";
 			if ($this->filesystem->exists($file))
 			{
+				$paths[] = $dir_ . $this->module->getPathName() . "/_public/" . $this->framework->getTheme()->getCssCompiler() . "/";
 				$allLess = $file;
 				break;
 			}
@@ -447,25 +452,49 @@ class View extends Template
 		
 		try
 		{
-			// the less parser
-			$parser = new \Less_Parser();
 			
-			// are we minifying?
-			\Less_Parser::$options['compress'] = $this->minifyCss;
-			$vars = array();
-			foreach ($this->getTemplateVars() as $k => $v)
+			$c = $this->framework->getTheme()->getCssCompiler();
+			if ($c == "less" || $c == "") // less is assumed if nothing else is given
 			{
-				if (! is_object($v) && ! is_array($v))
-					$vars[$k] = '\'' . $v . '\'';
+				// the less parser
+				$parser = new \Less_Parser();
+				
+				$vars = array();
+				foreach ($this->getTemplateVars() as $k => $v)
+				{
+					if (! is_object($v) && ! is_array($v))
+						$vars[$k] = '\'' . $v . '\'';
+				}
+				
+				// are we minifying?
+				\Less_Parser::$options['compress'] = $this->minifyCss;
+				$parser->ModifyVars($vars);
+				
+				// parse our output
+				$parser->parseFile($allLess, $this->rootUrl . 'static/' . $this->module->getPathName());
+				
+				// and get it as css
+				$css = $parser->getCss();
 			}
-			
-			$parser->ModifyVars($vars);
-			
-			// parse our output
-			$parser->parseFile($allLess, $this->rootUrl . 'static/' . $this->module->getPathName());
-			
-			// and get it as css
-			$css = $parser->getCss();
+			else if ($c == "scss")
+			{
+				$vars = array();
+				foreach ($this->getTemplateVars() as $k => $v)
+				{
+					if (! is_object($v) && ! is_array($v))
+						$vars[$k] = '' . $v . '';
+				}
+				
+				$scss = new Compiler();
+				$scssData = file_get_contents($allLess);
+				$scss->setImportPaths($paths);
+				$scss->setVariables($vars);
+				echo $scss->compile($scssData);
+			}
+			else if ($c == "css")
+			{
+				// TODO: Load all css files and just put them together in one file.
+			}
 		}
 		catch (\Exception $e)
 		{

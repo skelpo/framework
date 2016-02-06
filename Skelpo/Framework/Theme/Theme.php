@@ -32,7 +32,7 @@ abstract class Theme
 	 */
 	protected $folder;
 	/**
-	 * All files that are written in less.
+	 * All files that are written in less or scss.
 	 *
 	 * @var string[]
 	 */
@@ -49,6 +49,12 @@ abstract class Theme
 	 * @var Skelpo\Framework\Kernel\Kernel
 	 */
 	protected $kernel;
+	/**
+	 * The css compiler, either less or scss.
+	 *
+	 * @var string
+	 */
+	protected $cssCompiler;
 
 	/**
 	 * Creates a new theme instance.
@@ -83,6 +89,16 @@ abstract class Theme
 	{
 		$refC = new \ReflectionClass($this);
 		return $refC->getShortName();
+	}
+
+	/**
+	 * Sets the css compiler.
+	 *
+	 * @param String $c
+	 */
+	public function setCssCompiler($c)
+	{
+		$this->cssCompiler = $c;
 	}
 
 	/**
