@@ -497,7 +497,7 @@ class View extends Template
 				{
 					$scss->setFormatter(\Leafo\ScssPhp\Formatter\Expanded);
 				}
-				echo $scss->compile($scssData);
+				$css = $scss->compile($scssData);
 			}
 			else if ($c == "css")
 			{
