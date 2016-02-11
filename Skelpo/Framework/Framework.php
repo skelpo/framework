@@ -15,6 +15,7 @@ namespace Skelpo\Framework;
 use Skelpo\Framework\Module;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Framework bundle to handle all our stuff.
@@ -189,6 +190,11 @@ class Framework extends Bundle
 	{
 		$this->kernel = $kernel;
 		$this->eventDispatcher = new EventDispatcher();
+	}
+
+	public function build(ContainerBuilder $container)
+	{
+		parent::build($container);
 	}
 
 	/**

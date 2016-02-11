@@ -130,7 +130,6 @@ class ManagementControllerResolver implements ControllerResolverInterface
 		{
 			$r = new \ReflectionFunction($controller);
 		}
-		
 		return $this->doGetArguments($request, $controller, $r->getParameters());
 	}
 

@@ -153,6 +153,7 @@ class HttpKernel extends \Symfony\Component\HttpKernel\DependencyInjection\Conta
 		
 		// controller arguments
 		$arguments = $this->resolver->getArguments($request, $controller);
+		die("D:" . print_r($arguments, true));
 		
 		// call controller
 		$response = call_user_func_array($controller, $arguments);
@@ -186,8 +187,9 @@ class HttpKernel extends \Symfony\Component\HttpKernel\DependencyInjection\Conta
 
 	/**
 	 * Converts a variable (object, array, resource, string, .
+	 *
 	 * ..) into a String.
-	 * 
+	 *
 	 * @param Object $var
 	 * @return string
 	 */
