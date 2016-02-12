@@ -1,12 +1,17 @@
 <?php
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
+/**
+ * This file is part of the skelpo framework.
+ * This file has been
+ * partially or fully taken from the symfony framework.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
+ * @version 1.0.0
+ * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
+ * @author symfony Team
+ * @copyright 2016 Skelpo Inc. www.skelpo.com
  */
 namespace Skelpo\Framework\DependencyInjection;
 
@@ -119,7 +124,6 @@ class FrameworkExtension extends Extension
 		{
 			$this->registerRouterConfiguration($config['router'], $container, $loader);
 		}
-		
 		$this->registerAnnotationsConfiguration($config['annotations'], $container, $loader);
 		$this->registerPropertyAccessConfiguration($config['property_access'], $container);
 		
@@ -1112,7 +1116,6 @@ class FrameworkExtension extends Extension
 		{
 			$this->kernelRootHash = hash('sha256', $container->getParameter('kernel.root_dir'));
 		}
-		
 		return $this->kernelRootHash;
 	}
 

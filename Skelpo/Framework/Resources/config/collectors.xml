@@ -44,7 +44,7 @@
             <tag name="data_collector" template="@WebProfiler/Collector/memory.html.twig" id="memory" priority="325" />
         </service>
 
-        <service id="data_collector.router" class="Symfony\Bundle\FrameworkBundle\DataCollector\RouterDataCollector" >
+        <service id="data_collector.router" class="Skelpo\Framework\DataCollector\RouterDataCollector" >
             <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController"/>
             <tag name="data_collector" template="@WebProfiler/Collector/router.html.twig" id="router" priority="285" />
         </service>

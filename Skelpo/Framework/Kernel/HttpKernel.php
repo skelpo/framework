@@ -25,15 +25,24 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\HttpKernel as BaseHttpKernel;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\TerminableInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * HttpKernel Class that is very similar to the standard symfony kernel, we just deal with controllers a little different.
  * A good bit of this file is simply copied and pasted from the standard bunble.
  */
-class HttpKernel extends \Symfony\Component\HttpKernel\DependencyInjection\ContainerAwareHttpKernel implements HttpKernelInterface, TerminableInterface
+class HttpKernel extends BaseHttpKernel implements HttpKernelInterface, TerminableInterface, ContainerAwareInterface
 {
+	protected $container;
+
+	public function setContainer(ContainerInterface $container = null)
+	{
+		$this->container = $container;
+	}
 
 	/**
 	 * Publishes the finish request event, then pop the request from the stack.
@@ -153,7 +162,6 @@ class HttpKernel extends \Symfony\Component\HttpKernel\DependencyInjection\Conta
 		
 		// controller arguments
 		$arguments = $this->resolver->getArguments($request, $controller);
-		die("D:" . print_r($arguments, true));
 		
 		// call controller
 		$response = call_user_func_array($controller, $arguments);
@@ -187,6 +195,24 @@ class HttpKernel extends \Symfony\Component\HttpKernel\DependencyInjection\Conta
 
 	/**
 	 * Converts a variable (object, array, resource, string, .
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
 	 *
 	 * ..) into a String.
 	 *
@@ -300,8 +326,7 @@ class HttpKernel extends \Symfony\Component\HttpKernel\DependencyInjection\Conta
 	{
 		$request->headers->set('X-Php-Ob-Level', ob_get_level());
 		
-		$this->container->enterScope('request');
-		$this->container->set('request', $request, 'request');
+		// $this->container->set('request', $request, 'request');
 		
 		try
 		{
@@ -323,14 +348,12 @@ class HttpKernel extends \Symfony\Component\HttpKernel\DependencyInjection\Conta
 		}
 		catch (\Exception $e)
 		{
-			$this->container->set('request', null, 'request');
-			$this->container->leaveScope('request');
+			// $this->container->set('request', null, 'request');
 			
 			throw $e;
 		}
 		
-		$this->container->set('request', null, 'request');
-		$this->container->leaveScope('request');
+		// $this->container->set('request', null, 'request');
 		
 		return $response;
 	}

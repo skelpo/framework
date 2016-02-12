@@ -12,10 +12,29 @@
  */
 namespace Skelpo\Framework;
 
+use Skelpo\Framework\DependencyInjection\Compiler\AddCacheClearerPass;
+use Skelpo\Framework\DependencyInjection\Compiler\AddCacheWarmerPass;
+use Skelpo\Framework\DependencyInjection\Compiler\AddConstraintValidatorsPass;
+use Skelpo\Framework\DependencyInjection\Compiler\AddValidatorInitializersPass;
+use Skelpo\Framework\DependencyInjection\Compiler\CompilerDebugDumpPass;
+use Skelpo\Framework\DependencyInjection\Compiler\ConfigCachePass;
+use Skelpo\Framework\DependencyInjection\Compiler\ContainerBuilderDebugDumpPass;
+use Skelpo\Framework\DependencyInjection\Compiler\LoggingTranslatorPass;
+use Skelpo\Framework\DependencyInjection\Compiler\ProfilerPass;
+use Skelpo\Framework\DependencyInjection\Compiler\PropertyInfoPass;
+use Skelpo\Framework\DependencyInjection\Compiler\RoutingResolverPass;
+use Skelpo\Framework\DependencyInjection\Compiler\SerializerPass;
+use Skelpo\Framework\DependencyInjection\Compiler\TranslationDumperPass;
+use Skelpo\Framework\DependencyInjection\Compiler\TranslationExtractorPass;
+use Skelpo\Framework\DependencyInjection\Compiler\TranslatorPass;
+use Skelpo\Framework\DependencyInjection\Compiler\UnusedTagsPass;
 use Skelpo\Framework\Module;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\EventDispatcher\DependencyInjection\RegisterListenersPass;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\DependencyInjection\FragmentRendererPass;
 
 /**
  * Framework bundle to handle all our stuff.
@@ -195,6 +214,32 @@ class Framework extends Bundle
 	public function build(ContainerBuilder $container)
 	{
 		parent::build($container);
+		
+		$container->addCompilerPass(new RoutingResolverPass());
+		$container->addCompilerPass(new ProfilerPass());
+		// must be registered before removing private services as some might be listeners/subscribers
+		// but as late as possible to get resolved parameters
+		$container->addCompilerPass(new RegisterListenersPass(), PassConfig::TYPE_BEFORE_REMOVING);
+		$container->addCompilerPass(new AddConstraintValidatorsPass());
+		$container->addCompilerPass(new AddValidatorInitializersPass());
+		// $container->addCompilerPass(new AddConsoleCommandPass());
+		$container->addCompilerPass(new TranslatorPass());
+		$container->addCompilerPass(new LoggingTranslatorPass());
+		$container->addCompilerPass(new AddCacheWarmerPass());
+		$container->addCompilerPass(new AddCacheClearerPass());
+		$container->addCompilerPass(new TranslationExtractorPass());
+		$container->addCompilerPass(new TranslationDumperPass());
+		$container->addCompilerPass(new FragmentRendererPass(), PassConfig::TYPE_AFTER_REMOVING);
+		$container->addCompilerPass(new SerializerPass());
+		$container->addCompilerPass(new PropertyInfoPass());
+		
+		if ($container->getParameter('kernel.debug'))
+		{
+			$container->addCompilerPass(new UnusedTagsPass(), PassConfig::TYPE_AFTER_REMOVING);
+			$container->addCompilerPass(new ContainerBuilderDebugDumpPass(), PassConfig::TYPE_AFTER_REMOVING);
+			$container->addCompilerPass(new CompilerDebugDumpPass(), PassConfig::TYPE_AFTER_REMOVING);
+			$container->addCompilerPass(new ConfigCachePass());
+		}
 	}
 
 	/**

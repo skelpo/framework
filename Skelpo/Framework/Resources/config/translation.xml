@@ -5,7 +5,7 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="translator.default" class="Symfony\Bundle\FrameworkBundle\Translation\Translator">
+        <service id="translator.default" class="Skelpo\Framework\Translation\Translator">
             <argument type="service" id="service_container" />
             <argument type="service" id="translator.selector" />
             <argument type="collection" /> <!-- translation loaders -->
@@ -115,17 +115,17 @@
             <tag name="translation.dumper" alias="res" />
         </service>
 
-        <service id="translation.extractor.php" class="Symfony\Bundle\FrameworkBundle\Translation\PhpExtractor">
+        <service id="translation.extractor.php" class="Skelpo\Framework\Translation\PhpExtractor">
             <tag name="translation.extractor" alias="php" />
         </service>
 
-        <service id="translation.loader" class="Symfony\Bundle\FrameworkBundle\Translation\TranslationLoader"/>
+        <service id="translation.loader" class="Skelpo\Framework\Translation\TranslationLoader"/>
 
         <service id="translation.extractor" class="Symfony\Component\Translation\Extractor\ChainExtractor"/>
 
         <service id="translation.writer" class="Symfony\Component\Translation\Writer\TranslationWriter"/>
 
-        <service id="translation.warmer" class="Symfony\Bundle\FrameworkBundle\CacheWarmer\TranslationsCacheWarmer" public="false">
+        <service id="translation.warmer" class="Skelpo\Framework\CacheWarmer\TranslationsCacheWarmer" public="false">
             <argument type="service" id="translator" />
             <tag name="kernel.cache_warmer" />
         </service>

@@ -9,8 +9,8 @@
             <argument type="service" id="service_container" />
         </service>
 
-        <service id="http_kernel" class="Symfony\Component\HttpKernel\HttpKernel">
-            <argument type="service" id="event_dispatcher" />
+        <service id="http_kernel" class="Skelpo\Framework\Kernel\HttpKernel">
+        	<argument type="service" id="event_dispatcher" />
             <argument type="service" id="controller_resolver" />
             <argument type="service" id="request_stack" />
         </service>
@@ -21,7 +21,7 @@
             <argument type="collection" />
         </service>
 
-        <service id="kernel.class_cache.cache_warmer" class="Symfony\Bundle\FrameworkBundle\CacheWarmer\ClassCacheCacheWarmer">
+        <service id="kernel.class_cache.cache_warmer" class="Skelpo\Framework\CacheWarmer\ClassCacheCacheWarmer">
             <tag name="kernel.cache_warmer" />
         </service>
 

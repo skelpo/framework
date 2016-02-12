@@ -8,8 +8,8 @@
         <parameter key="router.options.generator_class">Symfony\Component\Routing\Generator\UrlGenerator</parameter>
         <parameter key="router.options.generator_base_class">Symfony\Component\Routing\Generator\UrlGenerator</parameter>
         <parameter key="router.options.generator_dumper_class">Symfony\Component\Routing\Generator\Dumper\PhpGeneratorDumper</parameter>
-        <parameter key="router.options.matcher_class">Symfony\Bundle\FrameworkBundle\Routing\RedirectableUrlMatcher</parameter>
-        <parameter key="router.options.matcher_base_class">Symfony\Bundle\FrameworkBundle\Routing\RedirectableUrlMatcher</parameter>
+        <parameter key="router.options.matcher_class">Skelpo\Framework\Routing\RedirectableUrlMatcher</parameter>
+        <parameter key="router.options.matcher_base_class">Skelpo\Framework\Routing\RedirectableUrlMatcher</parameter>
         <parameter key="router.options.matcher_dumper_class">Symfony\Component\Routing\Matcher\Dumper\PhpMatcherDumper</parameter>
         <parameter key="router.options.matcher.cache_class">%router.cache_class_prefix%UrlMatcher</parameter>
         <parameter key="router.options.generator.cache_class">%router.cache_class_prefix%UrlGenerator</parameter>
@@ -46,12 +46,12 @@
             <argument type="service" id="service_container" />
         </service>
 
-        <service id="routing.loader" class="Symfony\Bundle\FrameworkBundle\Routing\DelegatingLoader">
-            <argument type="service" id="controller_name_converter" />
+        <service id="routing.loader" class="Skelpo\Framework\Routing\Loader">
+            <argument type="service" id="kernel" />
             <argument type="service" id="routing.resolver" />
         </service>
 
-        <service id="router.default" class="Symfony\Bundle\FrameworkBundle\Routing\Router" public="false">
+        <service id="router.default" class="Skelpo\Framework\Routing\Router" public="false">
             <tag name="monolog.logger" channel="router" />
             <argument type="service" id="service_container" />
             <argument>%router.resource%</argument>
@@ -85,11 +85,11 @@
             <argument>%request_listener.https_port%</argument>
         </service>
 
-        <service id="router.cache_warmer" class="Symfony\Bundle\FrameworkBundle\CacheWarmer\RouterCacheWarmer" public="false">
+        <service id="router.cache_warmer" class="Skelpo\Framework\CacheWarmer\RouterCacheWarmer" public="false">
             <tag name="kernel.cache_warmer" />
             <argument type="service" id="router" />
         </service>
-
+        
         <service id="router_listener" class="Symfony\Component\HttpKernel\EventListener\RouterListener">
             <tag name="kernel.event_subscriber" />
             <tag name="monolog.logger" channel="request" />

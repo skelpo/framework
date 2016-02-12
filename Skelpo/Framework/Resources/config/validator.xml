@@ -38,11 +38,11 @@
             </argument>
         </service>
 
-        <service id="validator.validator_factory" class="Symfony\Bundle\FrameworkBundle\Validator\ConstraintValidatorFactory" public="false">
+         <service id="validator.validator_factory" class="Skelpo\Framework\Validator\ConstraintValidatorFactory" public="false">
             <argument type="service" id="service_container" />
             <argument type="collection" />
         </service>
-
+ 
         <service id="validator.expression" class="Symfony\Component\Validator\Constraints\ExpressionValidator">
             <argument type="service" id="property_accessor" />
             <tag name="validator.constraint_validator" alias="validator.expression" />

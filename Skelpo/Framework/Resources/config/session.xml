@@ -47,7 +47,7 @@
 
         <service id="session.handler.write_check" class="Symfony\Component\HttpFoundation\Session\Storage\Handler\WriteCheckSessionHandler" public="false" />
 
-        <service id="session_listener" class="Symfony\Bundle\FrameworkBundle\EventListener\SessionListener">
+        <service id="session_listener" class="Skelpo\Framework\EventListener\SessionListener">
             <tag name="kernel.event_subscriber" />
             <argument type="service" id="service_container" />
         </service>

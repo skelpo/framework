@@ -152,6 +152,7 @@ abstract class Kernel extends \Symfony\Component\HttpKernel\Kernel
 		{
 			$this->boot();
 		}
+		$this->getHttpKernel()->setContainer($this->getContainer());
 		return $this->getHttpKernel()->handle($request, $type, $catch);
 	}
 
