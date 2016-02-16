@@ -75,12 +75,12 @@ class View extends Template
 	 * @var string
 	 */
 	protected $rootUrl;
-
+	
 	/**
 	 * Caching on/off.
 	 */
 	protected $cacheOn;
-
+	
 	/**
 	 * The technical name of the template (even if the template is not available, this variable says
 	 * what it is supposed to be.
@@ -175,7 +175,7 @@ class View extends Template
 		$lpaths = array();
 		$lpaths[] = "App/Locale/";
 		$tpaths = $this->framework->getTemplateDirs();
-
+		
 		foreach ($tpaths as $p)
 		{
 			$lpaths[] = $p . "Locale/";
@@ -293,69 +293,69 @@ class View extends Template
 	public function onKernelController(FilterControllerEvent $event)
 	{
 		$controller = $event->getController();
-
+		
 		if (! is_array($controller))
 		{
 			return;
 		}
 		// this is our controller
 		$controller = $controller[0];
-
+		
 		// get the request
 		$request = $event->getRequest();
-
+		
 		// our string
 		$s = $request->attributes->get('_controller');
-
+		
 		// only if it is to skelpo controllers
 		if (! stristr($s, "::"))
 			return;
-
+			
 			// get the different parts
 		$params = explode('::', $s);
 		$actionName = substr($params[1], 0, - 6);
 		$controllerName = substr($params[0], 0, - 10);
-
+		
 		// build the events name
 		$this->eventName1 = str_replace("\\", "_", $controllerName) . "_" . ucwords($actionName) . "_PreDispatch";
 		$this->eventName2 = str_replace("\\", "_", $controllerName) . "_PreDispatch";
-
+		
 		// get the event dispatcher
 		$dispatcher = $this->framework->getEventDispatcher();
-
+		
 		// create an event
 		$cevent = new ControllerEvent($controller, $request);
-
+		
 		// dispatch the events
 		$dispatcher->dispatch($this->eventName1, $cevent);
 		$dispatcher->dispatch($this->eventName2, $cevent);
-
+		
 		$response = $cevent->getResponse();
 		if ($response instanceof Response)
 		{
 			// $event->setResponse($response);
 			return;
 		}
-
+		
 		// the module we are using right now
 		$module = substr($controllerName, strpos($controllerName, "Controllers") + 12);
 		$moduleName = strtolower(substr($module, 0, strpos($module, "\\")));
-
+		
 		$this->module = $this->framework->getKernel()->getModuleByName($moduleName);
-
+		
 		// if we are not returning a template stop here
 		if ($this->module->isBasedOnTemplates() == false)
 			return;
-
+			
 			// the template name
 		$templateName = strtolower(str_replace("\\", "/", substr($controllerName, strpos($controllerName, "Controllers") + 12))) . "/" . $actionName . ".tpl";
-
+		
 		// in case there is no template for an action, we use the index.tpl
 		$defaultTemplateName = strtolower(str_replace("\\", "/", substr($controllerName, strpos($controllerName, "Controllers") + 12))) . "/index.tpl";
-
+		
 		// get our template dirs
 		$dirs = $this->framework->getTemplateDirs();
-
+		
 		// search for the template
 		foreach ($dirs as $dir)
 		{
@@ -365,7 +365,7 @@ class View extends Template
 				break;
 			}
 		}
-
+		
 		// if we haven't found the template let's look for the default template
 		if ($this->templateFile == "")
 		{
@@ -378,7 +378,7 @@ class View extends Template
 				}
 			}
 		}
-
+		
 		$this->technicalTemplateName = $dir . $templateName;
 	}
 
@@ -410,14 +410,15 @@ class View extends Template
 	private function getLessUrl()
 	{
 		$p = $this->framework->getRootDir() . "static/" . $this->module->getPathName() . "/css/";
-
+		
 		if (! $this->filesystem->exists($p))
 		{
 			$this->filesystem->mkdir($p);
 		}
-
+		
 		$cssfile = $p . "all.css";
 		$cssurl = $this->rootUrl . "static/" . $this->module->getPathName() . "/css/all.css";
+		
 		// in case we have it in cache just return the url
 		if ($this->filesystem->exists($cssfile) && ! $this->isCacheDue())
 		{
@@ -425,13 +426,13 @@ class View extends Template
 		}
 		// if not go through all the dirs
 		$dirs = $this->framework->getTemplateDirs();
-
+		
 		// our output
 		$allLess = "";
-
+		
 		// paths with potential scss/less files
 		$paths = array();
-
+		
 		// go through all the dirs to find the all.less
 		foreach ($dirs as $dir_)
 		{
@@ -443,34 +444,34 @@ class View extends Template
 				break;
 			}
 		}
-
+		
 		// if there is none just return an empty string
 		if ($allLess == "")
 			return "";
-
+		
 		try
 		{
-
+			
 			$c = $this->framework->getTheme()->getCssCompiler();
 			if ($c == "less" || $c == "") // less is assumed if nothing else is given
 			{
 				// the less parser
 				$parser = new \Less_Parser();
-
+				
 				$vars = array();
 				foreach ($this->getTemplateVars() as $k => $v)
 				{
 					if (! is_object($v) && ! is_array($v))
 						$vars[$k] = '\'' . $v . '\'';
 				}
-
+				
 				// are we minifying?
 				\Less_Parser::$options['compress'] = $this->minifyCss;
 				$parser->ModifyVars($vars);
-
+				
 				// parse our output
 				$parser->parseFile($allLess, $this->rootUrl . 'static/' . $this->module->getPathName());
-
+				
 				// and get it as css
 				$css = $parser->getCss();
 			}
@@ -482,7 +483,7 @@ class View extends Template
 					if (! is_object($v) && ! is_array($v))
 						$vars[$k] = '' . $v . '';
 				}
-
+				
 				$scss = new Compiler();
 				$scssData = file_get_contents($allLess);
 				$scss->setImportPaths($paths);
@@ -507,14 +508,14 @@ class View extends Template
 			// TODO: Do something with the error.
 			$css = "";
 		}
-
+		
 		// remove the file if it exists
 		if ($this->filesystem->exists($cssfile))
 			$this->filesystem->remove($cssfile);
-
+			
 			// save our output here
 		$this->filesystem->dumpFile($cssfile, $css);
-
+		
 		// and return the url
 		return $cssurl;
 	}
@@ -527,21 +528,21 @@ class View extends Template
 	private function getJSUrl()
 	{
 		$p = $this->framework->getRootDir() . "static/" . $this->module->getPathName() . "/js/";
-
+		
 		if (! $this->filesystem->exists($p))
 		{
 			$this->filesystem->mkdir($p);
 		}
-
+		
 		$jsfile = $p . "all.js";
 		$jsurl = $this->rootUrl . "static/" . $this->module->getPathName() . "/js/all.js";
-
+		
 		// check if we have it in cache
 		if ($this->filesystem->exists($jsfile) && ! $this->isCacheDue())
 		{
 			return $jsurl;
 		}
-
+		
 		// get all our JS files
 		$files = $this->framework->getTheme()->getJSFiles();
 		if (isset($files[$this->module->getPathName()]))
@@ -552,7 +553,7 @@ class View extends Template
 		{
 			$files = array();
 		}
-
+		
 		// add the files for the plugins
 		$plugins = $this->pluginManager->getPlugins();
 		foreach ($plugins as $plugin)
@@ -561,10 +562,10 @@ class View extends Template
 			if (array_key_exists($this->module->getPathName(), $pluginFiles))
 				$files = array_merge($files, $pluginFiles[$this->module->getPathName()]);
 		}
-
+		
 		// and all dirs
 		$dirs = $this->framework->getTemplateDirs();
-
+		
 		// go through all "files" that are folders
 		foreach ($files as $a => $file)
 		{
@@ -586,7 +587,7 @@ class View extends Template
 				}
 			}
 		}
-
+		
 		// now find all the actual files
 		foreach ($files as $a => $file)
 		{
@@ -597,23 +598,23 @@ class View extends Template
 					$files[$a] = $f;
 			}
 		}
-
+		
 		// get all the files
 		$jsoutput = $this->loadFiles($files, ".js");
-
+		
 		// shall we minify?
 		if ($this->minifyJs)
 			$jsoutput = \JShrink\Minifier::minify($jsoutput, array(
-					'flaggedComments' => false
+					'flaggedComments' => false 
 			));
-
+			
 			// delete the existing file
 		if ($this->filesystem->exists($jsfile))
 			$this->filesystem->remove($jsfile);
-
+			
 			// save the new
 		$this->filesystem->dumpFile($jsfile, $jsoutput);
-
+		
 		// return the url
 		return $jsurl;
 	}
@@ -661,19 +662,19 @@ class View extends Template
 	private function copyStaticContent()
 	{
 		$baseFolder = $this->framework->getRootDir() . "static/" . $this->module->getPathName() . "/";
-
+		
 		if (! $this->filesystem->exists($baseFolder))
 		{
 			$this->filesystem->remove($baseFolder);
 			$this->filesystem->mkdir($baseFolder);
 		}
-
+		
 		// all dirs from the template
 		$dirs = $this->framework->getTemplateDirs();
-
+		
 		// our initial static files
 		$files = $this->framework->getTheme()->getAllStaticFiles();
-
+		
 		// specify
 		if (isset($files[$this->module->getPathName()]))
 		{
@@ -683,7 +684,7 @@ class View extends Template
 		{
 			$files = array();
 		}
-
+		
 		// add the files for the plugins
 		$plugins = $this->pluginManager->getPlugins();
 		foreach ($plugins as $plugin)
@@ -692,9 +693,9 @@ class View extends Template
 			if (array_key_exists($this->module->getPathName(), $pluginFiles))
 				$files = array_merge($files, $pluginFiles[$this->module->getPathName()]);
 		}
-
+		
 		$dirsCount = count($dirs);
-
+		
 		// get all the files
 		foreach ($files as $f2 => $file_)
 		{
@@ -727,7 +728,7 @@ class View extends Template
 								continue;
 							if ($this->filesystem->exists($d . $file_))
 							{
-
+								
 								$this->filesystem->symlink($file . $file_, $target . $file_, true);
 							}
 						}
@@ -760,58 +761,58 @@ class View extends Template
 	{
 		// get the event dispatcher
 		$dispatcher = $this->framework->getEventDispatcher();
-
+		
 		// create an event
 		$cevent = new ControllerEvent(null, $event->getRequest(), $event->getResponse());
-
+		
 		// dispatch the events
 		$dispatcher->dispatch($this->eventName1, $cevent);
 		$dispatcher->dispatch($this->eventName2, $cevent);
-
+		
 		if ($this->module->isBasedOnTemplates() == false)
 		{
 			// simply return since here is nothing needed from the template
 			return;
 		}
-
-			// final events if cache is due (before the css/js compilation)
+		
+		// final events if cache is due (before the css/js compilation)
 		if ($this->isCacheDue())
 		{
 			// run all theme custom commands
 			$this->framework->getTheme()->beforeCompile();
 		}
-
+		
 		// get the compressed urls
 		$cssUrl = $this->getLessUrl();
 		$jsUrl = $this->getJSUrl();
-
+		
 		// assign them to the template
 		$this->assign("cssUrl", $cssUrl);
 		$this->assign("jsUrl", $jsUrl);
-
+		
 		// final events if cache is due (after the css/js complication)
 		if ($this->isCacheDue())
 		{
 			$this->copyStaticContent();
-
+			
 			// run all theme custom commands
 			$this->framework->getTheme()->afterCompile();
 		}
-
+		
 		$this->framework->getTheme()->fixSmarty($this);
-
+		
 		// if still no template there is a problem
 		if ($this->templateFile == "")
 		{
 			throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException("Template does not exist: " . $this->technicalTemplateName);
 		}
-
+		
 		// get our template
 		$content = $this->fetch($this->templateFile);
-
+		
 		// parse language elements
 		$content = $this->parseLanguage($content);
-
+		
 		// our response
 		$newResponse = new Response();
 		$newResponse->setContent($content);
@@ -829,7 +830,7 @@ class View extends Template
 	{
 		$ret = preg_replace_callback("/##(.+?)##/", array(
 				$this->language,
-				"getString"
+				"getString" 
 		), $content);
 		return $ret;
 	}
