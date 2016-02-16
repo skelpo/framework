@@ -565,6 +565,29 @@ class View extends Template
 		// and all dirs
 		$dirs = $this->framework->getTemplateDirs();
 		
+		// go through all "files" that are folders
+		foreach ($files as $a => $file)
+		{
+			foreach ($dirs as $dir_)
+			{
+				$f = $dir_ . $this->module->getPathName() . "/_public/js/" . $file;
+				if (is_dir($f))
+				{
+					$dirs[] = $f;
+					unset($files[$a]);
+					$filesDir = scandir($f);
+					foreach ($filesDir as $f2)
+					{
+						if (substr($f2, - 3) == ".js")
+						{
+							$files[] = $f . '/' . $f2;
+						}
+					}
+				}
+			}
+		}
+		
+		// now find all the actual files
 		foreach ($files as $a => $file)
 		{
 			foreach ($dirs as $dir_)
@@ -574,6 +597,7 @@ class View extends Template
 					$files[$a] = $f;
 			}
 		}
+		
 		// get all the files
 		$jsoutput = $this->loadFiles($files, ".js");
 		
