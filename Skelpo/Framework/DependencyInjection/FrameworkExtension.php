@@ -2,13 +2,13 @@
 
 /**
  * This file is part of the skelpo framework.
- * This file has been
- * partially or fully taken from the symfony framework.
+ * This file has been partially or fully taken
+ * from the symfony framework.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version 1.0.0
+ * @version 1.1.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @author symfony Team
  * @copyright 2016 Skelpo Inc. www.skelpo.com
@@ -185,8 +185,8 @@ class FrameworkExtension extends Extension
 				'Symfony\\Component\\HttpKernel\\KernelEvents',
 				'Symfony\\Component\\HttpKernel\\Config\\FileLocator',
 				
-				'Symfony\\Bundle\\FrameworkBundle\\Controller\\ControllerNameParser',
-				'Symfony\\Bundle\\FrameworkBundle\\Controller\\ControllerResolver' 
+				'Skelpo\\Framework\\Controller\\ControllerNameParser',
+				'Skelpo\\Framework\\Controller\\ManagementControllerResolver' 
 		));
 		// Cannot be included because annotations will parse the big compiled class file
 		// 'Symfony\\Bundle\\FrameworkBundle\\Controller\\Controller',
@@ -398,7 +398,7 @@ class FrameworkExtension extends Extension
 				'Symfony\\Component\\Routing\\Generator\\UrlGenerator',
 				'Symfony\\Component\\Routing\\RequestContext',
 				'Symfony\\Component\\Routing\\Router',
-				'Symfony\\Bundle\\FrameworkBundle\\Routing\\RedirectableUrlMatcher',
+				'Skelpo\\Framework\\Routing\\RedirectableUrlMatcher',
 				$container->findDefinition('router.default')->getClass() 
 		));
 	}
@@ -461,7 +461,7 @@ class FrameworkExtension extends Extension
 		$container->setParameter('session.save_path', $config['save_path']);
 		
 		$this->addClassesToCompile(array(
-				'Symfony\\Bundle\\FrameworkBundle\\EventListener\\SessionListener',
+				'Skelpo\\Framework\\EventListener\\SessionListener',
 				'Symfony\\Component\\HttpFoundation\\Session\\Storage\\NativeSessionStorage',
 				'Symfony\\Component\\HttpFoundation\\Session\\Storage\\PhpBridgeSessionStorage',
 				'Symfony\\Component\\HttpFoundation\\Session\\Storage\\Handler\\NativeFileSessionHandler',
@@ -566,13 +566,6 @@ class FrameworkExtension extends Extension
 			
 			$container->setDefinition('templating.loader', $loaderCache);
 		}
-		
-		$this->addClassesToCompile(array(
-				'Symfony\\Bundle\\FrameworkBundle\\Templating\\GlobalVariables',
-				'Symfony\\Bundle\\FrameworkBundle\\Templating\\TemplateReference',
-				'Symfony\\Bundle\\FrameworkBundle\\Templating\\TemplateNameParser',
-				$container->findDefinition('templating.locator')->getClass() 
-		));
 		
 		$container->setParameter('templating.engines', $config['engines']);
 		$engines = array_map(function ($engine) {

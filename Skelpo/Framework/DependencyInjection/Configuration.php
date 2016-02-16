@@ -2,13 +2,13 @@
 
 /**
  * This file is part of the skelpo framework.
- * This file has been
- * partially or fully taken from the symfony framework.
+ * This file has been partially or fully taken
+ * from the symfony framework.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version 1.0.0
+ * @version 1.1.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @author symfony Team
  * @copyright 2016 Skelpo Inc. www.skelpo.com
@@ -176,7 +176,7 @@ scalarNode('field_name')->defaultValue('_token')->end()->end()->end()->end()->en
 
 	private function addTemplatingSection(ArrayNodeDefinition $rootNode)
 	{
-		$rootNode->children()->arrayNode('templating')->info('templating configuration')->canBeUnset()->children()->scalarNode('hinclude_default_template')->defaultNull()->end()->scalarNode('cache')->end()->arrayNode('form')->addDefaultsIfNotSet()->fixXmlConfig('resource')->children()->arrayNode('resources')->addDefaultChildrenIfNoneSet()->prototype('scalar')->defaultValue('FrameworkBundle:Form')->end()->validate()->ifTrue(function ($v) {
+		$rootNode->children()->arrayNode('templating')->info('templating configuration')->canBeUnset()->children()->scalarNode('hinclude_default_template')->defaultNull()->end()->scalarNode('cache')->end()->arrayNode('form')->addDefaultsIfNotSet()->fixXmlConfig('resource')->children()->arrayNode('resources')->addDefaultChildrenIfNoneSet()->prototype('scalar')->defaultValue('Framework:Form')->end()->validate()->ifTrue(function ($v) {
 			return ! in_array('FrameworkBundle:Form', $v);
 		})->then(function ($v) {
 			return array_merge(array(

@@ -6,7 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version 1.0.0
+ * @version 1.1.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @author symfony Team
  * @copyright 2016 Skelpo Inc. www.skelpo.com
@@ -29,20 +29,15 @@ use Symfony\Component\HttpKernel\HttpKernel as BaseHttpKernel;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * HttpKernel Class that is very similar to the standard symfony kernel, we just deal with controllers a little different.
- * A good bit of this file is simply copied and pasted from the standard bunble.
+ * A good bit of this file is simply copied and pasted from the standard bundle.
  */
 class HttpKernel extends BaseHttpKernel implements HttpKernelInterface, TerminableInterface, ContainerAwareInterface
 {
-	protected $container;
-
-	public function setContainer(ContainerInterface $container = null)
-	{
-		$this->container = $container;
-	}
+	use ContainerAwareTrait;
 
 	/**
 	 * Publishes the finish request event, then pop the request from the stack.
@@ -194,27 +189,7 @@ class HttpKernel extends BaseHttpKernel implements HttpKernelInterface, Terminab
 	}
 
 	/**
-	 * Converts a variable (object, array, resource, string, .
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 * ..) into a String.
+	 * Converts a variable (object, array, resource, string) into a String.
 	 *
 	 * @param Object $var
 	 * @return string
@@ -326,34 +301,21 @@ class HttpKernel extends BaseHttpKernel implements HttpKernelInterface, Terminab
 	{
 		$request->headers->set('X-Php-Ob-Level', ob_get_level());
 		
-		// $this->container->set('request', $request, 'request');
-		
 		try
 		{
-			try
-			{
-				$response = $this->handleRaw($request, $type);
-			}
-			catch (\Exception $e)
-			{
-				if (false === $catch)
-				{
-					$this->finishRequest($request, $type);
-					
-					throw $e;
-				}
-				
-				$response = $this->handleException($e, $request, $type);
-			}
+			$response = $this->handleRaw($request, $type);
 		}
 		catch (\Exception $e)
 		{
-			// $this->container->set('request', null, 'request');
+			if (false === $catch)
+			{
+				$this->finishRequest($request, $type);
+				
+				throw $e;
+			}
 			
-			throw $e;
+			$response = $this->handleException($e, $request, $type);
 		}
-		
-		// $this->container->set('request', null, 'request');
 		
 		return $response;
 	}

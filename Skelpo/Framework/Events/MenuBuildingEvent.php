@@ -6,14 +6,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version 1.0.0
+ * @version 1.1.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @copyright 2016 Skelpo Inc. www.skelpo.com
  */
 namespace Skelpo\Framework\Events;
 
 use Symfony\Component\EventDispatcher\Event;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Skelpo\Framework\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Skelpo\Framework\View;

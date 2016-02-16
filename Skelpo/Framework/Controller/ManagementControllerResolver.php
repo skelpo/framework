@@ -16,6 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
+use Doctrine\Common\Annotations\AnnotationReader;
 
 /**
  * This class is managing all controllers.
@@ -36,7 +37,7 @@ class ManagementControllerResolver implements ControllerResolverInterface
 	 * All controllers that are known to the system.
 	 * This includes controllers from plugins.
 	 *
-	 * @var Symfony\Bundle\FrameworkBundle\Controller\Controller[]
+	 * @var Skelpo\Framework\Controller\Controller[]
 	 */
 	protected $controllers;
 
@@ -113,20 +114,49 @@ class ManagementControllerResolver implements ControllerResolverInterface
 	 */
 	public function getArguments(Request $request, $controller)
 	{
+		$reflMthd = null;
+		$reflObj = null;
 		if (is_array($controller))
 		{
-			$r = new \ReflectionMethod($controller[0], $controller[1]);
+			$reflMthd = new \ReflectionMethod($controller[0], $controller[1]);
+			$reflObj = new \ReflectionObject($controller[0]);
 		}
 		elseif (is_object($controller) && ! $controller instanceof \Closure)
 		{
-			$r = new \ReflectionObject($controller);
-			$r = $r->getMethod('__invoke');
+			$reflObj = new \ReflectionObject($controller);
+			$reflMthd = $reflObj->getMethod('__invoke');
 		}
 		else
 		{
-			$r = new \ReflectionFunction($controller);
+			$reflObj = null;
+			$reflMthd = new \ReflectionFunction($controller);
 		}
-		return $this->doGetArguments($request, $controller, $r->getParameters());
+		$methodRelations = array();
+		if ($reflMthd !== null)
+		{
+			$reader = new AnnotationReader();
+			$methodRelations = $reader->getMethodAnnotations($reflMthd, 'Skelpo\\Framework\\Annotations\\Router\\UrlParam');
+			foreach ($methodRelations as $key => $v)
+			{
+				$methodRelations[$v->name] = $v;
+				unset($methodRelations[$key]);
+			}
+		}
+		$finalParameters = array();
+		$realParameters = $reflMthd->getParameters();
+		foreach ($realParameters as $p)
+		{
+			if (isset($methodRelations[$p->name]))
+			{
+				$finalParameters[] = $methodRelations[$p->name];
+			}
+			else
+			{
+				$finalParameters[] = $p;
+			}
+		}
+		
+		return $this->doGetArguments($request, $controller, $finalParameters);
 	}
 
 	/**
@@ -144,9 +174,17 @@ class ManagementControllerResolver implements ControllerResolverInterface
 		$arguments = array();
 		foreach ($parameters as $param)
 		{
+			
 			if (array_key_exists($param->name, $attributes))
 			{
-				$arguments[] = $attributes[$param->name];
+				if ($param->type == "string")
+				{
+					$arguments[] = $attributes[$param->name];
+				}
+				else if ($param->type == "int")
+				{
+					$arguments[] = intval($attributes[$param->name]);
+				}
 			}
 			elseif ($param->getClass() && $param->getClass()->isInstance($request))
 			{

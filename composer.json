@@ -1,7 +1,7 @@
 {
   "name" : "skelpo/framework",
-  "description" : "A framework based on symfony and smarty 3.",
-  "version" : "1.0.0",
+  "description" : "A framework based on symfony 3 and smarty 3.",
+  "version" : "1.1.0",
   "require" : {
     "php" : ">=5.5.9",
     "symfony/asset": "~3.0",
@@ -21,6 +21,7 @@
         "symfony/stopwatch": "~3.0",
         "symfony/templating": "~3.0",
         "symfony/translation": "~3.0",
+        "symfony/form": "~3.0",
         "doctrine/cache": "~1.0",
         "doctrine/annotations": "~1.0",
     "doctrine/orm" : "^2.5",
@@ -60,6 +61,9 @@
     "vendor-dir" : "vendor"
   },
   "authors" : [ {
+    "name" : "Skelpo Inc.",
+    "email" : "info@skelpo.com"
+  },{
     "name" : "Ralph Kuepper",
     "email" : "ralph.kuepper@skelpo.com"
   } ]

@@ -6,7 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version 1.0.0
+ * @version 1.1.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @copyright 2016 Skelpo Inc. www.skelpo.com
  */
@@ -22,6 +22,7 @@ use Skelpo\Framework\DependencyInjection\Compiler\ContainerBuilderDebugDumpPass;
 use Skelpo\Framework\DependencyInjection\Compiler\LoggingTranslatorPass;
 use Skelpo\Framework\DependencyInjection\Compiler\ProfilerPass;
 use Skelpo\Framework\DependencyInjection\Compiler\PropertyInfoPass;
+use Skelpo\Framework\DependencyInjection\Compiler\AddConsoleCommandPass;
 use Skelpo\Framework\DependencyInjection\Compiler\RoutingResolverPass;
 use Skelpo\Framework\DependencyInjection\Compiler\SerializerPass;
 use Skelpo\Framework\DependencyInjection\Compiler\TranslationDumperPass;
@@ -222,7 +223,7 @@ class Framework extends Bundle
 		$container->addCompilerPass(new RegisterListenersPass(), PassConfig::TYPE_BEFORE_REMOVING);
 		$container->addCompilerPass(new AddConstraintValidatorsPass());
 		$container->addCompilerPass(new AddValidatorInitializersPass());
-		// $container->addCompilerPass(new AddConsoleCommandPass());
+		$container->addCompilerPass(new AddConsoleCommandPass());
 		$container->addCompilerPass(new TranslatorPass());
 		$container->addCompilerPass(new LoggingTranslatorPass());
 		$container->addCompilerPass(new AddCacheWarmerPass());

@@ -6,7 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @version 1.0.0
+ * @version 1.1.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
  * @copyright 2016 Skelpo Inc. www.skelpo.com
  */
@@ -19,6 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+use Doctrine\Common\Annotations\AnnotationReader;
 
 /**
  * This class creates routes for all controllers with all actions.
@@ -194,14 +195,14 @@ class Loader implements LoaderInterface
 		{
 			if (substr($function->getName(), strlen($function->getName()) - 6) == "Action")
 			{
+				$reader = new AnnotationReader();
+				$parameters = $reader->getMethodAnnotations($function, 'Skelpo\\Framework\\Annotations\\Router\\UrlParam');
 				$functionName = str_replace("Action", "", $function->getName());
-				$parameters = $function->getParameters();
 				
 				$ctlStr = $controllerNS . 'Controller::' . $functionName . "Action";
 				
 				$moduleStr = $module;
-				
-				$this->buildRoutesIntern($moduleStr, strtolower($controller), $functionName, array(), $ctlStr, false, $parameters, $routes);
+				$this->buildRoutesIntern($moduleStr, strtolower($controller), $functionName, array(), $ctlStr, $parameters, $routes);
 			}
 		}
 	}
@@ -216,12 +217,11 @@ class Loader implements LoaderInterface
 	 * @param string $function
 	 * @param string $parameter
 	 * @param string $ctlStr
-	 * @param string $stop
 	 * @param string $parameters
 	 * @param Route[] $routes
 	 * @return Route[]
 	 */
-	private function buildRoutesIntern($module, $controller, $function, $parameter, $ctlStr, $stop, $parameters, $routes)
+	private function buildRoutesIntern($module, $controller, $function, $parameter, $ctlStr, $parameters, $routes)
 	{
 		if ($module == "frontend")
 			$module = "";
@@ -237,16 +237,13 @@ class Loader implements LoaderInterface
 		
 		if ($controller == "index")
 		{
-			$s .= $this->buildRoutesIntern($module, "", $function, $parameter, $ctlStr, false, array(), $routes);
+			$s .= $this->buildRoutesIntern($module, "", $function, $parameter, $ctlStr, array(), $routes);
 		}
 		
 		if ($function == "index")
 		{
-			$s .= $this->buildRoutesIntern($module, $controller, "", $parameter, $ctlStr, true, array(), $routes);
+			$s .= $this->buildRoutesIntern($module, $controller, "", $parameter, $ctlStr, array(), $routes);
 		}
-		
-		if ($stop)
-			return $s;
 		
 		if ($function != "")
 			$function = "/" . $function;
