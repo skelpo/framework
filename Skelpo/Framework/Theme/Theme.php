@@ -161,6 +161,25 @@ abstract class Theme
 	 */
 	public function fixSmarty(\Smarty $s)
 	{
-		// intentially empty
+		// intentionally empty
+	}
+
+	/**
+	 * This functions is called after all compilation steps are done (including the
+	 * copying of static files) and gives the theme the opportunity ro do some
+	 * custom stuff (like optimizing typescript etc.).
+	 */
+	public function afterCompile()
+	{
+		// intentionally empty
+	}
+
+	/**
+	 * This functions is called before all compilation steps are done (including the
+	 * copying of static files).
+	 */
+	public function beforeCompile()
+	{
+		// intentionally empty
 	}
 }

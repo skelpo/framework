@@ -20,7 +20,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
-class BuildTsCommand extends ContainerAwareCommand
+class TsBuildCommand extends ContainerAwareCommand
 {
 
 	/**
@@ -30,7 +30,7 @@ class BuildTsCommand extends ContainerAwareCommand
 	 */
 	protected function configure()
 	{
-		$this->setName('skelpo:build:ts');
+		$this->setName('skelpo:ts:build');
 		$this->setDescription('Compiles a typescript app (like angularjs 2) and puts the output together.');
 		$this->addArgument('path', InputArgument::REQUIRED, 'Where is the app located?');
 	}
@@ -68,7 +68,7 @@ class BuildTsCommand extends ContainerAwareCommand
 			return 1;
 		}
 		
-		$io->success(sprintf('Successfully compiled the app. The view class will include it into the all.js'));
+		$io->success(sprintf('Successfully compiled the app.'));
 		
 		$output->writeln($text);
 	}
