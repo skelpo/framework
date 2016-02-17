@@ -109,14 +109,9 @@ class FrameworkExtension extends Extension
 		
 		$this->registerSecurityCsrfConfiguration($config['csrf_protection'], $container, $loader);
 		
-		if (isset($config['assets']))
-		{
-			$this->registerAssetsConfiguration($config['assets'], $container, $loader);
-		}
-		
 		$this->registerValidationConfiguration($config['validation'], $container, $loader);
-		$this->registerEsiConfiguration($config['esi'], $container, $loader);
-		$this->registerSsiConfiguration($config['ssi'], $container, $loader);
+		// $this->registerEsiConfiguration($config['esi'], $container, $loader);
+		// $this->registerSsiConfiguration($config['ssi'], $container, $loader);
 		$this->registerTranslatorConfiguration($config['translator'], $container);
 		$this->registerProfilerConfiguration($config['profiler'], $container, $loader);
 		
@@ -139,11 +134,6 @@ class FrameworkExtension extends Extension
 		
 		$loader->load('debug_prod.xml');
 		$definition = $container->findDefinition('debug.debug_handlers_listener');
-		
-		if ($container->hasParameter('templating.helper.code.file_link_format'))
-		{
-			$definition->replaceArgument(5, '%templating.helper.code.file_link_format%');
-		}
 		
 		if ($container->getParameter('kernel.debug'))
 		{
