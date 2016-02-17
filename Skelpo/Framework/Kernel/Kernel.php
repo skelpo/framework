@@ -208,7 +208,7 @@ abstract class Kernel extends \Symfony\Component\HttpKernel\Kernel
 	 */
 	public function getCacheDir()
 	{
-		return $this->getRootDir() . 'cache/' . $this->getEnvironment() . '/';
+		return $this->getRootDir() . 'var/cache/' . $this->getEnvironment() . '/';
 	}
 
 	/**
@@ -228,7 +228,7 @@ abstract class Kernel extends \Symfony\Component\HttpKernel\Kernel
 	 */
 	public function getLogDir()
 	{
-		return $this->getRootDir() . 'logs/' . $this->getEnvironment() . '/';
+		return $this->getRootDir() . 'var/logs/' . $this->getEnvironment() . '/';
 	}
 
 	/**
