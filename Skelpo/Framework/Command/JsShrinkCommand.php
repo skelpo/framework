@@ -69,7 +69,5 @@ class JsShrinkCommand extends ContainerAwareCommand
 		}
 		
 		$io->success(sprintf('Success!'));
-		
-		$output->writeln($text);
 	}
 }
