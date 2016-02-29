@@ -38,4 +38,3 @@ class FormType extends AbstractType
 		return "Form_" . $n;
 	}
 }
-?>

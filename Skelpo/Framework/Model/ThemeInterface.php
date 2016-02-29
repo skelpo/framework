@@ -67,4 +67,3 @@ interface ThemeInterface
 	 */
 	public function isActive();
 }
-?>

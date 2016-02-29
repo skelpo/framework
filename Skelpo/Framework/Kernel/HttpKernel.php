@@ -320,5 +320,3 @@ class HttpKernel extends BaseHttpKernel implements HttpKernelInterface, Terminab
 		return $response;
 	}
 }
-
-?>

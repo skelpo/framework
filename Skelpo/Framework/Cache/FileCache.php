@@ -152,7 +152,7 @@ class FileCache implements Cacheable
 	 */
 	public function save()
 	{
-		$phpcode = '<?php $content = "' . addslashes(($this->content)) . '"; ?>';
+		$phpcode = '<?php $content = "' . addslashes(($this->content)) . '"; ';
 		$this->filesystem->dumpFile($this->file, $this->content);
 	}
 
@@ -168,5 +168,3 @@ class FileCache implements Cacheable
 		return unserialize($this->content);
 	}
 }
-
-?>

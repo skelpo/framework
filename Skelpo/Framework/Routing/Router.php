@@ -217,4 +217,3 @@ class Router extends BaseRouter implements WarmableInterface
 	}
 }
 
-?>

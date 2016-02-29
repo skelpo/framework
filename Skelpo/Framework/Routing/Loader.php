@@ -316,4 +316,3 @@ class Loader implements LoaderInterface
 		// same as above
 	}
 }
-?>

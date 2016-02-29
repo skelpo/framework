@@ -37,4 +37,3 @@ function smarty_function_input($params, Smarty_Internal_Template $template)
 	$c = $renderer->renderInput($element, "Form_" . $template->getTemplateVars("currentForm"), $params);
 	return $c;
 }
-?>

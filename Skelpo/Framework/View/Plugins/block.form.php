@@ -1,5 +1,5 @@
  <?php
-	
+
 	/**
 	 * This file is part of the skelpo framework.
 	 *
@@ -10,8 +10,7 @@
 	 * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
 	 * @copyright 2016 Skelpo Inc. www.skelpo.com
 	 */
-	use Skelpo\Framework\Forms\Form;
-
+	
 	/*
 	 * Smarty plugin
 	 * -------------------------------------------------------------
@@ -50,4 +49,3 @@
 		$c = $renderer->renderForm($view, $form->getName(), $content, $params, $locale, $smarty->smarty->getDefaultLanguage());
 		return $c;
 	}
-	?>

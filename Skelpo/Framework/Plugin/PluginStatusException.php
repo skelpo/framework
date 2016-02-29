@@ -21,4 +21,3 @@ class PluginStatusException extends \Exception
 {
 }
 
-?>

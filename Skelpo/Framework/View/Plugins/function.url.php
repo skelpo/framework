@@ -51,4 +51,3 @@ function smarty_function_url($params, Smarty_Internal_Template $template)
 	return $url;
 }
 
-?>

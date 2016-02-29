@@ -67,4 +67,3 @@ interface PluginInterface
 	 */
 	public function isActive();
 }
-?>

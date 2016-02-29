@@ -19,4 +19,3 @@ class PluginNotFoundException extends \Exception
 {
 }
 
-?>

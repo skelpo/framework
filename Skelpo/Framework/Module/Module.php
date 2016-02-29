@@ -73,5 +73,3 @@ abstract class Module
 		return $this->basedOnTemplates;
 	}
 }
-
-?>

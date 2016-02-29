@@ -34,5 +34,3 @@ function smarty_function_file($params, Smarty_Internal_Template $template)
 	$url = $template->smarty->getStaticFilesUrl() . $path;
 	return $url;
 }
-
-?>
