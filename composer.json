@@ -1,7 +1,7 @@
 {
   "name" : "skelpo/framework",
   "description" : "A framework based on symfony 3 and smarty 3.",
-  "version" : "1.1.1",
+  "version" : "1.1.2",
   "require" : {
     "php" : ">=5.5.9",
     "symfony/asset" : "~3.0",
