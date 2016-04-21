@@ -14,6 +14,7 @@ namespace Skelpo\Framework\Controller;
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -25,7 +26,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
  * Symfony is just loading the controller that is needed, we know and load
  * all of them to efficiently use them.
  */
-class ManagementControllerResolver implements ControllerResolverInterface
+class ManagementControllerResolver implements ControllerResolverInterface, ArgumentResolverInterface
 {
 	/**
 	 * Our container.

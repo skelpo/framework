@@ -78,23 +78,23 @@ class Loader implements LoaderInterface
 			throw new \RuntimeException('Framework can only be loaded once.');
 		}
 		$routes = new RouteCollection();
-		
+
 		$container = new ContainerBuilder();
 		$loader = new PhpFileLoader($container, new FileLocator($this->kernel->getConfigDir()));
 		$loader->load('parameters.php');
-		
+
 		$this->locale = $container->getParameter('locale');
 		$this->supportedLocales = explode(",", $container->getParameter('supportedLocales'));
-		
+
 		if (! in_array($this->locale, $this->supportedLocales))
 		{
 			$this->locale = $this->supportedLocales[0];
 		}
-		
+
 		$routes = $this->buildRoutes($routes);
-		
+
 		$this->loaded = true;
-		
+
 		return $routes;
 	}
 
@@ -107,7 +107,7 @@ class Loader implements LoaderInterface
 	private function buildRoutes($routes)
 	{
 		$rootPath = $this->kernel->getRootDir();
-		
+
 		$modules = $this->kernel->getModules();
 		// build all the routes
 		$controllerDirs = array();
@@ -115,22 +115,22 @@ class Loader implements LoaderInterface
 		{
 			$controllerDirs[] = "App/Controllers/" . $module->getName() . "/";
 		}
-		
+
 		$pluginDir = $this->kernel->getFramework()->getPluginDir();
-		
+
 		$file = $this->kernel->getCache("plugins");
 		$plugins = $file->getContent();
 		if ($plugins == "")
 		{
 			$plugins = array();
 		}
-		
+
 		foreach ($plugins as $p)
 		{
 			$pf = $pluginDir . $p['name'] . "/";
 			if (is_dir($pf))
 			{
-				
+
 				foreach ($modules as $module)
 				{
 					if (is_dir($pf . "Controllers/" . $module->getName() . "/"))
@@ -144,13 +144,13 @@ class Loader implements LoaderInterface
 		foreach ($controllerDirs as $dir)
 		{
 			$path = $rootPath . $dir;
-			
+
 			if (! is_dir($path))
 				continue;
-			
+
 			$module = substr($path, strpos($path, "Controllers/") + 12);
 			$module = strtolower(substr($module, 0, - 1));
-			
+
 			$files = scandir($path);
 			foreach ($files as $file)
 			{
@@ -164,7 +164,7 @@ class Loader implements LoaderInterface
 				}
 			}
 		}
-		
+
 		return $routes;
 	}
 
@@ -180,17 +180,17 @@ class Loader implements LoaderInterface
 	{
 		$class = str_replace(".php", "", $file);
 		include_once ($path . $file);
-		
+
 		$content = file_get_contents($path . $file);
 		$n = substr($content, strpos($content, "namespace ") + 10);
 		$n = substr($n, 0, strpos($n, ";"));
 		$controller = str_replace("Controller", "", $class);
 		$class = $n . "\\" . $class;
 		$controllerNS = $n . "\\" . $controller;
-		
+
 		$_reflection = new \ReflectionClass($class);
 		$functions = $_reflection->getMethods();
-		
+
 		foreach ($functions as $function)
 		{
 			if (substr($function->getName(), strlen($function->getName()) - 6) == "Action")
@@ -198,9 +198,9 @@ class Loader implements LoaderInterface
 				$reader = new AnnotationReader();
 				$parameters = $reader->getMethodAnnotations($function, 'Skelpo\\Framework\\Annotations\\Router\\UrlParam');
 				$functionName = str_replace("Action", "", $function->getName());
-				
+
 				$ctlStr = $controllerNS . 'Controller::' . $functionName . "Action";
-				
+
 				$moduleStr = $module;
 				$this->buildRoutesIntern($moduleStr, strtolower($controller), $functionName, array(), $ctlStr, $parameters, $routes);
 			}
@@ -232,54 +232,56 @@ class Loader implements LoaderInterface
 				$module = "/" . $module;
 			}
 		}
-		
+
 		$s = "";
-		
+
 		if ($controller == "index")
 		{
 			$s .= $this->buildRoutesIntern($module, "", $function, $parameter, $ctlStr, array(), $routes);
 		}
-		
+
 		if ($function == "index")
 		{
 			$s .= $this->buildRoutesIntern($module, $controller, "", $parameter, $ctlStr, array(), $routes);
 		}
-		
+
 		if ($function != "")
 			$function = "/" . $function;
 		if ($controller != "")
 			$controller = "/" . $controller;
 		$valid = false;
-		
+
 		if ($controller != "" && $function != "")
 			$valid = true;
 		if ($controller == "" && $function == "")
 			$valid = true;
-		
+		if ($controller != "" && $function == "")
+			$valid = true;
+
 		if ($valid)
 		{
 			$routes->add($module . $controller . $function, new \Symfony\Component\Routing\Route($module . $controller . $function, array(
-					'_controller' => $ctlStr 
+					'_controller' => $ctlStr
 			)));
 			$routes->add('/{_locale}' . $module . $controller . $function, new \Symfony\Component\Routing\Route('/{_locale}' . $module . $controller . $function . '', array(
 					'_controller' => $ctlStr,
-					'_locale' => $this->locale 
+					'_locale' => $this->locale
 			), array(
-					'_locale' => implode("|", $this->supportedLocales) 
+					'_locale' => implode("|", $this->supportedLocales)
 			)));
 			$para = "";
 			foreach ($parameters as $p)
 			{
 				$para .= "/{" . $p->name . "}";
-				
+
 				$routes->add($module . $controller . $function . $para, new \Symfony\Component\Routing\Route($module . $controller . $function . $para, array(
-						'_controller' => $ctlStr 
+						'_controller' => $ctlStr
 				)));
 				$routes->add('/{_locale}' . $module . $controller . $function . $para, new \Symfony\Component\Routing\Route('/{_locale}' . $module . $controller . $function . $para, array(
 						'_controller' => $ctlStr,
-						'_locale' => $this->locale 
+						'_locale' => $this->locale
 				), array(
-						'_locale' => implode("|", $this->supportedLocales) 
+						'_locale' => implode("|", $this->supportedLocales)
 				)));
 			}
 		}
