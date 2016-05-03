@@ -114,6 +114,7 @@ class Configuration implements ConfigurationInterface
 	}
 
 	private function addFormSection(ArrayNodeDefinition $rootNode)
+	
 	{
 		$rootNode->children()->arrayNode('form')->info('form configuration')->canBeEnabled()->children()->arrayNode('csrf_protection')->treatFalseLike(array(
 				'enabled' => false 
