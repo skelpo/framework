@@ -226,10 +226,17 @@ class View extends Template
 	public function setRequest(RequestStack $requestStack)
 	{
 		$this->request = $requestStack->getCurrentRequest();
-		$language = $this->request->attributes->get('_locale');
-		if ($language == "")
-			$language = $this->getDefaultLanguage();
-		$this->setLanguage($language);
+		if ($this->request instanceof \Symfony\Component\HttpFoundation\Request)
+		{
+			$language = $this->request->attributes->get('_locale');
+			if ($language == "")
+				$language = $this->getDefaultLanguage();
+			$this->setLanguage($language);
+		}
+		else
+		{
+			throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException("Skelpo Framework needs at least one request.");
+		}
 	}
 
 	/**

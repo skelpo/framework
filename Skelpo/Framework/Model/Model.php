@@ -66,6 +66,19 @@ abstract class Model
 	}
 
 	/**
+	 * Takes all values from the array and assigns them to this model.
+	 *
+	 * @param string[] $values
+	 */
+	public function setWithArray($values)
+	{
+		foreach ($values as $k => $v)
+		{
+			$this->__set($k, $v);
+		}
+	}
+
+	/**
 	 * Returns an array containing all fields, that aren't objects, and their values.
 	 *
 	 * @param string[] $fields
