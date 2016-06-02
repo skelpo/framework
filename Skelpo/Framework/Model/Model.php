@@ -12,6 +12,8 @@
  */
 namespace Skelpo\Framework\Model;
 
+use Doctrine\Common\Annotations\AnnotationReader;
+
 /**
  * Abstract model class.
  * What we do different to doctrine here is that we don't actually set all setters and getters
@@ -91,6 +93,31 @@ abstract class Model
 			$vars = $fields;
 		else
 			$vars = $this->getKeys();
+		
+		$reader = new AnnotationReader();
+		$reflect = new \ReflectionClass(get_class($this));
+		$vars2 = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED);
+		foreach ($vars2 as $var)
+		{
+			$relation = $reader->getPropertyAnnotation($var, 'Skelpo\\Framework\\Annotations\\Model\\ArrayAccess');
+			if ($relation)
+			{
+				if ($relation->allowed == false)
+				{
+					
+					if (in_array($var->name, $vars))
+					{
+						foreach ($vars as $d => $v)
+						{
+							if ($v == $var->name)
+							{
+								unset($vars[$d]);
+							}
+						}
+					}
+				}
+			}
+		}
 		foreach ($vars as $a)
 		{
 			$n = "get" . ucwords($a);
@@ -113,11 +140,13 @@ abstract class Model
 		
 		$reflect = new \ReflectionClass($this);
 		$vars = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED);
+		$staticVars = $reflect->getProperties(\ReflectionProperty::IS_STATIC);
 		foreach ($vars as $a)
 		{
-			// we have to filter doctrine here
-			if (! stristr($a->class, "__CG__"))
+			if (! in_array($a, $staticVars) && ! stristr($a->class, "__CG__"))
+			{
 				$ret[] = $a->getName();
+			}
 		}
 		return $ret;
 	}
