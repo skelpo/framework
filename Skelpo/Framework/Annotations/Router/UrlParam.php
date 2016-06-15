@@ -22,4 +22,25 @@ final class UrlParam extends Annotation
 {
 	public $name;
 	public $type;
+	public $default = "";
+
+	/**
+	 * Returns whether there is a default or not.
+	 */
+	public function isDefaultValueAvailable(): bool
+	{
+		if (is_null($this->default))
+		{
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Returns the default.
+	 */
+	public function getDefaultValue(): string
+	{
+		return $this->default;
+	}
 }

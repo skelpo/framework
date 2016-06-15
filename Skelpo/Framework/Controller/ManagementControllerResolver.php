@@ -65,25 +65,25 @@ class ManagementControllerResolver implements ControllerResolverInterface, Argum
 	{
 		if (! $controller = $request->attributes->get('_controller'))
 		{
-			
+
 			return false;
 		}
-		
+
 		if (is_array($controller))
 		{
 			return $controller;
 		}
-		
+
 		if (is_object($controller))
 		{
 			if (method_exists($controller, '__invoke'))
 			{
 				return $controller;
 			}
-			
+
 			throw new \InvalidArgumentException(sprintf('Controller "%s" for URI "%s" is not callable.', get_class($controller), $request->getPathInfo()));
 		}
-		
+
 		if (false === strpos($controller, ':'))
 		{
 			if (method_exists($controller, '__invoke'))
@@ -95,14 +95,14 @@ class ManagementControllerResolver implements ControllerResolverInterface, Argum
 				return $controller;
 			}
 		}
-		
+
 		$callable = $this->createController($controller);
-		
+
 		if (! is_callable($callable))
 		{
 			throw new \InvalidArgumentException(sprintf('Controller "%s" for URI "%s" is not callable.', $controller, $request->getPathInfo()));
 		}
-		
+
 		return $callable;
 	}
 
@@ -156,7 +156,7 @@ class ManagementControllerResolver implements ControllerResolverInterface, Argum
 				$finalParameters[] = $p;
 			}
 		}
-		
+
 		return $this->doGetArguments($request, $controller, $finalParameters);
 	}
 
@@ -175,7 +175,6 @@ class ManagementControllerResolver implements ControllerResolverInterface, Argum
 		$arguments = array();
 		foreach ($parameters as $param)
 		{
-			
 			if (array_key_exists($param->name, $attributes))
 			{
 				if ($param->type == "string")
@@ -187,13 +186,13 @@ class ManagementControllerResolver implements ControllerResolverInterface, Argum
 					$arguments[] = intval($attributes[$param->name]);
 				}
 			}
-			elseif ($param->getClass() && $param->getClass()->isInstance($request))
-			{
-				$arguments[] = $request;
-			}
 			elseif ($param->isDefaultValueAvailable())
 			{
 				$arguments[] = $param->getDefaultValue();
+			}
+			elseif ($param->getClass() && $param->getClass()->isInstance($request))
+			{
+				$arguments[] = $request;
 			}
 			else
 			{
@@ -209,11 +208,11 @@ class ManagementControllerResolver implements ControllerResolverInterface, Argum
 				{
 					$repr = $controller;
 				}
-				
+
 				throw new \RuntimeException(sprintf('Controller "%s" requires that you provide a value for the "$%s" argument (because there is no default value or because there is a non optional argument after this one).', $repr, $param->name));
 			}
 		}
-		
+
 		return $arguments;
 	}
 
@@ -221,9 +220,9 @@ class ManagementControllerResolver implements ControllerResolverInterface, Argum
 	 * Returns a callable for the given controller.
 	 *
 	 * @param string $controller A Controller string
-	 *       
+	 *
 	 * @return mixed A PHP callable
-	 *        
+	 *
 	 * @throws \InvalidArgumentException
 	 */
 	protected function createController($controller)
@@ -232,17 +231,17 @@ class ManagementControllerResolver implements ControllerResolverInterface, Argum
 		{
 			throw new \InvalidArgumentException(sprintf('Unable to find controller "%s".', $controller));
 		}
-		
+
 		list($class, $method) = explode('::', $controller, 2);
-		
+
 		if (! class_exists($class))
 		{
 			throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
 		}
-		
+
 		return array(
 				$this->instantiateController($class),
-				$method 
+				$method
 		);
 	}
 
@@ -250,7 +249,7 @@ class ManagementControllerResolver implements ControllerResolverInterface, Argum
 	 * Returns an instantiated controller
 	 *
 	 * @param string $class A class name
-	 *       
+	 *
 	 * @return object
 	 */
 	protected function instantiateController($class)

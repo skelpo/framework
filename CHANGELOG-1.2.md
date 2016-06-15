@@ -1,3 +1,10 @@
+CHANGELOG for 1.2.1
+===================
+
+* Complete removal of symfony/form.
+* Router issues fixed
+
+
 CHANGELOG for 1.2.x
 ===================
 

@@ -48,13 +48,13 @@ class Template extends \Smarty
 	 */
 	public function __construct(Framework $f, $templateFile = "")
 	{
-		$this->template_class = "\Skelpo\Framework\View\ViewTemplate";
+		$this->template_class = "\Smarty_Internal_Template";
 		parent::__construct();
-		
+
 		$this->framework = $f;
 		$this->templateFile = $templateFile;
 		$this->filesystem = new Filesystem();
-		
+
 		$this->setupSmarty();
 	}
 
