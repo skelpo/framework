@@ -84,6 +84,7 @@ class Loader implements LoaderInterface
 			throw new \RuntimeException('Framework can only be loaded once.');
 		}
 		$routes = new RouteCollection();
+		$routesWithParameters = new RouteCollection();
 
 		$container = new ContainerBuilder();
 		$loader = new PhpFileLoader($container, new FileLocator($this->kernel->getConfigDir()));
@@ -98,7 +99,12 @@ class Loader implements LoaderInterface
 			$this->locale = $this->supportedLocales[0];
 		}
 
-		$routes = $this->buildRoutes($routes);
+		$routes = $this->buildRoutes($routes, $routesWithParameters);
+
+		foreach ($routesWithParameters->all() as $r)
+		{
+			$routes->add($r->getPath(), $r);
+		}
 
 		$this->loaded = true;
 
@@ -111,7 +117,7 @@ class Loader implements LoaderInterface
 	 * @param Symfony\Component\Routing\Route[] $routes The routes that are already established.
 	 * @return The routes as a RouteCollection.
 	 */
-	private function buildRoutes($routes)
+	private function buildRoutes($routes, $routesWithParameters)
 	{
 		$rootPath = $this->kernel->getRootDir();
 
@@ -166,7 +172,7 @@ class Loader implements LoaderInterface
 				{
 					if (substr($file, $l - 14) == $lookFor)
 					{
-						$this->buildRoutesForClass($path, $file, $module, $routes);
+						$this->buildRoutesForClass($path, $file, $module, $routes, $routesWithParameters);
 					}
 				}
 			}
@@ -182,7 +188,7 @@ class Loader implements LoaderInterface
 	 * @param string $module
 	 * @param Route[] $routes
 	 */
-	private function buildRoutesForClass($path, $file, $module, $routes)
+	private function buildRoutesForClass($path, $file, $module, $routes, $routesWithParameters)
 	{
 		$class = str_replace(".php", "", $file);
 		include_once ($path . $file);
@@ -208,7 +214,7 @@ class Loader implements LoaderInterface
 				$ctlStr = $controllerNS . 'Controller::' . $functionName . "Action";
 
 				$moduleStr = $module;
-				$this->buildRoutesIntern($moduleStr, strtolower($controller), $functionName, array(), $ctlStr, $parameters, $routes);
+				$this->buildRoutesIntern($moduleStr, strtolower($controller), $functionName, array(), $ctlStr, $parameters, $routes, $routesWithParameters);
 			}
 		}
 	}
@@ -227,7 +233,7 @@ class Loader implements LoaderInterface
 	 * @param Route[] $routes
 	 * @return Route[]
 	 */
-	private function buildRoutesIntern($module, $controller, $function, $parameter, $ctlStr, $parameters, $routes)
+	private function buildRoutesIntern($module, $controller, $function, $parameter, $ctlStr, $parameters, $routes, $routesWithParameters)
 	{
 		if ($module == "frontend")
 			$module = "";
@@ -243,12 +249,12 @@ class Loader implements LoaderInterface
 
 		if ($controller == "index")
 		{
-			$s .= $this->buildRoutesIntern($module, "", $function, $parameter, $ctlStr, $parameters, $routes);
+			$s .= $this->buildRoutesIntern($module, "", $function, $parameter, $ctlStr, $parameters, $routes, $routesWithParameters);
 		}
 
 		if ($function == "index")
 		{
-			$s .= $this->buildRoutesIntern($module, $controller, "", $parameter, $ctlStr, $parameters, $routes);
+			$s .= $this->buildRoutesIntern($module, $controller, "", $parameter, $ctlStr, $parameters, $routes, $routesWithParameters);
 		}
 
 		if ($function != "")
@@ -294,10 +300,10 @@ class Loader implements LoaderInterface
 				}
 				$para .= "{" . $p->name . "}";
 
-				$routes->add($module . $controller . $function . $para, new \Symfony\Component\Routing\Route($module . $controller . $function . $para, array(
+				$routesWithParameters->add($module . $controller . $function . $para, new \Symfony\Component\Routing\Route($module . $controller . $function . $para, array(
 						'_controller' => $ctlStr
 				), array(), array(), $this->host));
-				$routes->add('/{_locale}' . $module . $controller . $function . $para, new \Symfony\Component\Routing\Route('/{_locale}' . $module . $controller . $function . $para, array(
+				$routesWithParameters->add('/{_locale}' . $module . $controller . $function . $para, new \Symfony\Component\Routing\Route('/{_locale}' . $module . $controller . $function . $para, array(
 						'_controller' => $ctlStr,
 						'_locale' => $this->locale
 				), array(
