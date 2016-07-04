@@ -484,8 +484,7 @@ class View extends Template
 		}
 		catch (\Exception $e)
 		{
-			// TODO: Do something with the error.
-			$css = "";
+			throw $e;
 		}
 
 		// remove the file if it exists
