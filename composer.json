@@ -1,7 +1,7 @@
 {
   "name" : "skelpo/framework",
   "description" : "A framework based on symfony 3, angular2 and smarty 3.",
-  "version" : "1.2.1",
+  "version" : "1.2.2",
   "require" : {
     "php" : ">=5.5.9",
     "symfony/class-loader" : "~3.2",

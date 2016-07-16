@@ -1,3 +1,9 @@
+CHANGELOG for 1.2.2
+===================
+
+* Events from View are now using the standard event dispatcher
+* View is now accessible within ControllerEvent
+
 CHANGELOG for 1.2.1
 ===================
 

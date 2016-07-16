@@ -16,7 +16,7 @@ use Symfony\Component\EventDispatcher\Event;
 use Skelpo\Framework\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Skelpo\Framework\View;
+use Skelpo\Framework\View\View;
 
 /**
  * Controller event class.
@@ -42,6 +42,12 @@ class ControllerEvent extends Event
 	 * @var Symfony\Component\HttpFoundation\Response
 	 */
 	protected $response;
+	/**
+	 * The view.
+	 *
+	 * @var Skelpo\Framework\View\View
+	 */
+	protected $view;
 
 	/**
 	 * Creates a new event with controller $c.
@@ -50,11 +56,12 @@ class ControllerEvent extends Event
 	 * @param Symfony\Component\HttpFoundation\Request $q The request.
 	 * @param Symfony\Component\HttpFoundation\Response $r The response.
 	 */
-	public function __construct(Controller $c = null, Request $q = null, Response $r = null)
+	public function __construct(Controller $c = null, Request $q = null, Response $r = null, View $v = null)
 	{
 		$this->controller = $c;
 		$this->request = $q;
 		$this->response = $r;
+		$this->view = $v;
 	}
 
 	/**
@@ -75,6 +82,25 @@ class ControllerEvent extends Event
 	public function getResponse()
 	{
 		return $this->response;
+	}
+
+	/**
+	 *
+	 * @return the $view
+	 */
+	public function getView()
+	{
+		return $this->view;
+	}
+
+	/**
+	 * Sets the view.
+	 *
+	 * @param \Skelpo\Framework\View $view
+	 */
+	public function setView($view)
+	{
+		$this->view = $view;
 	}
 
 	/**

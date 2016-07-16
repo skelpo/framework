@@ -55,13 +55,25 @@ class View extends Template
 	 *
 	 * @var string
 	 */
-	protected $eventName1;
+	protected $event1Name1;
 	/**
 	 * The name of the second event to fire.
 	 *
 	 * @var string
 	 */
-	protected $eventName2;
+	protected $event1Name2;
+	/**
+	 * The name of the first event to fire.
+	 *
+	 * @var string
+	 */
+	protected $event2Name1;
+	/**
+	 * The name of the second event to fire.
+	 *
+	 * @var string
+	 */
+	protected $event2Name2;
 	/**
 	 * The root url.
 	 *
@@ -131,7 +143,7 @@ class View extends Template
 		$this->router = $router;
 		$this->defaultLanguage = $defaultLanguage;
 		$this->pluginManager = $pluginManager;
-		$this->cacheOn = false;
+		$this->cacheOn = true;
 		$this->setupSmarty();
 	}
 
@@ -296,18 +308,21 @@ class View extends Template
 		$controllerName = substr($params[0], 0, - 10);
 
 		// build the events name
-		$this->eventName1 = str_replace("\\", "_", $controllerName) . "_" . ucwords($actionName) . "_PreDispatch";
-		$this->eventName2 = str_replace("\\", "_", $controllerName) . "_PreDispatch";
+		$this->event1Name1 = str_replace("\\", "_", $controllerName) . "_" . ucwords($actionName) . "_PreDispatch";
+		$this->event1Name2 = str_replace("\\", "_", $controllerName) . "_PreDispatch";
+		$this->event2Name1 = str_replace("\\", "_", $controllerName) . "_" . ucwords($actionName) . "_PostDispatch";
+		$this->event2Name2 = str_replace("\\", "_", $controllerName) . "_PostDispatch";
 
 		// get the event dispatcher
 		$dispatcher = $this->framework->getEventDispatcher();
 
 		// create an event
-		$cevent = new ControllerEvent($controller, $request);
+		$cevent = new ControllerEvent($controller, $request, null, $this);
 
 		// dispatch the events
-		$dispatcher->dispatch($this->eventName1, $cevent);
-		$dispatcher->dispatch($this->eventName2, $cevent);
+		$dispatcher->dispatch($this->event1Name1, $cevent);
+		$dispatcher->dispatch($this->event1Name2, $cevent);
+		$dispatcher->dispatch("App_Controllers_View_PreDispatch", $cevent);
 
 		$response = $cevent->getResponse();
 		if ($response instanceof Response)
@@ -741,11 +756,12 @@ class View extends Template
 		$dispatcher = $this->framework->getEventDispatcher();
 
 		// create an event
-		$cevent = new ControllerEvent(null, $event->getRequest(), $event->getResponse());
+		$cevent = new ControllerEvent(null, $event->getRequest(), $event->getResponse(), $this);
 
 		// dispatch the events
-		$dispatcher->dispatch($this->eventName1, $cevent);
-		$dispatcher->dispatch($this->eventName2, $cevent);
+		$dispatcher->dispatch($this->event2Name1, $cevent);
+		$dispatcher->dispatch($this->event2Name2, $cevent);
+		$dispatcher->dispatch("App_Controllers_View_PostDispatch", $cevent);
 
 		if ($this->module->isBasedOnTemplates() == false)
 		{
@@ -759,7 +775,6 @@ class View extends Template
 			// run all theme custom commands
 			$this->framework->getTheme()->beforeCompile();
 		}
-
 		// get the compressed urls
 		$cssUrl = $this->getLessUrl();
 		$jsUrl = $this->getJSUrl();

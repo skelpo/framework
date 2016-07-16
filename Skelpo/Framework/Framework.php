@@ -33,6 +33,7 @@ use Skelpo\Framework\Module;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\DependencyInjection\RegisterListenersPass;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\HttpKernel\DependencyInjection\FragmentRendererPass;
@@ -52,14 +53,14 @@ class Framework extends Bundle
 	 * @var Symfony\Component\EventDispatcher\EventDispatcher
 	 */
 	private $eventDispatcher;
-	
+
 	/**
 	 * The environment we are using (dev/prod/test).
 	 *
 	 * @var string
 	 */
 	private $environment;
-	
+
 	/**
 	 * The kernel.
 	 *
@@ -169,7 +170,7 @@ class Framework extends Bundle
 	public function getTemplateDirs()
 	{
 		$dirs = $this->getTheme()->getPaths();
-		
+
 		// get the template paths from the plugins
 		$pluginPaths = $this->kernel->getContainer()->get('pluginmanager')->getPluginPaths();
 		$themeHiearchy = $this->getTheme()->getThemeHierachy();
@@ -209,13 +210,17 @@ class Framework extends Bundle
 	public function __construct(\Skelpo\Framework\Kernel\Kernel $kernel)
 	{
 		$this->kernel = $kernel;
-		$this->eventDispatcher = new EventDispatcher();
 	}
 
+	/**
+	 * Builds the container.
+	 *
+	 * @param ContainerBuilder $container
+	 */
 	public function build(ContainerBuilder $container)
 	{
 		parent::build($container);
-		
+
 		$container->addCompilerPass(new RoutingResolverPass());
 		$container->addCompilerPass(new ProfilerPass());
 		// must be registered before removing private services as some might be listeners/subscribers
@@ -233,7 +238,7 @@ class Framework extends Bundle
 		$container->addCompilerPass(new FragmentRendererPass(), PassConfig::TYPE_AFTER_REMOVING);
 		$container->addCompilerPass(new SerializerPass());
 		$container->addCompilerPass(new PropertyInfoPass());
-		
+
 		if ($container->getParameter('kernel.debug'))
 		{
 			$container->addCompilerPass(new UnusedTagsPass(), PassConfig::TYPE_AFTER_REMOVING);
@@ -251,7 +256,7 @@ class Framework extends Bundle
 	public function getInfo()
 	{
 		return array(
-				'author' => "Skelpo Inc." 
+				'author' => "Skelpo Inc."
 		);
 	}
 
@@ -262,6 +267,8 @@ class Framework extends Bundle
 	 */
 	public function getEventDispatcher()
 	{
+		if (is_null($this->eventDispatcher))
+			$this->eventDispatcher = $this->kernel->getEventDispatcher();
 		return $this->eventDispatcher;
 	}
 }

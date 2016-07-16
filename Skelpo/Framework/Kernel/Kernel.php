@@ -37,7 +37,7 @@ abstract class Kernel extends \Symfony\Component\HttpKernel\Kernel
 	 * Caches for faster access.
 	 */
 	protected $caches;
-	
+
 	/**
 	 * Array of modules.
 	 */
@@ -52,7 +52,7 @@ abstract class Kernel extends \Symfony\Component\HttpKernel\Kernel
 	public function __construct($environment, $debug)
 	{
 		parent::__construct($environment, $debug);
-		
+
 		$this->framework = new Framework($this);
 		$this->modules = array();
 	}
@@ -184,6 +184,16 @@ abstract class Kernel extends \Symfony\Component\HttpKernel\Kernel
 	public function getFramework()
 	{
 		return $this->framework;
+	}
+
+	/**
+	 * Returns the framework.
+	 *
+	 * @return Framework
+	 */
+	public function getEventDispatcher()
+	{
+		return $this->getContainer()->get("event_dispatcher");
 	}
 
 	/**

@@ -42,9 +42,9 @@ class Application extends BaseApplication
 	public function __construct(KernelInterface $kernel)
 	{
 		$this->kernel = $kernel;
-		
+
 		parent::__construct('Symfony', Kernel::VERSION . ' - ' . $kernel->getName() . '/' . $kernel->getEnvironment() . ($kernel->isDebug() ? '/debug' : ''));
-		
+
 		$this->getDefinition()->addOption(new InputOption('--env', '-e', InputOption::VALUE_REQUIRED, 'The Environment name.', $kernel->getEnvironment()));
 		$this->getDefinition()->addOption(new InputOption('--no-debug', null, InputOption::VALUE_NONE, 'Switches off debug mode.'));
 	}
@@ -64,22 +64,22 @@ class Application extends BaseApplication
 	 *
 	 * @param InputInterface $input An Input instance
 	 * @param OutputInterface $output An Output instance
-	 *       
+	 *
 	 * @return int 0 if everything went fine, or an error code
 	 */
 	public function doRun(InputInterface $input, OutputInterface $output)
 	{
 		$this->kernel->boot();
-		
+
 		if (! $this->commandsRegistered)
 		{
 			$this->registerCommands();
-			
+
 			$this->commandsRegistered = true;
 		}
-		
+
 		$container = $this->kernel->getContainer();
-		
+
 		foreach ($this->all() as $command)
 		{
 			if ($command instanceof ContainerAwareInterface)
@@ -87,16 +87,15 @@ class Application extends BaseApplication
 				$command->setContainer($container);
 			}
 		}
-		
 		$this->setDispatcher($container->get('event_dispatcher'));
-		
+
 		return parent::doRun($input, $output);
 	}
 
 	protected function registerCommands()
 	{
 		$container = $this->kernel->getContainer();
-		
+
 		foreach ($this->kernel->getBundles() as $bundle)
 		{
 			if ($bundle instanceof Bundle)
@@ -104,7 +103,7 @@ class Application extends BaseApplication
 				$bundle->registerCommands($this);
 			}
 		}
-		
+
 		if ($container->hasParameter('console.command.ids'))
 		{
 			foreach ($container->getParameter('console.command.ids') as $id)
