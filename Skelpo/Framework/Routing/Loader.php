@@ -101,7 +101,28 @@ class Loader implements LoaderInterface
 
 		$routes = $this->buildRoutes($routes, $routesWithParameters);
 
+		$newRoutes = array();
+		$i = 0;
+		$i2 = $routes->count();
+
 		foreach ($routesWithParameters->all() as $r)
+		{
+			if (substr($r->getPath(), 0, 8) == "/{param1")
+			{
+				// die("F:" . $r->getPath());
+				$newRoutes[$i2] = $r;
+				$i2 ++;
+			}
+			else
+			{
+				$newRoutes[$i] = $r;
+				$i ++;
+			}
+		}
+
+		ksort($newRoutes);
+
+		foreach ($newRoutes as $r)
 		{
 			$routes->add($r->getPath(), $r);
 		}
