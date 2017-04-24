@@ -2,9 +2,7 @@
 
 /**
  * This file is part of the skelpo framework.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * For the full copyright and license information, please view the LICENSE file that was distributed with this source code.
  *
  * @version 1.1.0
  * @author Ralph Kuepper <ralph.kuepper@skelpo.com>
@@ -19,9 +17,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Kernel class.
- * It basically is the same as it is for symfony standard, we just extended
- * it in order for us to get a few things easier.
+ * Kernel class. It basically is the same as it is for symfony standard, we just extended it in order for us to get a few things easier.
  */
 abstract class Kernel extends \Symfony\Component\HttpKernel\Kernel
 {
@@ -93,13 +89,23 @@ abstract class Kernel extends \Symfony\Component\HttpKernel\Kernel
 		}
 	}
 
+	public function getName()
+	{
+		if (null === $this->name)
+		{
+			$this->name = preg_replace('/[^a-zA-Z0-9_]+/', '', basename($this->rootDir));
+		}
+
+		return $this->name;
+	}
+
 	/**
 	 * Returns the cache for a given name.
 	 *
 	 * @param string $name
 	 * @return object
 	 */
-	public function getCache($name)
+	public function getCache($name): FileCache
 	{
 		if (is_null($this->caches))
 		{
@@ -117,9 +123,7 @@ abstract class Kernel extends \Symfony\Component\HttpKernel\Kernel
 	}
 
 	/**
-	 * Selects a theme.
-	 * We are calling getListOfThemes() for that which has to be implemented by
-	 * sub classes.
+	 * Selects a theme. We are calling getListOfThemes() for that which has to be implemented by sub classes.
 	 */
 	protected function selectTheme()
 	{
@@ -242,8 +246,7 @@ abstract class Kernel extends \Symfony\Component\HttpKernel\Kernel
 	}
 
 	/**
-	 * Registers a new container configuration.
-	 * We manipulate the path here.
+	 * Registers a new container configuration. We manipulate the path here.
 	 *
 	 * @param LoaderInterface $loader
 	 */
